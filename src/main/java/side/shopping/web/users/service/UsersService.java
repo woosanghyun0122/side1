@@ -12,6 +12,7 @@ import side.shopping.repository.users.dto.users.PersistUserDto;
 import side.shopping.repository.users.dto.users.UpdateUserDto;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -21,16 +22,11 @@ public class UsersService {
     private UserRepository repository;
 
     /* 로그인 */
-    public LoginResponseDto login(LoginDto dto) {
+    public Users login(LoginDto dto) throws IllegalAccessException {
 
         log.info("loginSerivce={}", dto);
-        Users loginuser =  repository.findByUseridAndPassword(dto.getLoginId(), dto.getPassword())
-                .orElseThrow(() -> new NoSuchElementException());
-
-        return new LoginResponseDto(loginuser.getUserid(),
-                loginuser.getUserName(),
-                loginuser.getNickName(),
-                loginuser.getRole());
+        return repository.findByUserid(dto.getLoginId())
+                .orElseThrow(()-> new NoSuchElementException("존재하지 않는 아이디입니다."));
     }
 
     // 아이디 중복 체크 여부

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link rel="stylesheet" th:href="@{../css/signup.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="signup-container">
+    <h2>회원가입</h2>
+    <form th:action="@{/signup}" method="POST">
+        <!-- 아이디 입력 및 중복 확인 -->
+        <div class="input-group">
+            <label for="userid">아이디</label>
+            <input type="text" id="userid" name="userid" th:value="${userid}" required>
+            <button type="button" class="check-btn" onclick="checkDuplicate('userid')">중복 확인</button>
+        </div>
+        <div class="duplicate-message" id="userid-duplicate-message"></div>
+
+        <!-- 비밀번호 -->
+        <div class="input-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <!-- 이름 -->
+        <div class="input-group">
+            <label for="username">이름</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+
+        <!-- 닉네임 입력 및 중복 확인 -->
+        <div class="input-group">
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" name="nickname" th:value="${nickname}" required>
+            <button type="button" class="check-btn" onclick="checkDuplicate('nickname')">중복 확인</button>
+        </div>
+        <div class="duplicate-message" id="nickname-duplicate-message"></div>
+
+        <!-- 전화번호 -->
+        <div class="input-group">
+            <label for="phone">전화번호</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <!-- 이메일 -->
+        <div class="input-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <!-- 주소 -->
+        <div class="input-group">
+            <label for="address">주소</label>
+            <input type="text" id="address" name="address" required>
+        </div>
+
+        <!-- 상세 주소 -->
+        <div class="input-group">
+            <label for="detail-address">상세 주소</label>
+            <input type="text" id="detail-address" name="detail-address">
+        </div>
+
+        <!-- 회원가입 버튼 -->
+        <div class="button-container">
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

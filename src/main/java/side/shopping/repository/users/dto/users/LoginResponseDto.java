@@ -1,9 +1,11 @@
 package side.shopping.repository.users.dto.users;
 
+import lombok.Builder;
 import lombok.Getter;
 import side.shopping.domain.users.Role;
 
 @Getter
+@Builder
 public class LoginResponseDto {
 
     private String userId;

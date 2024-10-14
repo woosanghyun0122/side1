@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-btn:hover {
+    background-color: #0056b3;
+}
+
+.links {
+    margin-top: 20px;
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 버튼 중앙 정렬 */
+    align-items: center; /* 수직 정렬 */
+}
+
+.field-error {
+ border-color: #dc3545;
+ color: #dc3545;
+ }
+
+.links a {
+    display: block;
+    margin: 5px 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}

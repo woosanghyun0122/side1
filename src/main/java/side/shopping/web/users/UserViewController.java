@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import side.shopping.repository.users.dto.users.LoginDto;
 import side.shopping.web.users.service.UsersService;
 
 @Slf4j
@@ -19,13 +20,14 @@ public class UserViewController {
     private UsersService usersService;
 
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
+        model.addAttribute("loginDto", new LoginDto());
         return "user/login";
     }
 
-    @GetMapping("/join")
+    @GetMapping("/signUp")
     public String join() {
-        return "user/join";
+        return "user/signUp";
     }
 
     @GetMapping("/myPage")

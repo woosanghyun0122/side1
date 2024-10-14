@@ -51,12 +51,12 @@ class UsersServiceTest {
     }
 
     @Test
-    void login() {
+    void login() throws IllegalAccessException {
 
         LoginDto loginCheck = new LoginDto("admin", "1234");
         LoginDto loginCheck2 = new LoginDto("admin1", "1234");
 
-        LoginResponseDto user = service.login(loginCheck);
+        Users user = service.login(loginCheck);
         log.info("user={}", user);
 
         // 로그인 정상 테스트

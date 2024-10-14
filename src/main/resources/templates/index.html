@@ -5,19 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Mall</title>
     <link rel="stylesheet" th:href="@{../css/index.css}">
+    <link rel="stylesheet" th:href="@{../css/header.css}">
 </head>
 <body>
-<header>
-    <div class="logo">My Shopping Mall</div>
-    <nav>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Products</a></li>gi
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
-</header>
+
+<!-- 상단바 포함 -->
+<div th:replace="~{fragments/header :: header}"></div>
 
 <section class="banner">
     <img src="https://via.placeholder.com/1200x400" alt="Banner">
@@ -60,5 +53,6 @@
 <footer>
     <p>&copy; 2024 My Shopping Mall</p>
 </footer>
+
 </body>
 </html>
