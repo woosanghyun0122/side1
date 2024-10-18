@@ -56,21 +56,11 @@ public class Users {
 
     public void updateUserInfo(UpdateUserDto dto) {
         this.id = dto.getId();
-        this.nickName = dto.getNickname();
+        this.nickName = dto.getNickName();
         this.phone = dto.getPhone();
         this.email = dto.getEmail();
         this.address1 = dto.getAddress1();
         this.address2 = dto.getAddress2();
-    }
-
-    public void saveUser(PersistUserDto dto) {
-        this.userid = dto.getUserid();
-        this.password = dto.getPassword();
-        this.userName = dto.getUserName();
-        this.nickName = dto.getNickName();
-        this.phone = dto.getPhone();
-        this.email = dto.getEmail();
-        this.role = dto.getRole();
     }
 
     @PrePersist

@@ -1,0 +1,147 @@
+/* mypage.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.signup-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 150px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.form-error-group{
+        display: flex; /* input과 button을 한 줄에 배치 */
+        align-items: center; /* input과 button이 세로로 가운데 정렬 */
+        margin-bottom: 20px; /* input과 field-error 사이 간격 */
+}
+
+label {
+    font-weight: bold;
+    color: #555;
+    margin-right: 10px;
+    width: 100px; /* 아이디와 같은 넓이로 레이블 고정 */
+}
+
+input[type="text"],
+input[type="email"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+    outline: none;
+    border-color: #888;
+}
+
+.check-btn {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.check-btn:hover {
+    background-color: #0056b3;
+}
+
+.button-group{
+        display: flex;
+        align-items: center;
+}
+
+.submit-btn {
+    width: 48%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+    text-align: left;
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-left:110px;
+    margin-bottom: 20px;
+ }
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+
+button[type="submit"] {
+    margin-right: 4%;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    margin-top: 50px;
+}
+
+.availability-status {
+    margin-top: 5px;
+    font-size: 14px;
+    color: red;
+}
+
+/* 모바일 디바이스에 대한 조정 */
+@media (max-width: 768px) {
+    .signup-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    label {
+        margin-bottom: 5px;
+        width: auto;
+    }
+
+    .submit-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button[type="submit"] {
+        margin-right: 0;
+    }
+}

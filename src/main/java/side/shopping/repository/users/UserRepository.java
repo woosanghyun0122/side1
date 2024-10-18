@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<Users,Long> {
     Boolean existsByNickName(String nickName);
 
     // 회원 가입
-    Users save(Users user);
+    Users save(PersistUserDto user);
 
     // 회원 탈퇴
     void deleteById(Long id);
