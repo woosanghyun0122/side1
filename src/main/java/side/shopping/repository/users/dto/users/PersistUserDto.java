@@ -1,6 +1,7 @@
 package side.shopping.repository.users.dto.users;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class PersistUserDto {
 
     private String email;
 
-    @NotBlank
+    @NotNull
     private Role role;
 
 
