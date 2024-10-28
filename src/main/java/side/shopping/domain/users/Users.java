@@ -2,14 +2,14 @@ package side.shopping.domain.users;
 
 import jakarta.persistence.*;
 import lombok.*;
-import side.shopping.repository.users.dto.users.PersistUserDto;
 import side.shopping.repository.users.dto.users.UpdateUserDto;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
 public class Users {
 
     @Id
@@ -28,7 +28,7 @@ public class Users {
     @Column(name = "nickname")
     private String nickName;
 
-    @Column(name = "phone")
+    @Column(name = "phone",unique = true)
     private String phone;
 
     @Column(name = "email")
@@ -52,6 +52,18 @@ public class Users {
 
 
     public Users() {
+    }
+
+    public Users(String userid, String password, String userName, String nickName, String phone, String email, String address1, String address2, Role role) {
+        this.userid = userid;
+        this.password = password;
+        this.userName = userName;
+        this.nickName = nickName;
+        this.phone = phone;
+        this.email = email;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.role = role;
     }
 
     public void updateUserInfo(UpdateUserDto dto) {

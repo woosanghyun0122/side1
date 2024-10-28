@@ -74,6 +74,7 @@ input[type="email"]:focus {
 .button-group{
         display: flex;
         align-items: center;
+        justify-content: space-between;
 }
 
 .submit-btn {

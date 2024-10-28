@@ -2,28 +2,39 @@
 header {
     background-color: #2c3e50;
     color: white;
-    padding: 20px;
+    padding: 5px;
+    position: fixed; /* 화면 상단에 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
 }
 
+/* .navbar 설정 */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; /* 너비를 100%로 변경 */
-    max-width: 1200px;
-    margin: 0 auto; /* 중앙 정렬 */
+    width: 100%;
+    max-width: 1300px; /* 중앙에 고정된 너비 */
+    margin: 0 auto;
+    height: 60px; /* 상단바 높이 고정 */
 }
 
+/* 로고를 좌측 끝에 고정 */
 .logo {
     font-size: 1.5em;
     font-weight: bold;
     color: white;
     text-decoration: none;
+    margin-left: 0px; /* 좌측 끝에서 약간 떨어짐 */
 }
 
+/* 메뉴를 가운데 정렬 */
 nav {
     display: flex;
-    flex: 1; /* 메뉴가 로고와 같은 줄에 위치하도록 수정 */
+    justify-content: center;
+    flex: 1;
 }
 
 nav ul.menu {
@@ -31,13 +42,14 @@ nav ul.menu {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: flex-end; /* 오른쪽 정렬 */
-    flex-wrap: nowrap; /* 줄바꿈 방지 */
-    gap: 20px; /* 항목 간 간격 추가 */
+    gap: 20px; /* 메뉴 항목 간 간격 */
+    margin-right: 100px;
+    margin-left: 200px;
 }
 
+/* 메뉴 링크 스타일 */
 nav ul li {
-    position: relative;
+    position: relative; /* 드롭다운을 위한 위치 설정 */
 }
 
 nav ul li a {
@@ -47,17 +59,18 @@ nav ul li a {
 }
 
 nav ul li:hover .dropdown {
-    display: block;
+    display: block; /* 드롭다운 표시 */
 }
 
 nav ul li .dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
+    display: none; /* 기본적으로 드롭다운 숨김 */
+    position: absolute; /* 드롭다운 위치 설정 */
+    top: 100%; /* 부모 요소 바로 아래에 표시 */
     left: 0;
     background-color: #34495e;
     padding: 10px 0;
     border-radius: 5px;
+    z-index: 1001; /* 드롭다운이 다른 요소 위에 표시되도록 설정 */
 }
 
 nav ul li .dropdown li {
@@ -74,18 +87,23 @@ nav ul li .dropdown li a:hover {
     background-color: #3d566e;
 }
 
+/* 유저 메뉴를 우측 끝에 고정 */
 .user-menu {
     display: flex;
     align-items: center;
-    gap: 10px; /* 아이콘 간 간격 추가 */
+    gap: 10px;
+    margin-left: 50px
+    margin-right: 0px; /* 우측 끝에서 약간 떨어짐 */
 }
 
 .user-menu a {
     color: white;
     text-decoration: none;
     padding: 10px;
-    display: flex;
-    align-items: center;
+}
+
+.user-menu span {
+    font-size: 15px;
 }
 
 .user-menu a.login {

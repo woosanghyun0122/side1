@@ -6,81 +6,131 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import side.shopping.domain.users.Users;
+import side.shopping.repository.users.dto.users.FindUserDto;
 import side.shopping.repository.users.dto.users.LoginDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.repository.users.dto.users.UpdateUserDto;
 import side.shopping.web.users.service.UsersService;
 
-import javax.naming.AuthenticationException;
-import java.security.InvalidParameterException;
-import java.util.NoSuchElementException;
-
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserApiController {
 
     @Autowired
     private UsersService service;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Validated LoginDto dto, HttpServletRequest request) {
+    public ResponseEntity<?> login(@RequestBody @Validated LoginDto dto
+            , HttpServletRequest request
+            , @RequestParam(value = "redirectURL" , defaultValue = "/") String redirectURL) {
 
-        try {
-            LoginResponseDto loginUser = service.login(dto);
+        log.info("redirectURL ={}", redirectURL);
 
-            // 비밀번호 확인 로직
-                HttpSession session = request.getSession(true);
+        LoginResponseDto loginUser = service.login(dto);
 
-                session.setAttribute("loginUser", loginUser);
-                log.info("session={}", session.getAttribute("loginUser"));
+        // 비밀번호 확인 로직
+        HttpSession session = request.getSession(true);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("알 수 없는 오류가 발생하였습니다.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).build();
+        session.setAttribute("loginUser", loginUser);
+        log.info("session={}", session.getAttribute("loginUser"));
+
+        return ResponseEntity.status(HttpStatus.OK).body(redirectURL);
+
     }
 
-    @GetMapping("/isExistNickName")
-    public ResponseEntity<?> isExistNickName(@RequestParam("nickName") String nickName) {
+    @PostMapping("/find-userid")
+    public ResponseEntity<String> findUserid(@RequestBody @Validated FindUserDto dto) {
 
-        try {
-            boolean isExist = service.isExistNickname(nickName);
-            log.info("isExist={} nickName={}", isExist,nickName);
-
-            if (isExist) {
-                return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("이미 존재하는 닉네임입니다.");
-            } else {
-                return ResponseEntity.status(HttpStatus.OK).body("사용 가능한 닉네임입니다.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("오류가 발생하였습니다.");
-        }
+        String findId = service.findUserInfo(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(findId);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/find-pw")
+    public ResponseEntity<String> findPw(@RequestBody @Validated FindUserDto dto) {
+
+        String findPw = service.findUserInfo(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(findPw);
+    }
+
+
+    @GetMapping("/check-userid/{userid}")
+    public ResponseEntity<?> isExistUserid(@PathVariable("userid") @Validated String userid) {
+
+        boolean isExist = service.isExistUserid(userid);
+
+        if (isExist) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 아이디입니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("사용 가능한 아이디입니다.");
+        }
+
+    }
+
+    @GetMapping("/check-nickname/{nickName}")
+    public ResponseEntity<?> isExistNickName(@PathVariable("nickName") @Validated String nickName) {
+
+        boolean isExist = service.isExistNickname(nickName);
+        log.info("isExist={} nickName={}", isExist, nickName);
+
+        if (isExist) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 닉네임입니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("사용 가능한 닉네임입니다.");
+        }
+
+    }
+
+    @PutMapping("/modify")
     public ResponseEntity<?> update(@RequestBody @Validated UpdateUserDto dto, HttpServletRequest request) {
 
+        Users updateUser = service.update(dto);
+        log.info("update={}", updateUser.getNickName());
+
+        HttpSession session = request.getSession(false);
+        LoginResponseDto loginResponseDto = service.sessionManage(updateUser);
+
+        session.setAttribute("loginUser", loginResponseDto);
+        log.info("updateNickname={}", loginResponseDto.getNickName());
+
+        return ResponseEntity.status(HttpStatus.OK).body("수정에 성공하였습니다.");
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> save(@RequestBody @Validated Users dto, HttpServletRequest request) {
+
         try {
-            Users updateUser = service.update(dto);
-            log.info("update={}", updateUser.getNickName());
 
-            HttpSession session = request.getSession(false);
-            LoginResponseDto loginResponseDto = service.sessionManage(updateUser);
+            boolean check = service.isExistPhone(dto.getPhone());
 
-            session.setAttribute("loginUser", loginResponseDto);
-            log.info("updateNickname={}", loginResponseDto.getNickName());
+            if (!check) {
+                Users saveUser = service.save(dto);
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("하나의 핸드폰 번호로 중복가입은 불가합니다.");
+            }
 
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("알수없는 오류가 발생하였습니다.");
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("개인 정보 수정에 실패하였습니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 사용자입니다.");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("수정에 성공하였습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("저장에 성공하였습니다.");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
+
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("탈퇴에 실패하였습니다.");
+        }
+
+        log.info("id={}", id);
+        service.delete(id);
+        HttpSession session = request.getSession(false);
+        session.invalidate();
+        return ResponseEntity.status(HttpStatus.OK).body("정상적으로 탈퇴되었습니다.");
+
     }
 }

@@ -77,3 +77,14 @@ input {
     justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
     margin-top: 20px; /* 버튼과 이전 요소 간격 조정 */
 }
+
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+    text-align: left;
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-left:5px;
+    margin-bottom: 20px;
+ }
+

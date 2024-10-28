@@ -1,5 +1,6 @@
 package side.shopping.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @RestControllerAdvice
 public class ApiControllerAdvice {
 
@@ -31,5 +33,24 @@ public class ApiControllerAdvice {
         String message = exception.getMessage();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> HandlerCustomException(CustomException e) {
+
+        ErrorResponse errorResponse = ErrorResponse
+                .builder()
+                .message(e.getMessage())
+                .code(e.getCode())
+                .build();
+
+        log.info("errorCode ={}", errorResponse.getCode());
+        log.info("message ={}", errorResponse.getMessage());
+
+        if (errorResponse.getCode() < 9000) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 }

@@ -36,7 +36,6 @@ public class LogInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         // 컨트롤러에서 오류가 발생하면 호출되지 않는다.
 
-        log.info("postHandle [{}]", modelAndView);
     }
 
     @Override

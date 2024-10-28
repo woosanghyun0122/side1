@@ -1,7 +1,6 @@
 package side.shopping.web.users.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,17 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import side.shopping.domain.users.Role;
 import side.shopping.domain.users.Users;
 import side.shopping.repository.users.UserRepository;
 import side.shopping.repository.users.dto.users.LoginDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
-import side.shopping.repository.users.dto.users.PersistUserDto;
 import side.shopping.repository.users.dto.users.UpdateUserDto;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -68,10 +65,9 @@ class UsersServiceTest {
     }
 
     @Test
-    void save() {
+    void save() throws MethodArgumentNotValidException {
 
-        PersistUserDto user1 = new PersistUserDto("test1"
-                , "1234", "테스트", "테스트", "01012127878", "","","", Role.NORMAL);
+        Users user1 = new Users("test1", "1234", "테스트", "테스트", "01012127878","","서울시 영등포구","", Role.NORMAL);
         Users saveUser = service.save(user1);
 
         assertThat(service.isExistUserid("test1")).isTrue();
@@ -80,8 +76,7 @@ class UsersServiceTest {
     @Test
     void update() {
 
-        PersistUserDto user1 = new PersistUserDto("test1"
-                , "1234", "테스트", "테스트", "01012127878", "","","", Role.NORMAL);
+        Users user1 = new Users("test1", "1234", "테스트", "테스트", "01012127878","","서울시 영등포구","", Role.NORMAL);
         Users saveUser = service.save(user1);
 
         log.info("saveUser.getNickName()={}", saveUser.getNickName());
@@ -106,10 +101,8 @@ class UsersServiceTest {
     @Test
     void delete() {
 
-        PersistUserDto user1 = new PersistUserDto("test1"
-                , "1234", "테스트", "테스트", "01012127878", "","","", Role.NORMAL);
+        Users user1 = new Users("test1", "1234", "테스트", "테스트", "01012127878","","서울시 영등포구","", Role.NORMAL);
         Users saveUser = service.save(user1);
-
        // DELETE
         service.delete(saveUser.getId());
         boolean result = repository.existsById(saveUser.getId());

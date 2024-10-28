@@ -1,7 +1,8 @@
 <header xmlns:th="http://www.thymeleaf.org">
+    <link rel="stylesheet" th:href="@{../css/header.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <div class="navbar">
-        <a th:href="@{/}" class="logo">My Shopping Mall</a>
+        <a th:href="@{/}" class="logo">STORE</a>
         <nav>
             <ul class="menu">
                 <li>
@@ -32,7 +33,7 @@
         </nav>
 
         <div class="user-menu">
-            <span th:if="${session.loginUser != null}" th:text="${session.loginUser.nickName} + '님, 안녕하세요'"></span>
+            <span th:if="${session.loginUser != null}" th:text="${session.loginUser.nickName} + '님'"></span>
             <a th:href="@{/user/myPage}" class="icon" title="My Page">
                 <i class="fas fa-user"></i> <!-- 사용자 아이콘 -->
             </a>
@@ -44,6 +45,7 @@
             </a>
             <a th:if="${session.loginUser == null}" th:href="@{/user/login}" class="login">Login</a>
             <a th:if="${session.loginUser != null}" th:href="@{/user/logout}" class="login">Logout</a>
+            <a th:href="@{/user/selectRole}" class="login">Sign Up</a>
         </div>
     </div>
 </header>
