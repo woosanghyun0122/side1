@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/","/css/**","/js/**","/user/login", "/*.ico",
                         "/api/**","/user/selectRole","/error","/user/signup/**",
-                        "/user/find-id","/user/find-pw"
+                        "/user/find-id","/user/find-pw","/product/**"
 
 
                 );

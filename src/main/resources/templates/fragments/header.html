@@ -1,32 +1,50 @@
 <header xmlns:th="http://www.thymeleaf.org">
-    <link rel="stylesheet" th:href="@{../css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <div class="navbar">
         <a th:href="@{/}" class="logo">STORE</a>
         <nav>
             <ul class="menu">
                 <li>
-                    <a th:href="@{/}">Home</a>
-                </li>
-                <li>
-                    <a th:href="@{/product}">Products</a>
+                    <a th:href="@{/product/category/top/CAT001}">전자기기</a>
                     <ul class="dropdown">
-                        <li><a th:href="@{/product}">Category 1</a></li>
-                        <li><a th:href="@{/product}">Category 2</a></li>
+                        <li><a th:href="@{/product/category/CAT00101}">핸드폰</a></li>
+                        <li><a th:href="@{/product/category/CAT00102}">노트북</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a>About</a>
+                    <a th:href="@{/product/category/top/CAT002}">패션</a>
                     <ul class="dropdown">
-                        <li><a th:href="@{/product}">Our Story</a></li>
-                        <li><a th:href="@{/product}">Team</a></li>
+                        <li><a th:href="@{/product/category/CAT00201}">남성</a></li>
+                        <li><a th:href="@{/product/category/CAT00202}">여성</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a>Contact</a>
+                    <a th:href="@{/product/category/top/CAT003}">홈&키친</a>
                     <ul class="dropdown">
-                        <li><a th:href="@{/product}">Support</a></li>
-                        <li><a th:href="@{/product}">FAQs</a></li>
+                        <li><a th:href="@{/product/category/CAT00301}">가구</a></li>
+                        <li><a th:href="@{/product/category/CAT00302}">가전</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a th:href="@{/product/category/top/CAT004}">스포츠 & 아웃도어</a>
+                    <ul class="dropdown">
+                        <li><a th:href="@{/product/category/CAT00401}">스포츠용품</a></li>
+                        <li><a th:href="@{/product/category/CAT00402}">아웃도어</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a th:href="@{/product/category/top/CAT005}">도서</a>
+                    <ul class="dropdown">
+                        <li><a th:href="@{/product/category/CAT00501}">소설</a></li>
+                        <li><a th:href="@{/product/category/CAT00502}">기타</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <!--<a th:if="${ session.loginUser != null || session.loginUser.role == 'SELLER'}">상품관리</a> -->
+                    <ul class="dropdown">
+                        <li><a th:href="@{/product/category/CAT00501}">상품 등록</a></li>
+                        <li><a th:href="@{/product/category/CAT00502}">상품 수정</a></li>
                     </ul>
                 </li>
             </ul>

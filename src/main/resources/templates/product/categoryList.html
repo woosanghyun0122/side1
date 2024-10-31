@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Products</title>
+    <link rel="stylesheet" th:href="@{/css/categoryList.css}">
+    <script th:src="@{/js/detail.js}"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<form th:object="${list}">
+<!-- 카테고리 제목 표시 -->
+    <h1 class="category-title" th:if="${parentName} == null" th:text="${list[0].category.categoryName}">Category Name</h1>
+    <h1 class="category-title" th:if="${parentName} != null" th:text="${parentName}">Category Name</h1>
+
+
+    <!-- 카테고리 상품 리스트 -->
+    <div class="product-list">
+        <div th:each="product : ${list}" class="product-card">
+            <!-- 이미지 -->
+            <div class="product-image">
+                <img alt="Product Image">
+            </div>
+            <!-- 상세 정보 -->
+            <div class="product-info">
+                <h3 class="product-name" th:text="${product.name}">Product Name</h3>
+                <p class="product-price" th:text="${product.price+' 원'}">0 원</p>
+                <a th:href="@{'/product/detail/' + ${product.productId}}" class="view-details">상세 보기</a>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

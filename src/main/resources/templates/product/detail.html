@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+    <script th:src="@{/js/detail.js}"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+    <div class="product-view">
+        <!-- 이미지 섹션 -->
+        <div class="image-section">
+            <img alt="Product Image" class="product-image">
+        </div>
+
+        <!-- 상세 정보 섹션 -->
+        <form th:object="${detail}" method="POST">
+        <div class="details-section">
+            <h1 class="product-title" th:text="*{name}">Product Name</h1>
+            <p class="product-price" th:text="*{price}">Price</p>
+            <p class="product-description" th:text="*{content}"></p>
+
+            <!-- 옵션 선택 -->
+            <div class="product-options">
+                <label for="quantity">수량 선택:</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="10" value="1">
+            </div>
+            <!-- 구매 버튼 -->
+            <div class="purchase-section">
+                <button class="buy-now">즉시 구매</button>
+                <a class="icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+                <a class="icon" id="heart" th:onclick="toggleWishlist()">
+                    <i class="far fa-heart"></i> <!-- 빈 하트 아이콘 -->
+                </a>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

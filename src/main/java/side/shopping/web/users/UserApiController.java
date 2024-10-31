@@ -37,7 +37,6 @@ public class UserApiController {
         HttpSession session = request.getSession(true);
 
         session.setAttribute("loginUser", loginUser);
-        log.info("session={}", session.getAttribute("loginUser"));
 
         return ResponseEntity.status(HttpStatus.OK).body(redirectURL);
 

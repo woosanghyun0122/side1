@@ -2,7 +2,7 @@
 header {
     background-color: #2c3e50;
     color: white;
-    padding: 5px;
+    padding: 5px 20px; /* 패딩을 좌우에 추가하여 넓게 만듦 */
     position: fixed; /* 화면 상단에 고정 */
     top: 0;
     left: 0;
@@ -27,7 +27,6 @@ header {
     font-weight: bold;
     color: white;
     text-decoration: none;
-    margin-left: 0px; /* 좌측 끝에서 약간 떨어짐 */
 }
 
 /* 메뉴를 가운데 정렬 */
@@ -43,8 +42,6 @@ nav ul.menu {
     padding: 0;
     display: flex;
     gap: 20px; /* 메뉴 항목 간 간격 */
-    margin-right: 100px;
-    margin-left: 200px;
 }
 
 /* 메뉴 링크 스타일 */
@@ -92,8 +89,8 @@ nav ul li .dropdown li a:hover {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 50px
-    margin-right: 0px; /* 우측 끝에서 약간 떨어짐 */
+    margin-left: auto; /* 좌측에서의 간격을 자동으로 조정하여 우측 정렬 */
+    padding: 0 20px; /* 좌우 패딩 추가 */
 }
 
 .user-menu a {
