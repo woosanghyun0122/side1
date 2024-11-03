@@ -40,8 +40,8 @@
                         <li><a th:href="@{/product/category/CAT00502}">기타</a></li>
                     </ul>
                 </li>
-                <li>
-                    <!--<a th:if="${ session.loginUser != null || session.loginUser.role == 'SELLER'}">상품관리</a> -->
+                <li th:if="${session.loginUser != null && session.loginUser.role.name() == 'SELLER'}">
+                    <a>상품관리</a>
                     <ul class="dropdown">
                         <li><a th:href="@{/product/category/CAT00501}">상품 등록</a></li>
                         <li><a th:href="@{/product/category/CAT00502}">상품 수정</a></li>

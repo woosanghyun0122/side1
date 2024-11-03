@@ -25,7 +25,7 @@ public class HomeController {
         List<FindProductDto> topList = service.findTop();
 
         // 최신순 top5
-        List<FindProductDto> recentList = service.findTop();
+        List<FindProductDto> recentList = service.findRecently();
 
         model.addAttribute("TopList", topList);
         model.addAttribute("RecentList", recentList);

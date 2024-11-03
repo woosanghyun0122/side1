@@ -60,9 +60,12 @@ h2 {
 }
 
 .product-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
+    justify-content: space-between;
+    margin-right: 0px;
+    padding-right: 0px;
 }
 
 .product-card {
@@ -72,6 +75,7 @@ h2 {
     padding: 15px;
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
+    width: calc(20% - 20px); /* 화면 너비의 5분의 1로 설정 (5개를 한 줄에 표시) */
 }
 
 .product-card:hover {
