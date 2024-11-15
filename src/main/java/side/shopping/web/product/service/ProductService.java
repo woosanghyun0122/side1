@@ -12,12 +12,12 @@ import side.shopping.domain.product.Product;
 import side.shopping.exception.CustomException;
 import side.shopping.repository.product.ProductRepository;
 import side.shopping.repository.product.dto.FindProductDto;
+import side.shopping.repository.product.dto.FindSellerProductDto;
 import side.shopping.repository.product.dto.UpdateProductDto;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
 import static side.shopping.exception.ErrorCode.*;
 
 @Slf4j
@@ -126,6 +126,34 @@ public class ProductService {
     }
 
     /**
+     * 판매자 상품 조회
+     */
+    public List<FindSellerProductDto> sellerProductList(String userid) {
+
+        if (!StringUtils.hasText(userid)) {
+            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
+        }
+
+        List<Product> list = repository.findByUser_Userid(userid);
+
+        if (list == null) {
+            throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
+        }
+
+        return list.stream()
+                .map(product -> {
+                    FindSellerProductDto dto = new FindSellerProductDto();
+                    dto.setProductId(product.getProductId());
+                    dto.setName(product.getName());
+                    dto.setPrice(product.getPrice());
+                    dto.setQuantity(product.getQuantity());
+                    dto.setSaleCount(product.getSaleCount());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 상품 등록
      */
     @Transactional
@@ -158,6 +186,9 @@ public class ProductService {
 
     }
 
+    /**
+     * 상품 삭제
+     * */
     @Transactional
     public void delete(Long id) {
         try {

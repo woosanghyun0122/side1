@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>판매자 상품 목록</title>
+    <link rel="stylesheet" th:href="@{/css/seller-product-list.css}">
+</head>
+<body>
+<div class="product-list-container">
+    <h1>판매자 상품 목록</h1>
+    <div class="product-list">
+        <!-- 반복되는 상품 아이템 -->
+        <div th:each="product : ${sellerList}" class="product-item">
+            <img src="path/to/image.jpg" alt="상품 이미지" class="product-image">
+            <div class="product-info">
+                <a th:href="@{/product/modify/{productId}(productId=${product.productId})}"><h2 class="product-name" th:text="${product.name}"></h2></a>
+                가격: <p class="product-price" th:text="${product.price}"></p>원
+                판매량: <p class="product-sales" th:text="${product.saleCount}"></p>개
+                재고: <p class="product-stock" th:text="${product.quantity}"></p>개
+            </div>
+        </div>
+        <!-- 추가 상품 아이템은 이 블록을 복제해서 추가 -->
+    </div>
+</div>
+</body>
+</html>

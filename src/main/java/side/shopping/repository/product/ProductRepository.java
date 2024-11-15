@@ -24,6 +24,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // 상위 카테고리별 조회
     List<Product> findByCategory_ParentId(String parentId);
 
+    //판매자 등록상품 조회
+    List<Product> findByUser_Userid(String userid);
+
     // 상품 등록
     Product save(Product product);
 

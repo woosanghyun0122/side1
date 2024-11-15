@@ -4,11 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import side.shopping.domain.product.Category;
 import side.shopping.domain.product.Product;
+import side.shopping.exception.CustomException;
+import side.shopping.exception.ErrorCode;
 import side.shopping.repository.product.dto.UpdateProductDto;
+import side.shopping.web.category.CategoryService;
 import side.shopping.web.product.service.ProductService;
+
+import java.util.List;
+
+import static side.shopping.exception.ErrorCode.*;
 
 @Slf4j
 @RestController
@@ -17,6 +26,21 @@ public class ProductApiController {
 
     @Autowired
     private ProductService service;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @PostMapping("/category")
+    public ResponseEntity<?> findCategory(@PathVariable("parentId") String parentId) {
+
+        if (!StringUtils.hasText(parentId)) {
+            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
+        }
+
+        List<Category> categoryList = categoryService.findLowerDepth(2,parentId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(categoryList);
+    }
 
     @PostMapping("/add")
     public ResponseEntity<?> save(@RequestBody @Validated Product product){
