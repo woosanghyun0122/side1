@@ -33,6 +33,9 @@ public class ProductViewController {
     private CategoryService categoryService;
 
 
+    /**
+     * 제품 상세보기
+     * */
     @GetMapping("/detail/{id}")
     public String productDetail(@PathVariable(name = "id") long id, Model model) {
 
@@ -42,6 +45,9 @@ public class ProductViewController {
         return "/product/detail";
     }
 
+    /**
+     * 카테고리별 조회
+     * */
     @GetMapping("/category/{categoryId}")
     public String categoryList(@PathVariable(name = "categoryId") String categoryId, Model model) {
 
@@ -50,12 +56,15 @@ public class ProductViewController {
         return "/product/categoryList";
     }
 
+    /**
+     * 카테고리별 조회 상위
+     * */
     @GetMapping("/category/top/{parentId}")
     public String parentList(@PathVariable(name = "parentId") String parentId, Model model) {
 
         List<Product> list = service.findByParentId(parentId);
 
-        List<Category> categories = categoryService.findHighestDepth();
+        List<Category> categories = categoryService.findDepth(1);
 
         String parentName = categories.stream()
                 .filter(name -> name.getCategoryId().equals(parentId))
@@ -68,6 +77,9 @@ public class ProductViewController {
         return "/product/categoryList";
     }
 
+    /**
+     * 판매자 물건 조회
+     * */
     @GetMapping("/seller/list")
     public String sellerProductList(HttpSession session,Model model) {
 
@@ -79,16 +91,28 @@ public class ProductViewController {
         return "/product/seller-product-list";
     }
 
+    /**
+     * 판매 상품 등록
+     * */
     @GetMapping("/add")
     public String productAdd(Model model) {
 
         Product product = new Product();
         model.addAttribute("addProduct", product);
 
-        List<Category> list= categoryService.findHighestDepth();
+        List<Category> parentList= categoryService.findDepth(1);
+        List<Category> lowerList= categoryService.findDepth(2);
+        model.addAttribute("parentCategory", parentList);
+        model.addAttribute("lowerCategory", lowerList);
+
+
+
         return "/product/product-form";
     }
 
+    /**
+     * 판매 상품 수정
+     */
     @GetMapping("/modify")
     public String productModify(@PathVariable(name = "productId") Long productId, Model model) {
 

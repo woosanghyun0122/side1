@@ -22,12 +22,12 @@ public class CategoryService {
 
 
     /**
-     *  최상위뎁스 조회
+     *  뎁스별 카테고리 조회 조회
      * */
-    public List<Category> findHighestDepth() {
+    public List<Category> findDepth(int i) {
 
 
-        List<Category> list = repository.findByDepth(1);
+        List<Category> list = repository.findByDepth(i);
 
         if (list == null) {
             throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());

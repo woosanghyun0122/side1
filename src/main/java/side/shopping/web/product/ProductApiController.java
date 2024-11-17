@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,18 +31,10 @@ public class ProductApiController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/category")
-    public ResponseEntity<?> findCategory(@PathVariable("parentId") String parentId) {
 
-        if (!StringUtils.hasText(parentId)) {
-            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
-        }
-
-        List<Category> categoryList = categoryService.findLowerDepth(2,parentId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(categoryList);
-    }
-
+    /**
+     * 저장
+     * */
     @PostMapping("/add")
     public ResponseEntity<?> save(@RequestBody @Validated Product product){
 
@@ -53,6 +46,9 @@ public class ProductApiController {
         }
     }
 
+    /**
+     * 수정
+     * */
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@RequestBody @Validated UpdateProductDto dto) {
 

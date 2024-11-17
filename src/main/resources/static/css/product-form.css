@@ -73,3 +73,13 @@ h1 {
 .btn-reset:hover {
     background-color: #d4d4d4;
 }
+
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+    text-align: left;
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-left:5px;
+    margin-bottom: 20px;
+ }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import side.shopping.domain.users.Users;
 import side.shopping.repository.product.dto.UpdateProductDto;
@@ -20,30 +21,32 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @Column
+    @Column(name = "name")
     @NotBlank(message = "상품명을 입력하세요")
     private String name;
 
-    @Column
+    @Column(name = "price")
     @NotNull(message = "금액을 입력해주세요")
     @Min(value = 100,message = "100원 이상 입력해주세요")
     @Max(value = 100000000,message = "100,000,000원 이상의 상품은 등록할 수 없습니다.")
     private int price;
 
-    @Column
+    @Column(name = "content")
     @NotBlank(message = "내용을 입력해주세요")
     private String content;
 
-    @Column
+    @Column(name = "quantity")
     @NotNull
     @Min(value = 10,message = "최소 등록 수량은 10개입니다.")
     @Max(value = 5000,message = "5000개 이상의 상품은 등록할 수 없습니다.")
     private int quantity;
 
     @Column(name = "sale_count")
+    @ColumnDefault("0")
     private int saleCount;
 
     @Column(name = "view_count")
+    @ColumnDefault("0")
     private int viewCount;
 
     @ManyToOne
