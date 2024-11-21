@@ -94,7 +94,7 @@ public class ProductViewController {
     /**
      * 판매 상품 등록
      * */
-    @GetMapping("/add")
+    @GetMapping("/seller/add")
     public String productAdd(Model model) {
 
         Product product = new Product();
@@ -106,14 +106,13 @@ public class ProductViewController {
         model.addAttribute("lowerCategory", lowerList);
 
 
-
         return "/product/product-form";
     }
 
     /**
      * 판매 상품 수정
      */
-    @GetMapping("/modify")
+    @GetMapping("/seller/modify")
     public String productModify(@PathVariable(name = "productId") Long productId, Model model) {
 
         if (productId == null) {

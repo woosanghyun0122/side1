@@ -6,10 +6,12 @@ function changeLowerCategory(){
 
         // 부모 카테고리에서 선택된 값 가져오기
         var parentCategory = document.getElementById("parentCategory").value;
+        var lowerCategory = document.getElementById('lowerCategory');
+        lowerCategory.value = "";
+        lowerCategory.disabled = true;
 
         if(parentCategory != ""){
 
-            var lowerCategory = document.getElementById('lowerCategory');
             lowerCategory.disabled = false;
         }
         // 모든 하위 카테고리 옵션을 가져오기
@@ -41,9 +43,13 @@ function save(){
     var parentId = document.getElementById('parentCategory').value;
     var categoryId = document.getElementById('lowerCategory').value;
     document.getElementById('nameError').innerText = '';
-    document.getElementById('pricedError').innerText = '';
+    document.getElementById('priceError').innerText = '';
     document.getElementById('contentError').innerText = '';
     document.getElementById('quantityError').innerText = '';
+    document.getElementById('parentError').innerText = '';
+    document.getElementById('lowerError').innerText = '';
+
+    console.log(categoryId);
 
     const saveProduct = {
         name : name,
@@ -65,7 +71,7 @@ function save(){
             if(response.status == 201){
                             return response.text().then(message =>{
                                 alert(message);
-                                window.location.href = '/user/login';
+                                window.location.href = '/product/seller/list';
                             })
                         }
                         else if(response.status == 409){
@@ -91,6 +97,12 @@ function save(){
                                           }
                                           else if(key == 'quantity'){
                                                document.getElementById('quantityError').innerText = errorMessage[key];
+                                          }
+                                          else if(key == 'parentId'){
+                                               document.getElementById('parentError').innerText = errorMessage[key];
+                                          }
+                                          else if(key == 'categoryId'){
+                                               document.getElementById('lowerError').innerText = errorMessage[key];
                                           }
                                 }
                             })

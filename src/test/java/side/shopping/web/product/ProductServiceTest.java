@@ -86,7 +86,7 @@ class ProductServiceTest {
     void save() {
 
         Product product = settingProduct();
-        Product saveProduct = service.save(product);
+        Product saveProduct = repository.save(product);
 
         Optional<Product> findProduct = repository.findById(product.getProductId());
         assertThat(findProduct).isNotNull();
@@ -98,7 +98,7 @@ class ProductServiceTest {
     void update() {
 
         Product product = settingProduct();
-        Product saveProduct = service.save(product);
+        Product saveProduct = repository.save(product);
 
         UpdateProductDto dto = UpdateProductDto
                 .builder()
@@ -119,7 +119,7 @@ class ProductServiceTest {
     void delete() {
 
         Product product = settingProduct();
-        Product saveProduct = service.save(product);
+        Product saveProduct = repository.save(product);
 
         service.delete(saveProduct.getProductId());
         Optional<Product> result = repository.findById(saveProduct.getProductId());
@@ -132,7 +132,6 @@ class ProductServiceTest {
 
         Users user = userRepository.findByUserid("seller3")
                 .orElseThrow(() -> new NoSuchElementException());
-
 
 
         Category category = categoryRepository.findById("CAT001")

@@ -11,7 +11,7 @@
 <div class="form-container">
     <h1>상품 등록</h1>
 
-    <form th:obejct="${addProduct}" method="post">
+    <form th:object="${addProduct}" method="post">
 
         <div class="form-group">
             <label for="name">상품명:</label>
@@ -40,21 +40,23 @@
         <div class="form-group">
             <label for="parentCategory">카테고리:</label>
             <select id="parentCategory" name="category" onchange="changeLowerCategory()">
-                <option>-- 전체 --</option>
+                <option value="">-- 전체 --</option>
                 <option th:each="category : ${parentCategory}"
                         th:value="${category.categoryId}"
                         th:text="${category.categoryName}"
                         >
                 </option>
             </select>
+            <div class="field-error" id="parentError"></div>
             <select id="lowerCategory" name="category" disabled>
-                <option>-- 전체 --</option>
+                <option value="">-- 전체 --</option>
                 <option th:each="category : ${lowerCategory}"
                         th:value="${category.categoryId}"
                         th:text="${category.categoryName}"
                         th:data-parent-id="${category.parentId}">
                 </option>
             </select>
+            <div class="field-error" id="lowerError"></div>
         </div>
 
         <div class="form-group">

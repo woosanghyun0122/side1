@@ -12,7 +12,9 @@ public enum ErrorCode {
     SERVER_ERROR(9000,"알 수 없는 오류가 발생하였습니다."),
     SAVE_ERROR(9001,"저장에 실패하였습니다."),
     UPDATE_ERROR(9002,"수정에 실패하였습니다."),
-    DELETE_ERROR(9003, "저장에 실패하였습니다.");
+    DELETE_ERROR(9003, "저장에 실패하였습니다."),
+    SELECT_ERROR(9004, "조회에 실패하였습니다.")
+    ;
 
     private final int code;
     private final String message;

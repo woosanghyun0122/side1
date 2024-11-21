@@ -1,5 +1,7 @@
 package side.shopping.web.product;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,9 @@ import side.shopping.domain.product.Category;
 import side.shopping.domain.product.Product;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
+import side.shopping.repository.product.dto.SaveProductDto;
 import side.shopping.repository.product.dto.UpdateProductDto;
+import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.category.CategoryService;
 import side.shopping.web.product.service.ProductService;
 
@@ -36,10 +40,15 @@ public class ProductApiController {
      * 저장
      * */
     @PostMapping("/add")
-    public ResponseEntity<?> save(@RequestBody @Validated Product product){
+    public ResponseEntity<?> save(@RequestBody @Validated SaveProductDto product, HttpServletRequest request){
+
+        HttpSession session = request.getSession(false);
+        LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
+
+        log.info("loginUSer={}", loginUser.getUserId());
 
         try {
-            Product addProduct = service.save(product);
+            Product addProduct = service.save(product,loginUser);
             return ResponseEntity.status(HttpStatus.CREATED).body("정상적으로 등록되었습니다");
         }catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 상품입니다.");

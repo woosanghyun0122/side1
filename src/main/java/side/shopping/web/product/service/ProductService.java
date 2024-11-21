@@ -2,21 +2,31 @@ package side.shopping.web.product.service;
 
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import side.shopping.domain.product.Category;
 import side.shopping.domain.product.Product;
+import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
+import side.shopping.repository.category.CategoryRepository;
 import side.shopping.repository.product.ProductRepository;
 import side.shopping.repository.product.dto.FindProductDto;
 import side.shopping.repository.product.dto.FindSellerProductDto;
+import side.shopping.repository.product.dto.SaveProductDto;
 import side.shopping.repository.product.dto.UpdateProductDto;
+import side.shopping.repository.users.UserRepository;
+import side.shopping.repository.users.dto.users.LoginResponseDto;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import static side.shopping.exception.ErrorCode.*;
 
@@ -26,6 +36,12 @@ public class ProductService {
 
     @Autowired
     private ProductRepository repository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     /**
@@ -157,9 +173,20 @@ public class ProductService {
      * 상품 등록
      */
     @Transactional
-    public Product save(Product product) {
+    public Product save(SaveProductDto dto, LoginResponseDto loginUser) {
 
         try {
+
+            Category category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() ->new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
+
+            Users user = userRepository.findByUserid(loginUser.getUserId())
+                    .orElseThrow(()->new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
+
+
+            Product product = new Product();
+            product = product.saveDto(dto,category,user);
+
             return repository.save(product);
 
         } catch (EntityExistsException | DataIntegrityViolationException e) {
