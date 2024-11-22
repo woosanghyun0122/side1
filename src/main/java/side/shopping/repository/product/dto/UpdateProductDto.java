@@ -1,9 +1,7 @@
 package side.shopping.repository.product.dto;
 
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,15 +17,16 @@ public class UpdateProductDto {
     @NotBlank(message = "상품명을 입력하세요")
     private String name;
 
-    @NotBlank(message = "금액을 입력하세요")
-    @Size(min= 100, message = "100원 이상 입력해주세요")
+    @NotNull(message = "금액을 입력하세요")
+    @Min(value = 100,message = "100원 이상 입력해주세요")
     private int price;
 
     @NotBlank(message = "내용을 입력해주세요")
     private String content;
 
-    @NotBlank(message = "수량을 입력하세요")
-    @Size(min= 5, max = 1000, message = "수량은 5개 이상 1000이하 등록가능합니다.")
+    @NotNull(message = "수량을 입력하세요")
+    @Min(value = 5, message = "수량은 5개 이상 1000이하 등록가능합니다.")
+    @Max(value = 1000, message = "수량은 5개 이상 1000이하 등록가능합니다.")
     private int quantity;
 
     public UpdateProductDto() {

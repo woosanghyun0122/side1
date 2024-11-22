@@ -43,7 +43,7 @@
                 <li th:if="${session.loginUser != null && session.loginUser.role.name() == 'SELLER'}">
                     <a>상품관리</a>
                     <ul class="dropdown">
-                        <li><a th:href="@{/product/add}">상품 등록</a></li>
+                        <li><a th:href="@{/product/seller/add}">상품 등록</a></li>
                         <li><a th:href="@{/product/seller/list}">상품 수정</a></li>
                     </ul>
                 </li>

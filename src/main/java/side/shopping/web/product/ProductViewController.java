@@ -1,5 +1,8 @@
 package side.shopping.web.product;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
 import side.shopping.domain.product.Category;
 import side.shopping.domain.product.Product;
+import side.shopping.domain.users.Role;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
 import side.shopping.repository.product.dto.FindProductDto;
@@ -19,6 +26,8 @@ import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.category.CategoryService;
 import side.shopping.web.product.service.ProductService;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @Slf4j
@@ -83,12 +92,14 @@ public class ProductViewController {
     @GetMapping("/seller/list")
     public String sellerProductList(HttpSession session,Model model) {
 
-        LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
-        String sellerId = loginUser.getUserId();
-        log.info("seller={}", sellerId);
-        List<FindSellerProductDto> list = service.sellerProductList(sellerId);
-        model.addAttribute("sellerList", list);
-        return "/product/seller-product-list";
+
+            LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
+            String sellerId = loginUser.getUserId();
+            log.info("seller={}", sellerId);
+            List<FindSellerProductDto> list = service.sellerProductList(sellerId);
+            model.addAttribute("sellerList", list);
+            return "/product/seller-product-list";
+
     }
 
     /**
@@ -112,7 +123,7 @@ public class ProductViewController {
     /**
      * 판매 상품 수정
      */
-    @GetMapping("/seller/modify")
+    @GetMapping("/seller/modify/{productId}")
     public String productModify(@PathVariable(name = "productId") Long productId, Model model) {
 
         if (productId == null) {
@@ -124,4 +135,6 @@ public class ProductViewController {
 
         return "/product/productModify";
     }
+
+
 }
