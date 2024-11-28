@@ -38,9 +38,9 @@ public class ProductApiController {
 
     /**
      * 저장
-     * */
+     */
     @PostMapping("/add")
-    public ResponseEntity<?> save(@RequestBody @Validated SaveProductDto product, HttpServletRequest request){
+    public ResponseEntity<?> save(@RequestBody @Validated SaveProductDto product, HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
         LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
@@ -48,20 +48,30 @@ public class ProductApiController {
         log.info("loginUSer={}", loginUser.getUserId());
 
         try {
-            Product addProduct = service.save(product,loginUser);
+            Product addProduct = service.save(product, loginUser);
             return ResponseEntity.status(HttpStatus.CREATED).body("정상적으로 등록되었습니다");
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 상품입니다.");
         }
     }
 
     /**
      * 수정
-     * */
+     */
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@RequestBody @Validated UpdateProductDto dto) {
 
         service.update(dto);
-        return ResponseEntity.status(HttpStatus.OK).body("상품 정볼를 수정하였습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body("상품 정보를 수정하였습니다.");
+    }
+
+    /**
+     * 삭제
+     */
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<?> delete(@PathVariable("productId") Long productId) {
+
+        service.delete(productId);
+        return ResponseEntity.status(HttpStatus.OK).body("상품을 삭제하였습니다.");
     }
 }

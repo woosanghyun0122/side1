@@ -1,8 +1,11 @@
 package side.shopping.repository.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import side.shopping.domain.product.Product;
 
 import java.util.List;
@@ -26,6 +29,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     //판매자 등록상품 조회
     List<Product> findByUser_Userid(String userid);
+
+    @Modifying
+    @Transactional
+    @Query("update Product p set p.viewCount = p.viewCount +1 where p.productId = :productId")
+    void updateViews(@Param("productId") long productId);
+
+    @Modifying
+    @Transactional
+    @Query("update Product p set p.saleCount = p.saleCount +1 where p.productId = :productId")
+    void updateSaleCount(@Param("productId") long productId);
 
     // 상품 등록
     Product save(Product product);

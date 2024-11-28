@@ -1,12 +1,14 @@
 
 function modify(){
 
+    var productId = document.getElementById('productId').value;
     var name = document.getElementById('name').value;
     var price = document.getElementById('price').value;
     var quantity = document.getElementById('quantity').value;
     var content = document.getElementById('content').value;
 
     var modifyDto ={
+        productId : productId,
         name : name,
         price : price,
         quantity : quantity,
@@ -14,6 +16,7 @@ function modify(){
     }
 
     if(confirm("상품을 수정하시겠습니까?")){
+
         fetch('/api/product/modify',{
             method:'PUT',
             headers:{
@@ -60,6 +63,23 @@ function modify(){
                                                 alert(errorResponse.message);
                             })
                         }
+        })
+    }
+}
+
+
+function remove(){
+
+    if(confirm('이 상품을 삭제하시겠습니까?')){
+        var productId = parseInt(document.getElementById('productId').value);
+        fetch(`/api/product/delete/${productId}`,{
+            method:'DELETE'
+        })
+        .then(response =>{
+            return response.text().then(message =>{
+                alert(message);
+                window.location.href = '/product/seller/list';
+            })
         })
     }
 }

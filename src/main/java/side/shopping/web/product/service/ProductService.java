@@ -106,6 +106,30 @@ public class ProductService {
     }
 
     /**
+     * 조회 수 업데이트
+     */
+    public void viewCountUpdate(Long productId) {
+
+        try {
+            repository.updateViews(productId);
+        } catch (Exception e) {
+            throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
+        }
+    }
+
+    /**
+     * 조회 수 업데이트
+     */
+    public void saleCountUpdate(Long productId) {
+
+        try {
+            repository.updateSaleCount(productId);
+        } catch (Exception e) {
+            throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
+        }
+    }
+
+    /**
      * 카테고리별 조회
      */
     public List<Product> findByCategoryId(String category) {
@@ -200,6 +224,7 @@ public class ProductService {
     @Transactional
     public void update(UpdateProductDto dto) {
 
+            log.info("productId={}", dto.getProductId());
         try {
             Product product = repository.findById(dto.getProductId())
                     .orElseThrow(() -> new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage()));

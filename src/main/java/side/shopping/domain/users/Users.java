@@ -2,9 +2,12 @@ package side.shopping.domain.users;
 
 import jakarta.persistence.*;
 import lombok.*;
+import side.shopping.domain.order.Order;
 import side.shopping.repository.users.dto.users.UpdateUserDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -49,6 +52,9 @@ public class Users {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updated_at;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orderList = new ArrayList<Order>();
 
 
     public Users() {

@@ -46,9 +46,21 @@ public class ProductViewController {
      * 제품 상세보기
      * */
     @GetMapping("/detail/{id}")
-    public String productDetail(@PathVariable(name = "id") long id, Model model) {
+    public String productDetail(@PathVariable(name = "id") long id, Model model,HttpServletRequest request) {
 
+        HttpSession session = request.getSession(false);
         Product detail = service.findDetail(id);
+
+        if(session == null){
+            service.viewCountUpdate(id);
+        }
+        else{
+            LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
+            if (loginUser.getUserId() != detail.getUser().getUserid()) {
+                service.viewCountUpdate(id);
+            }
+        }
+
         model.addAttribute("detail", detail);
 
         return "/product/detail";

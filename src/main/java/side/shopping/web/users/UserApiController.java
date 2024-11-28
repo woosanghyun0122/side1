@@ -91,6 +91,7 @@ public class UserApiController {
         Users updateUser = service.update(dto);
         log.info("update={}", updateUser.getNickName());
 
+        // 세션 값 수정
         HttpSession session = request.getSession(false);
         LoginResponseDto loginResponseDto = service.sessionManage(updateUser);
 

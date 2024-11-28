@@ -5,11 +5,14 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
+import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.users.Users;
 import side.shopping.repository.product.dto.SaveProductDto;
 import side.shopping.repository.product.dto.UpdateProductDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Getter
@@ -50,6 +53,7 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -71,7 +75,8 @@ public class Product {
     }
 
     @Builder
-    public Product(String name, int price, String content, int quantity, int saleCount, int viewCount, Users user, Category category, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Product(Long productId, String name, int price, String content, int quantity, int saleCount, int viewCount, Users user, Category category) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.content = content;
@@ -80,9 +85,8 @@ public class Product {
         this.viewCount = viewCount;
         this.user = user;
         this.category = category;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
+
 
     public void modify(UpdateProductDto dto) {
 

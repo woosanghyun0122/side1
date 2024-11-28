@@ -19,6 +19,7 @@
         <!-- 상세 정보 섹션 -->
         <form th:object="${detail}" method="POST">
         <div class="details-section">
+            <p class="product-viewCount">[[*{viewCount}]]명이 조회했어요</p>
             <h1 class="product-title" th:text="*{name}">Product Name</h1>
             <p class="product-price" th:text="*{price}">Price</p>
             <p class="product-description" th:text="*{content}"></p>

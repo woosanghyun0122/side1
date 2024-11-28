@@ -8,11 +8,13 @@
 
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
+
 <div class="form-container">
     <h1>상품 수정</h1>
 
-    <form th:object="${product}" method="post" enctype="multipart/form-data">
-
+    <form th:object="${product}">
+        <input type="hidden" th:field="*{productId}">
         <div class="form-group">
             <label for="name">상품명:</label>
             <input type="text" th:field="*{name}">
@@ -37,17 +39,6 @@
             <div class="field-error" id="contentError"></div>
         </div>
 
-
-        <!--<div class="form-group">
-            <label for="category">카테고리:</label>
-            <select id="category" name="category">
-                <option
-                        th:value="${category.id}"
-                        th:text="${category.name}">
-                </option>
-            </select>
-        </div>-->
-
         <div class="form-group">
             <label for="image">이미지 업로드:</label>
             <input type="file" id="image" name="image">
@@ -55,7 +46,7 @@
 
         <div class="form-buttons">
             <button type="button" class="btn-save" th:onclick="modify()">수정</button>
-            <button type="button" class="btn-delete" th:onclick="delete()">삭제</button>
+            <button type="button" class="btn-delete" th:onclick="remove()">삭제</button>
         </div>
     </form>
 </div>
