@@ -37,7 +37,7 @@ public class OrderService {
             throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
         }
 
-        List<Order> userOrderList = repository.findByUsers_UseridOrderByOrderDateDesc(userid);
+        List<Order> userOrderList = repository.findByUser_UseridOrderByOrderDateDesc(userid);
 
         if (userOrderList.isEmpty()) {
             throw new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage());
@@ -81,7 +81,7 @@ public class OrderService {
 
         try {
             Order order = repository.findById(dto.getOrderNum())
-                    .orElseThrow(() -> new NoSuchElementException());
+                    .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(),SELECT_ERROR.getMessage()));
 
             order.updateToOrder(dto);
             return repository.save(order);

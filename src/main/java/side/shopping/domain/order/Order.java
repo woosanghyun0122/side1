@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "orders")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -68,6 +69,7 @@ public class Order {
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.orderDate = LocalDateTime.now();
     }
 
     @PreUpdate
@@ -105,20 +107,19 @@ public class Order {
                 .method(order.getMethod())
                 .totalCount(order.getTotalCount())
                 .totalPrice(order.getTotalPrice())
-                .orderDate(order.getOrderDate())
                 .build();
     }
 
     public void updateToOrder(UpdateOrderDto dto) {
 
-        Address address = Address.builder()
+        Address modifyAddress = Address.builder()
                 .zipCode(dto.getZipCode())
                 .address(dto.getAddress())
                 .addressDetail(dto.getAddressDetail())
                 .build();
 
         this.name = dto.getName();
-        this.address = address;
+        this.address = modifyAddress;
     }
 
 

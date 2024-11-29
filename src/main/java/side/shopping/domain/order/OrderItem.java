@@ -5,8 +5,10 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import side.shopping.domain.product.Product;
 import side.shopping.domain.users.Users;
+import side.shopping.repository.order.dto.UpdateOrderItemDto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,17 +18,13 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orderItem_id")
     private long id;
-
-    @ManyToOne
-    @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
-    private Users user;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num", nullable = false)
     private Order order;
@@ -35,7 +33,7 @@ public class OrderItem {
     private int amount;
 
     @Column
-    @ColumnDefault("0")
+    @ColumnDefault("1")
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
@@ -51,11 +49,10 @@ public class OrderItem {
 
 
     @Builder
-    public OrderItem(Product product, Order order, int amount, Status status) {
+    public OrderItem(Product product, Order order, int amount,Status status) {
         this.product = product;
         this.order = order;
         this.amount = amount;
-        this.totalPrice = (product.getPrice() * amount);
         this.status = status;
     }
 
@@ -69,4 +66,18 @@ public class OrderItem {
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void toOrderItem(UpdateOrderItemDto dto) {
+
+        this.status = dto.getStatus();
+        this.amount = dto.getAmount();
+    }
+
+    public void setTotalPrice(OrderItem item) {
+        this.totalPrice = item.getAmount() * item.getProduct().getPrice();
+    }
+
+
+
+
 }

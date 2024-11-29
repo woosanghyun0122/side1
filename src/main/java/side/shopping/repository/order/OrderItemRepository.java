@@ -10,7 +10,7 @@ import java.util.List;
 public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
 
     // 주문 내역별 조회
-    List<OrderItem> findByOrderNum(String orderNum);
+    List<OrderItem> findByOrder_OrderNum(String orderNum);
 
 
 }
