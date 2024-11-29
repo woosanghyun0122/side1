@@ -224,7 +224,9 @@ INSERT INTO `category` (`category_id`, `category_name`, `depth`, `parent_id`, `c
 
 -- side.`order` definition
 
-CREATE TABLE `order` (
+-- side.orders definition
+
+CREATE TABLE `orders` (
   `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `total_price` int DEFAULT NULL,
@@ -238,6 +240,7 @@ CREATE TABLE `order` (
   `total_count` int DEFAULT NULL,
   `req` varchar(100) DEFAULT NULL COMMENT '배송요청사항',
   `payment_method` varchar(100) DEFAULT NULL,
+  `zip_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`order_num`),
   KEY `order_users_FK` (`userid`),
   CONSTRAINT `order_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
@@ -245,8 +248,10 @@ CREATE TABLE `order` (
 
 -- side.order_item definition
 
+-- side.order_item definition
+
 CREATE TABLE `order_item` (
-  `id` varchar(255) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `product_id` int DEFAULT NULL,
   `amount` int DEFAULT NULL,
@@ -261,9 +266,9 @@ CREATE TABLE `order_item` (
   PRIMARY KEY (`id`),
   KEY `order_item_order_fk` (`order_num`),
   KEY `order_item_product_FK` (`product_id`),
-  CONSTRAINT `order_item_order_fk` FOREIGN KEY (`order_num`) REFERENCES `order` (`order_num`),
+  CONSTRAINT `order_item_order_fk` FOREIGN KEY (`order_num`) REFERENCES `orders` (`order_num`),
   CONSTRAINT `order_item_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- side.payment definition
 
