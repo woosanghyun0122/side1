@@ -1,5 +1,7 @@
 -- user 테이블 DDL
 
+-- side.users definition
+
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userid` varchar(255) NOT NULL,
@@ -13,7 +15,8 @@ CREATE TABLE `users` (
   `role` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_unique` (`userid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- user 테이블 데이터

@@ -1,6 +1,7 @@
 package side.shopping.web.order.service;
 
 import jakarta.persistence.EntityExistsException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static side.shopping.exception.ErrorCode.*;
 
+@Slf4j
 @Service
 public class OrderService {
 
@@ -84,7 +86,10 @@ public class OrderService {
                     .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(),SELECT_ERROR.getMessage()));
 
             order.updateToOrder(dto);
-            return repository.save(order);
+
+            log.info("order={}", order);
+            log.info("dto={}", dto);
+            return order;
         } catch (Exception e) {
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
         }

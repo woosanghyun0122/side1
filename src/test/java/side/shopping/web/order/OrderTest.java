@@ -1,5 +1,6 @@
 package side.shopping.web.order;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -131,6 +132,7 @@ public class OrderTest {
 
     @Test
     @DisplayName("주문 내역 수정")
+    @Transactional
     void modifyOrder() {
 
         // 주문 내역 저장
@@ -155,13 +157,31 @@ public class OrderTest {
 
         log.info("saveOrder={}", saveOrder.getAddress().getZipCode());
 
-        Order modifyOrder = orderService.modifyOrder(dto);
+        Order modifyOrder = new Order();
+        modifyOrder = orderService.modifyOrder(dto);
 
         log.info("modifyOrder={}", modifyOrder.getAddress().getZipCode());
-        log.info("saveOrder hashCode={}", System.identityHashCode(saveOrder));
-        log.info("modifyOrder hashCode={}", System.identityHashCode(modifyOrder));
 
-        assertThat(saveOrder.getAddress().getZipCode()).isEqualTo(modifyOrder.getAddress().getZipCode());
+        assertThat(modifyOrder.getAddress().getZipCode()).isEqualTo("999999");
+    }
+
+    @Test
+    @DisplayName("주문 상태 변경")
+    void modifyStatus() {
+
+        // 주문 내역 저장
+        List<OrderItem> itemList = settingItemList();
+        Order saveOrder = orderService.registerOrder(setOrder(),itemList);
+
+        itemList.stream()
+                .forEach(item ->{
+                    log.info("item.id={}", item.getId());
+                    item.setTotalPrice(item);
+                    item.setOrder(saveOrder);
+                    saveOrder.getOrderItemList().add(item);
+                });
+
+        // 주문 상태 변경
 
 
 
@@ -174,7 +194,7 @@ public class OrderTest {
     private Order setOrder() {
 
         Users cust1 = userRepository.findById(6L)
-                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         Address address = Address.builder()
                 .zipCode("123456")
