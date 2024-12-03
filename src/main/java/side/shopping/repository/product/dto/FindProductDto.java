@@ -17,6 +17,8 @@ public class FindProductDto {
 
     private int price;
 
+    private String sellerName;
+
     public FindProductDto() {
     }
 }

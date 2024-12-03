@@ -16,6 +16,7 @@ import side.shopping.exception.ErrorCode;
 import side.shopping.repository.order.OrderRepository;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
+import side.shopping.web.product.service.ProductService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,6 +30,9 @@ public class OrderService {
 
     @Autowired
     private OrderRepository repository;
+
+    @Autowired
+    private ProductService productService;
 
     /**
      * 회원별 주문 내역 조회하기
@@ -64,11 +68,14 @@ public class OrderService {
         }
 
         Order saveOrder = toSaveOrder(order, orderList);
+
         try {
+            orderList.stream()
+                    .forEach(item ->{
+                        productService.saleCountUpdate(item.getId());
+                    });
             return repository.save(saveOrder);
-        } catch (EntityExistsException | DataIntegrityViolationException e) {
-            throw new IllegalArgumentException();
-        } catch (RuntimeException e){
+        } catch (Exception e){
             throw new CustomException(SAVE_ERROR.getCode(), SAVE_ERROR.getMessage());
         }
 
@@ -86,9 +93,6 @@ public class OrderService {
                     .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(),SELECT_ERROR.getMessage()));
 
             order.updateToOrder(dto);
-
-            log.info("order={}", order);
-            log.info("dto={}", dto);
             return order;
         } catch (Exception e) {
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
@@ -104,9 +108,6 @@ public class OrderService {
         for (OrderItem orderItem : orderList) {
             order.getOrderItemList().add(orderItem);
         }
-        order.setTotalCount(order.registerTotalAmount(orderList));
-        order.setTotalPrice(order.registerTotalPrice(orderList));
-
         return order;
     }
 

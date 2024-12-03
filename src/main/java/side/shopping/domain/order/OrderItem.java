@@ -21,6 +21,10 @@ public class OrderItem {
     private long id;
 
     @ManyToOne
+    @JoinColumn(name = "userid",referencedColumnName = "userid",nullable = false)
+    private Users users;
+
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -31,6 +35,9 @@ public class OrderItem {
 
     @Column
     private int amount;
+
+    @Column
+    private String req;
 
     @Column
     @ColumnDefault("1")
@@ -71,6 +78,7 @@ public class OrderItem {
 
         this.status = dto.getStatus();
         this.amount = dto.getAmount();
+        this.req = dto.getReq();
     }
 
     public void setTotalPrice(OrderItem item) {

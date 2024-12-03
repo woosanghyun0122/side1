@@ -30,6 +30,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //판매자 등록상품 조회
     List<Product> findByUser_Userid(String userid);
 
+    @Query("select p from Product p where productId in :list")
+    List<Product> findOrderList(Long[] list);
+
     @Modifying
     @Transactional
     @Query("update Product p set p.viewCount = p.viewCount +1 where p.productId = :productId")

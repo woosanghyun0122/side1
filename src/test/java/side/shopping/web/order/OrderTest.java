@@ -24,6 +24,7 @@ import side.shopping.exception.ErrorCode;
 import side.shopping.repository.order.OrderItemRepository;
 import side.shopping.repository.order.OrderRepository;
 import side.shopping.repository.order.dto.UpdateOrderDto;
+import side.shopping.repository.order.dto.UpdateOrderItemDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
 import side.shopping.repository.product.ProductRepository;
 import side.shopping.repository.users.UserRepository;
@@ -182,8 +183,17 @@ public class OrderTest {
                 });
 
         // 주문 상태 변경
+        UpdateOrderItemDto dto = UpdateOrderItemDto.builder()
+                .id(itemList.get(0).getId())
+                .status(Status.PACKING)
+                .amount(10)
+                .build();
 
 
+        OrderItem modifyStatusItem = orderItemService.modifyOrderItem(dto);
+        log.info("orderItem={}", modifyStatusItem.getOrder().getAddress().getZipCode());
+        assertThat(modifyStatusItem.getStatus()).isEqualTo(Status.PACKING);
+        assertThat(modifyStatusItem.getAmount()).isEqualTo(10);
 
     }
 

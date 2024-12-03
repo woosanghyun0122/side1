@@ -12,5 +12,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     // 주문 내역별 조회
     List<OrderItem> findByOrder_OrderNum(String orderNum);
 
+    //판매자 판매 내역 조회
+
+
 
 }

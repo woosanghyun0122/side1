@@ -68,8 +68,8 @@ public class OrderItemService {
             OrderItem orderItem = repository.findById(dto.getId())
                     .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
-            orderItem.toOrderItem(dto);
-            return repository.save(orderItem);
+             orderItem.toOrderItem(dto);
+            return orderItem;
         } catch (Exception e) {
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
         }

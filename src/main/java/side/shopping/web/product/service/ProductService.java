@@ -4,6 +4,7 @@ package side.shopping.web.product.service;
 import jakarta.persistence.EntityExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Session;
@@ -248,6 +249,29 @@ public class ProductService {
         } catch (Exception e) {
             throw new CustomException(DELETE_ERROR.getCode(), DELETE_ERROR.getMessage());
         }
+    }
+
+    /**
+     * 주문 상품 조회
+     */
+    public List<FindProductDto> findOrderList(Long[] list) {
+
+        List<Product> orderList = repository.findOrderList(list);
+
+        if (orderList.isEmpty()) {
+            throw new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage());
+        }
+
+        return orderList.stream()
+                .map(product -> {
+                    FindProductDto dto = FindProductDto.builder()
+                            .productId(product.getProductId())
+                            .name(product.getName())
+                            .price(product.getPrice())
+                            .sellerName(product.getUser().getNickName())
+                            .build();
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
 }
