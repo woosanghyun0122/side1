@@ -1,9 +1,6 @@
 package side.shopping.repository.order.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import side.shopping.domain.order.Status;
 
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ public class FindOrderItemDto {
 
     private int productPrice;
 
+    @Setter
     private int amount;
 
     private Status status;

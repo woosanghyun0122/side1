@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import side.shopping.cache.CacheKeyGenerator;
 import side.shopping.cache.CacheService;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
+import side.shopping.repository.order.dto.FindOrderItemDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UpdateOrderItemDto;
 import side.shopping.repository.product.dto.FindProductDto;
@@ -18,6 +20,8 @@ import side.shopping.web.order.service.OrderService;
 import side.shopping.web.product.service.ProductService;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,19 +42,34 @@ public class OrderApiController {
     @Autowired
     private CacheService cacheService;
 
+//    /**
+//     * 장바구니 -> 주문 하기
+//     */
+//    @PostMapping("/cartPay")
+//    public ResponseEntity<?> orderList(@RequestBody Long[] list) {
+//
+//        return
+//    }
+
     /**
-     * 주문 하기
+     * 즉시 구매
      */
+    @PostMapping("/buyInstant")
+    public ResponseEntity<?> orderItem(@RequestBody FindOrderItemDto dto) {
 
-    @Cacheable(cacheNames = "orderList", key = "#uuid" )
-    @PostMapping("/findOrderList")
-    public ResponseEntity<?> orderList(@RequestBody Long[] list, String uuid) {
+        FindOrderItemDto item = productService.instantOrderItem(dto.getProductId());
+        item.setAmount(dto.getAmount());
 
-        List<FindProductDto> orderList = productService.findOrderList(list);
-        uuid = createUuid();
-        cacheService.setOrderList(uuid,orderList);
+        List<FindOrderItemDto> list = new ArrayList<>();
+        list.add(item);
 
-        return ResponseEntity.status(HttpStatus.OK).body(uuid);
+        LocalDateTime time = LocalDateTime.now();
+        String key = UUID.randomUUID()
+                .toString().replace("-", "").substring(0, 8)
+                + time;
+        cacheService.setOrderList(key,list);
+
+        return ResponseEntity.status(HttpStatus.OK).body(key);
     }
 
 
@@ -86,18 +105,6 @@ public class OrderApiController {
     }
 
 
-    /**
-     * 8자리 uuid 생성
-     * */
-    private static String createUuid() {
 
-        String uuid = UUID.randomUUID().toString();
-        BigInteger bigInt = new BigInteger(uuid, 16);
-
-        String base62 = bigInt.toString(36);
-
-        return base62.substring(0, 8);
-
-    }
 
 }

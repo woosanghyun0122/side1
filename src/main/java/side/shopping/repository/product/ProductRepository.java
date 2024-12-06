@@ -31,7 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByUser_Userid(String userid);
 
     @Query("select p from Product p where productId in :list")
-    List<Product> findOrderList(Long[] list);
+    List<Product> findOrderList(@Param("list") Long[] list);
 
     @Modifying
     @Transactional

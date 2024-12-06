@@ -31,6 +31,7 @@ public class Order {
     @Column
     private String name;
 
+    @Setter
     @Embedded
     private Address address;
 
@@ -60,7 +61,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
-    private Users user;
+    private Users user = new Users();
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> orderItemList = new ArrayList<OrderItem>();

@@ -17,6 +17,7 @@ import side.shopping.domain.product.Product;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
 import side.shopping.repository.category.CategoryRepository;
+import side.shopping.repository.order.dto.FindOrderItemDto;
 import side.shopping.repository.product.ProductRepository;
 import side.shopping.repository.product.dto.FindProductDto;
 import side.shopping.repository.product.dto.FindSellerProductDto;
@@ -252,9 +253,31 @@ public class ProductService {
     }
 
     /**
-     * 주문 상품 조회
+     * 즉시구매 상품 조회
      */
-    public List<FindProductDto> findOrderList(Long[] list) {
+    public FindOrderItemDto instantOrderItem(Long id) {
+
+        if (id == null) {
+            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
+        }
+
+        Product item = repository.findById(id)
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
+
+        return FindOrderItemDto.builder()
+                .productId(item.getProductId())
+                .productName(item.getName())
+                .productPrice(item.getPrice())
+                .build();
+
+    }
+
+
+
+    /**
+     * 장바구니 -> 결제할 상품 조회
+     */
+    public List<FindProductDto> fromCartOrderList(Long[] list) {
 
         List<Product> orderList = repository.findOrderList(list);
 

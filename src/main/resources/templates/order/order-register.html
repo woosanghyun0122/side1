@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>주문하기</title>
-    <link rel="stylesheet" href="/css/order-registers.css">
+    <link rel="stylesheet" href="/css/order-register.css">
     <script th:src="@{/js/order-register.js}"></script>
 </head>
 <body>
@@ -12,16 +12,16 @@
     <!-- 주문자 정보 -->
     <section class="order-info">
         <h2>배송 정보</h2>
-        <form method="POST" th:object="${order}">
+        <form th:object="${order}">
             <label for="name">받는 분</label>
             <input type="text" th:field="*{name}">
 
             <label for="zipcode">우편번호</label>
-            <input type="text"  th:field="*{zipcode}">
+            <input type="text"  th:field="*{address.zipCode}">
 
             <label for="address">주소</label>
-            <input type="text"  th:field="*{address}">
-            <input type="text"  th:field="*{addressDetail}">
+            <input type="text"  th:field="*{address.address}">
+            <input type="text"  th:field="*{address.addressDetail}">
 
             <label for="phone">핸드폰 번호</label>
             <input type="text"  th:field="*{phone}">
@@ -31,11 +31,9 @@
     <!-- 결제 수단 -->
     <section class="payment-method">
         <h2>결제 수단</h2>
-        <select name="paymentMethod" id="paymentMethod">
-            <option value="card">신용카드</option>
-            <option value="bank">무통장입금</option>
-            <option value="mobile">휴대폰 결제</option>
-        </select>
+        <div th:each="method: ${method}">
+            <input type="radio" th:field="*{method}" th:value="*{method.value}" th:text="*{method.description}">
+        </div>
     </section>
 
     <!-- 주문 상품 -->
@@ -44,19 +42,20 @@
         <table>
             <thead>
             <tr>
-                <th>사진</th>
+                <th></th>
+                <th></th>
                 <th>상품명</th>
                 <th>가격</th>
                 <th>수량</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${itemList}">
-                <td><input type="checkbox" th:field="${item.product.productId}"></td>
+            <tr th:each="item : ${orderList}">
+                <td><input type="checkbox" name="index" th:checked="true"></td>
                 <td><img alt="상품 이미지"></td>
-                <td th:text="${item.product.name}"></td>
-                <td th:text="${item.product.price} + '원'"></td>
-                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.productName}"></td>
+                <td th:text="${item.productPrice} + '원'"></td>
+                <td th:text="${item.amount}"></td>
             </tr>
             </tbody>
         </table>

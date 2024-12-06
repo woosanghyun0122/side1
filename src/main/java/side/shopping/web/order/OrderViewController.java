@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import side.shopping.cache.CacheService;
+import side.shopping.domain.Address;
+import side.shopping.domain.order.Method;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
 import side.shopping.exception.CustomException;
@@ -27,9 +29,12 @@ import side.shopping.web.order.service.OrderItemService;
 import side.shopping.web.order.service.OrderService;
 import side.shopping.web.product.service.ProductService;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static side.shopping.exception.ErrorCode.*;
 
@@ -51,21 +56,19 @@ public class OrderViewController {
     /**
      * 주문 하기 화면
      */
-    @Cacheable(cacheNames = "orderList", key = "#uuid" )
     @GetMapping("/register/orderList")
-    public String register(@RequestParam(name = "uuid")String uuid, Model model) {
+    public String register(@RequestParam(name = "key") String key, Model model) {
 
-        if (!StringUtils.hasText(uuid)) {
-            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
-        }
-
-        List<FindProductDto> orderList = cacheService.getCacheValue(uuid);
+        log.info("key={}", key);
+        List<FindOrderItemDto> orderList = (List<FindOrderItemDto>) cacheService.getCacheValue(key);
 
         if (orderList.isEmpty()) {
             throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
         }
 
+        model.addAttribute("order",new Order());
         model.addAttribute("orderList", orderList);
+        model.addAttribute("method", Arrays.asList(Method.values()));
 
         return "/order/order-register";
     }

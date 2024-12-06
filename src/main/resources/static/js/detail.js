@@ -8,21 +8,26 @@ function toggleWishlist() {
 
 function pay(){
 
-    var list =[];
     var productId = document.getElementById('productId').value;
-    list.push(productId);
+    var amount = document.getElementById('quantity').value;
 
-    fetch('/api/order/findOrderList',{
+    var item ={
+        productId: productId,
+        amount: amount
+    };
+
+    fetch('/api/order/buyInstant',{
         method:'POST',
         headers:{
             'Content-Type' : 'application/json'
         },
-        body: JSON.stringify(list)
+        body: JSON.stringify(item)
     })
     .then(response =>{
         if(response.ok){
-            return response.json().then(result =>{
-                window.href.
+            return response.text().then(result =>{
+                const key = result;
+                window.location.href = `http://localhost:8080/order/register/orderList?key=${key}`;
             })
         }
         else{
