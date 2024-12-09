@@ -22,6 +22,8 @@ public class FindOrderItemDto {
 
     private Status status;
 
-    private LocalDateTime orderDate;
+    private String orderDate;
+
+
 
 }

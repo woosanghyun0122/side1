@@ -84,7 +84,7 @@ public class OrderTest {
     void registerOrder() {
 
         List<OrderItem> itemList = settingItemList();
-        Order saveOrder = orderService.registerOrder(setOrder(),itemList);
+        Order saveOrder = orderService.registerOrder(setOrder(),itemList,setOrder().getUser().getUserid());
 
         itemList.stream()
                 .forEach(item ->{
@@ -114,7 +114,7 @@ public class OrderTest {
 
         // 주문 내역 저장
         List<OrderItem> itemList = settingItemList();
-        Order saveOrder = orderService.registerOrder(setOrder(),itemList);
+        Order saveOrder = orderService.registerOrder(setOrder(),itemList,setOrder().getUser().getUserid());
 
         itemList.stream()
                 .forEach(item ->{
@@ -138,7 +138,7 @@ public class OrderTest {
 
         // 주문 내역 저장
         List<OrderItem> itemList = settingItemList();
-        Order saveOrder = orderService.registerOrder(setOrder(),itemList);
+        Order saveOrder = orderService.registerOrder(setOrder(),itemList,setOrder().getUser().getUserid());
 
         itemList.stream()
                 .forEach(item ->{
@@ -172,7 +172,7 @@ public class OrderTest {
 
         // 주문 내역 저장
         List<OrderItem> itemList = settingItemList();
-        Order saveOrder = orderService.registerOrder(setOrder(),itemList);
+        Order saveOrder = orderService.registerOrder(setOrder(),itemList,setOrder().getUser().getUserid());
 
         itemList.stream()
                 .forEach(item ->{

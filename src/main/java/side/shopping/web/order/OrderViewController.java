@@ -60,14 +60,15 @@ public class OrderViewController {
     public String register(@RequestParam(name = "key") String key, Model model) {
 
         log.info("key={}", key);
-        List<FindOrderItemDto> orderList = (List<FindOrderItemDto>) cacheService.getCacheValue(key);
+        Order order = (Order) cacheService.getCacheValue(key);
 
-        if (orderList.isEmpty()) {
+        if (order == null) {
             throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
         }
 
+        model.addAttribute("key", key);
         model.addAttribute("order",new Order());
-        model.addAttribute("orderList", orderList);
+        model.addAttribute("orderList", order.getOrderItemList());
         model.addAttribute("method", Arrays.asList(Method.values()));
 
         return "/order/order-register";

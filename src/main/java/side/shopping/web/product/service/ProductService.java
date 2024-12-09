@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.product.Category;
 import side.shopping.domain.product.Product;
 import side.shopping.domain.users.Users;
@@ -255,7 +256,7 @@ public class ProductService {
     /**
      * 즉시구매 상품 조회
      */
-    public FindOrderItemDto instantOrderItem(Long id) {
+    public OrderItem instantOrderItem(Long id) {
 
         if (id == null) {
             throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
@@ -264,10 +265,8 @@ public class ProductService {
         Product item = repository.findById(id)
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
-        return FindOrderItemDto.builder()
-                .productId(item.getProductId())
-                .productName(item.getName())
-                .productPrice(item.getPrice())
+        return OrderItem.builder()
+                .product(item)
                 .build();
 
     }

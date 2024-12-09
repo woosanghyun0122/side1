@@ -2,6 +2,7 @@ package side.shopping.web.order.service;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,15 @@ import side.shopping.domain.Address;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.product.Product;
+import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
 import side.shopping.repository.order.OrderRepository;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
+import side.shopping.repository.users.UserRepository;
 import side.shopping.web.product.service.ProductService;
+import side.shopping.web.users.service.UsersService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -33,6 +37,10 @@ public class OrderService {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     /**
      * 회원별 주문 내역 조회하기
@@ -61,13 +69,17 @@ public class OrderService {
      * 주문 하기
      */
     @Transactional
-    public Order registerOrder(Order order, List<OrderItem> orderList) {
+    public Order registerOrder(Order order, List<OrderItem> orderList, String userid) {
+
+        Users loginUser = userRepository.findByUserid(userid)
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         if (orderList.isEmpty()) {
             throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
         }
 
         Order saveOrder = toSaveOrder(order, orderList);
+        saveOrder.setUser(loginUser);
 
         try {
             orderList.stream()

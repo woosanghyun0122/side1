@@ -1,8 +1,10 @@
 package side.shopping.interceptor;
 
+import io.netty.util.internal.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +22,12 @@ public class LogInterceptor implements HandlerInterceptor {
         // 컨트롤러 호출 전에 호출된다.
 
         String requestURI = request.getRequestURI();
+        String queryString = request.getQueryString();
+        log.info("queryString ={}", queryString);
+
+        if (StringUtils.hasText(queryString)) {
+            requestURI = requestURI + "?" + queryString;
+        }
 
         String uuid = UUID.randomUUID().toString();
         request.setAttribute(LOG_ID, uuid);

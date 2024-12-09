@@ -13,7 +13,8 @@ public enum ErrorCode {
     SAVE_ERROR(9001,"저장에 실패하였습니다."),
     UPDATE_ERROR(9002,"수정에 실패하였습니다."),
     DELETE_ERROR(9003, "저장에 실패하였습니다."),
-    SELECT_ERROR(9004, "조회에 실패하였습니다.")
+    SELECT_ERROR(9004, "조회에 실패하였습니다."),
+    LOGIN_ERROR(9005, "로그인 상태가 아닙니다")
     ;
 
     private final int code;

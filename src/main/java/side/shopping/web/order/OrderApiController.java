@@ -1,29 +1,28 @@
 package side.shopping.web.order;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import side.shopping.cache.CacheKeyGenerator;
 import side.shopping.cache.CacheService;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
+import side.shopping.exception.CustomException;
 import side.shopping.repository.order.dto.FindOrderItemDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UpdateOrderItemDto;
-import side.shopping.repository.product.dto.FindProductDto;
+import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.order.service.OrderItemService;
 import side.shopping.web.order.service.OrderService;
 import side.shopping.web.product.service.ProductService;
 
-import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+import static side.shopping.exception.ErrorCode.*;
 
 @Slf4j
 @RestController
@@ -42,6 +41,7 @@ public class OrderApiController {
     @Autowired
     private CacheService cacheService;
 
+
 //    /**
 //     * 장바구니 -> 주문 하기
 //     */
@@ -57,17 +57,16 @@ public class OrderApiController {
     @PostMapping("/buyInstant")
     public ResponseEntity<?> orderItem(@RequestBody FindOrderItemDto dto) {
 
-        FindOrderItemDto item = productService.instantOrderItem(dto.getProductId());
+        OrderItem item = productService.instantOrderItem(dto.getProductId());
         item.setAmount(dto.getAmount());
+        item.setTotalPrice(item);
 
-        List<FindOrderItemDto> list = new ArrayList<>();
-        list.add(item);
+        Order order = new Order();
+        order.getOrderItemList().add(item);
 
-        LocalDateTime time = LocalDateTime.now();
-        String key = UUID.randomUUID()
-                .toString().replace("-", "").substring(0, 8)
-                + time;
-        cacheService.setOrderList(key,list);
+        String key = cacheService.createKey();
+
+        cacheService.setOrderList(key,order);
 
         return ResponseEntity.status(HttpStatus.OK).body(key);
     }
@@ -77,10 +76,17 @@ public class OrderApiController {
      * 주문 등록
      * */
     @PostMapping("/register")
-    public ResponseEntity<?> save(@RequestBody @Validated Order order, List<OrderItem> orderList) {
+    public ResponseEntity<?> save(@RequestBody @Validated Order order, List<OrderItem> orderList, HttpServletRequest request) {
 
-        Order newOrder = orderService.registerOrder(order, orderList);
-        return ResponseEntity.status(HttpStatus.CREATED).body("주문 되었습니다.");
+        HttpSession session = request.getSession(false);
+        LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
+        }
+
+        Order newOrder = orderService.registerOrder(order, orderList, loginUser.getUserId());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 

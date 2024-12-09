@@ -3,6 +3,7 @@
 <head>
     <title>주문하기</title>
     <link rel="stylesheet" href="/css/order-register.css">
+    <script src="https://js.tosspayments.com/v1"></script>
     <script th:src="@{/js/order-register.js}"></script>
 </head>
 <body>
@@ -12,6 +13,7 @@
     <!-- 주문자 정보 -->
     <section class="order-info">
         <h2>배송 정보</h2>
+        <input type="hidden" th:field="${key}">
         <form th:object="${order}">
             <label for="name">받는 분</label>
             <input type="text" th:field="*{name}">
@@ -32,7 +34,7 @@
     <section class="payment-method">
         <h2>결제 수단</h2>
         <div th:each="method: ${method}">
-            <input type="radio" th:field="*{method}" th:value="*{method.value}" th:text="*{method.description}">
+            <input type="radio" name="method" th:value="*{method.value}" th:text="*{method.description}">
         </div>
     </section>
 

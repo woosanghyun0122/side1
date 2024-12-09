@@ -20,9 +20,9 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "userid",referencedColumnName = "userid",nullable = false)
-    private Users users;
+//    @ManyToOne
+//    @JoinColumn(name = "userid",referencedColumnName = "userid",nullable = false)
+//    private Users users;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
@@ -33,6 +33,7 @@ public class OrderItem {
     @JoinColumn(name = "order_num", nullable = false)
     private Order order;
 
+    @Setter
     @Column
     private int amount;
 

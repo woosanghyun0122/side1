@@ -229,11 +229,13 @@ INSERT INTO `category` (`category_id`, `category_name`, `depth`, `parent_id`, `c
 
 -- side.orders definition
 
+-- side.orders definition
+
 CREATE TABLE `orders` (
   `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `total_price` int DEFAULT NULL,
-  `order_date` timestamp NOT NULL,
+  `order_date` varchar(26) NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '구매자명',
@@ -275,17 +277,24 @@ CREATE TABLE `order_item` (
 
 -- side.payment definition
 
+-- side.payment definition
+
 CREATE TABLE `payment` (
   `id` varchar(255) NOT NULL,
-  `order_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `pay_date` timestamp NOT NULL,
   `payment_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `payment_status` varchar(255) DEFAULT NULL,
-  `transaction_id` varchar(255) DEFAULT NULL,
+  `payment_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `price` int DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
+  `pay_success_yn` varchar(1) DEFAULT NULL,
+  `cancel_reason` varchar(100) DEFAULT NULL,
+  `fail_reason` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `order_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
