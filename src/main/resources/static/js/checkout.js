@@ -4,14 +4,14 @@ main();
       const button = document.getElementById("payment-button");
       const amount = {
         currency: "KRW",
-        value: ,
+        value: document.getElementById('totalPrice').value,
       };
       // ------  결제위젯 초기화 ------
       // TODO: clientKey는 개발자센터의 결제위젯 연동 키 > 클라이언트 키로 바꾸세요.
       // TODO: 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요. 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
       // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
-      const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-      const customerKey = generateRandomString();
+      const clientKey = document.getElementById('clientKey').value;
+      const customerKey = document.getElementById('orderNum');
       const tossPayments = TossPayments(clientKey);
       // 회원 결제
       const widgets = tossPayments.widgets({
@@ -54,17 +54,13 @@ main();
         // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
         // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
         await widgets.requestPayment({
-          orderId: generateRandomString(),
-          orderName: "토스 티셔츠 외 2건",
+          orderId: document.getElementById('orderNum').value,
+          orderName: document.getElementById("orderName").value,
           successUrl: window.location.origin + "/success.html",
           failUrl: window.location.origin + "/fail.html",
-          customerEmail: "customer123@gmail.com",
-          customerName: "김토스",
-          customerMobilePhone: "01012341234",
+          customerEmail: document.getElementById('customerEmail').value,
+          customerName: document.getElementById('customerName').value,
+          customerMobilePhone: document.getElementById('userPhone').value
         });
       });
-    }
-
-    function generateRandomString() {
-      return window.btoa(Math.random()).slice(0, 20);
     }

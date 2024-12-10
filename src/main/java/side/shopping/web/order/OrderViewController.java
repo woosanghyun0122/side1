@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,7 +68,7 @@ public class OrderViewController {
         }
 
         model.addAttribute("key", key);
-        model.addAttribute("order",new Order());
+        model.addAttribute("order",order);
         model.addAttribute("orderList", order.getOrderItemList());
         model.addAttribute("method", Arrays.asList(Method.values()));
 

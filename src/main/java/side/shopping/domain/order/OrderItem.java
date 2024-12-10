@@ -20,10 +20,6 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "userid",referencedColumnName = "userid",nullable = false)
-//    private Users users;
-
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product = new Product();
@@ -45,6 +41,7 @@ public class OrderItem {
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
+    @Setter
     @Column(name = "total_price")
     private int totalPrice;
 
@@ -81,12 +78,6 @@ public class OrderItem {
         this.amount = dto.getAmount();
         this.req = dto.getReq();
     }
-
-    public void setTotalPrice(OrderItem item) {
-        this.totalPrice = item.getAmount() * item.getProduct().getPrice();
-    }
-
-
 
 
 }

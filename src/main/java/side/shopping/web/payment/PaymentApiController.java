@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import side.shopping.domain.order.Order;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
+import side.shopping.repository.order.dto.OrderToPayDto;
 import side.shopping.repository.payment.dto.PaymentDto;
 import side.shopping.repository.payment.dto.PaymentResDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
@@ -39,6 +41,7 @@ public class PaymentApiController {
         this.service = service;
     }
 
+
     @PostMapping("/checkout/{key}")
     public ResponseEntity setOrder(@RequestBody @Validated Order order
             , @PathVariable(name = "key") String key
@@ -47,13 +50,15 @@ public class PaymentApiController {
         HttpSession session = request.getSession(false);
         LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
 
-
         Order myOrder = (Order) cacheService.getCacheValue(key);
         myOrder.setOrder(order);
-
+        OrderToPayDto dto = myOrder.toOrderToPayDto();
         cacheService.removeCache(key);
 
-        return ResponseEntity.ok().body(myOrder);
+        String newKey = cacheService.createKey();
+        cacheService.setOrderList(newKey, dto);
+
+        return ResponseEntity.ok().body(newKey);
 
     }
 

@@ -1,13 +1,16 @@
 
+var key,clientKey,name,zipCode,address,addressDetail,phone,method;
+
 function pay(){
 
-    var key = document.getElementById('key').value;
-    var name = document.getElementById('name').value;
-    var zipCode = document.getElementById('address.zipCode').value;
-    var address = document.getElementById('address.address').value;
-    var addressDetail = document.getElementById('address.addressDetail').value;
-    var phone = document.getElementById('phone').value;
-    var method = document.getElementByName('method').value;
+    key = document.getElementById('key').value;
+    clientKey = document.getElementById('clientKey').value;
+    name = document.getElementById('name').value;
+    zipCode = document.getElementById('address.zipCode').value;
+    address = document.getElementById('address.address').value;
+    addressDetail = document.getElementById('address.addressDetail').value;
+    phone = document.getElementById('phone').value;
+    method = getSelectedMethod();
 
     var addressDto = {
             zipCode: zipCode,
@@ -23,7 +26,8 @@ function pay(){
         address: addressDto
     }
 
-    fetch('/api/v1/payments/checkout/${key}',{
+    fetch(`/api/v1/payments/checkout/${key}`,{
+
         method:'POST',
         headers: {
             'Content-Type':'application/json',
@@ -32,28 +36,27 @@ function pay(){
     })
     .then(response =>{
         if(response.ok){
-            return response.json().then(myOrder =>{
-
-                 var clientKey = '테스트_클라이언트_키'
-                 var tossPayments = TossPayments(clientKey)
-
-                 tossPayments.requestPayment('CARD', {
-                            amount: 58500,
-                            orderId: 'bec1d544-2a34-4f44-ada0-c5213d8fd8dd',
-                            orderName: '포인트 충전',
-                            customerName: '첫번째',
-                            customerEmail: 'test1@gmail.com',
-                            successUrl: 'http://localhost:8081/api/v1/payments/toss/success',
-                            failUrl: 'http://localhost:8081/api/v1/payments/toss/fail'
-                        })
+            return response.json().then(response =>{
+                var newKey = response.newKey;
+                window.location.href = `/payment/checkout?key=${newKey}`;
             })
         }
-
         else{
              return response.json().then(errorResponse =>{
                     alert(errorResponse.message);
                     })
              }
     })
+
+    function getSelectedMethod(){
+
+        var selectedMethod = document.querySelector('input[name="method"]:checked');
+        if(selectedMethod){
+            return selectedMethod.value;
+        }
+        else{
+            return null;
+        }
+    }
 
 }

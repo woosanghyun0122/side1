@@ -17,8 +17,18 @@
 <div class="wrapper">
   <div class="box_section" style="padding: 40px 30px 50px 30px; margin-top: 30px; margin-bottom: 50px">
     <!-- 결제 UI -->
-    <div id="payment-method">
-    </div>
+    <form th:object="${order}">
+      <div id="payment-method">
+        <input type="hidden" th:field="*{orderNum}">
+        <input type="hidden" th:field="*{orderName}">
+        <input type="hidden" th:field="*{customerName}">
+        <input type="hidden" th:field="*{userPhone}">
+        <input type="hidden" th:field="*{customerEmail}">
+        <input type="hidden" th:field="*{method}">
+        <input type="hidden" th:field="*{totalPrice}">
+        <input type="hidden" id="clientKey" th:value="${clientKey}">
+      </div>
+    </form>
     <!-- 이용약관 UI -->
     <div id="agreement"></div>
 
@@ -30,5 +40,6 @@
     </div>
   </div>
 
+</div>
 </body>
 </html>

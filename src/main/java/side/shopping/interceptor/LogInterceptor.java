@@ -23,7 +23,6 @@ public class LogInterceptor implements HandlerInterceptor {
 
         String requestURI = request.getRequestURI();
         String queryString = request.getQueryString();
-        log.info("queryString ={}", queryString);
 
         if (StringUtils.hasText(queryString)) {
             requestURI = requestURI + "?" + queryString;

@@ -59,10 +59,11 @@ public class OrderApiController {
 
         OrderItem item = productService.instantOrderItem(dto.getProductId());
         item.setAmount(dto.getAmount());
-        item.setTotalPrice(item);
+        item.setTotalPrice(item.getAmount() * item.getProduct().getPrice());
 
         Order order = new Order();
         order.getOrderItemList().add(item);
+        order.setTotalPrice(order.registerTotalPrice(order.getOrderItemList()));
 
         String key = cacheService.createKey();
 

@@ -10,6 +10,8 @@ import lombok.Setter;
 import side.shopping.domain.Address;
 import side.shopping.domain.payment.Payment;
 import side.shopping.domain.users.Users;
+import side.shopping.repository.order.dto.OrderItemDto;
+import side.shopping.repository.order.dto.OrderToPayDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
 
@@ -18,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "orders")
@@ -64,8 +68,9 @@ public class Order {
     @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
     private Users user = new Users();
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
-    private List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<OrderItem> orderItemList = new ArrayList<>();
 
     @OneToOne(mappedBy = "order")
     private Payment payment;
@@ -130,12 +135,55 @@ public class Order {
     public void setOrder(Order order) {
 
         this.orderNum = createOrderNum();
-        this.name = order.getName();
+        if (!order.getOrderItemList().isEmpty()) {
+            this.name = order.getOrderItemList().get(0).getProduct().getName() + "외 " + (order.getOrderItemList().size() - 1) + "건";
+        } else {
+            this.name = "상품 없음";  // 리스트가 비어 있을 경우 처리
+        }
         this.address = order.getAddress();
         this.method = order.getMethod();
         this.totalCount = order.registerTotalAmount(order.getOrderItemList());
         this.totalPrice = order.registerTotalPrice(order.getOrderItemList());
         this.orderDate = LocalDateTime.now().toString().substring(0,8);
+/*        this.orderItemList = order.getOrderItemList().stream()
+                .map(orderItem -> {
+                    OrderItemDto orderItemDto = new OrderItemDto();
+                    orderItemDto.setProductId(orderItem.getProduct().getProductId());
+                    orderItemDto.setProductName(orderItem.getProduct().getName());
+                    orderItemDto.setProductPrice(orderItem.getProduct().getPrice());
+                    orderItemDto.setAmount(orderItem.getAmount());
+                    orderItemDto.setStatus(orderItem.getStatus());
+                    orderItemDto.setTotalPrice(orderItem.getTotalPrice());
+                    return orderItemDto;
+                }).collect(Collectors.toList());*/
+
+    }
+
+    public OrderToPayDto toOrderToPayDto() {
+
+        OrderToPayDto orderToPayDto = new OrderToPayDto();
+
+        orderToPayDto.setOrderNum(this.orderNum);
+        orderToPayDto.setOrderName(this.name);
+        orderToPayDto.setMethod(this.method);
+        orderToPayDto.setOrderItemList(this.orderItemList.stream()
+                .map(orderItem -> {
+                    OrderItemDto orderItemDto = new OrderItemDto();
+                    orderItemDto.setProductId(orderItem.getProduct().getProductId());
+                    orderItemDto.setProductName(orderItem.getProduct().getName());
+                    orderItemDto.setProductPrice(orderItem.getProduct().getPrice());
+                    orderItemDto.setAmount(orderItem.getAmount());
+                    orderItemDto.setStatus(orderItem.getStatus());
+                    orderItemDto.setTotalPrice(orderItem.getTotalPrice());
+                    return orderItemDto;
+                }).collect(Collectors.toList()));
+        orderToPayDto.setTotalAmount(this.totalCount);
+        orderToPayDto.setOrderNum(this.orderNum);
+        orderToPayDto.setCustomerName(this.name);
+        orderToPayDto.setCustomerEmail(this.user.getEmail());
+        orderToPayDto.setUserPhone(this.user.getPhone());
+
+        return orderToPayDto;
 
     }
 
