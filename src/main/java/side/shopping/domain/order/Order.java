@@ -17,6 +17,7 @@ import side.shopping.repository.order.dto.UserOrderListDto;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -145,18 +146,6 @@ public class Order {
         this.totalCount = order.registerTotalAmount(order.getOrderItemList());
         this.totalPrice = order.registerTotalPrice(order.getOrderItemList());
         this.orderDate = LocalDateTime.now().toString().substring(0,8);
-/*        this.orderItemList = order.getOrderItemList().stream()
-                .map(orderItem -> {
-                    OrderItemDto orderItemDto = new OrderItemDto();
-                    orderItemDto.setProductId(orderItem.getProduct().getProductId());
-                    orderItemDto.setProductName(orderItem.getProduct().getName());
-                    orderItemDto.setProductPrice(orderItem.getProduct().getPrice());
-                    orderItemDto.setAmount(orderItem.getAmount());
-                    orderItemDto.setStatus(orderItem.getStatus());
-                    orderItemDto.setTotalPrice(orderItem.getTotalPrice());
-                    return orderItemDto;
-                }).collect(Collectors.toList());*/
-
     }
 
     public OrderToPayDto toOrderToPayDto() {
@@ -177,9 +166,9 @@ public class Order {
                     orderItemDto.setTotalPrice(orderItem.getTotalPrice());
                     return orderItemDto;
                 }).collect(Collectors.toList()));
-        orderToPayDto.setTotalAmount(this.totalCount);
+        orderToPayDto.setTotalAmount(this.totalPrice);
         orderToPayDto.setOrderNum(this.orderNum);
-        orderToPayDto.setCustomerName(this.name);
+        orderToPayDto.setCustomerName(this.user.getUserName());
         orderToPayDto.setCustomerEmail(this.user.getEmail());
         orderToPayDto.setUserPhone(this.user.getPhone());
 
@@ -190,6 +179,7 @@ public class Order {
     public String createOrderNum() {
 
         LocalDateTime time = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd_HH:mm:ss");
         String key = UUID.randomUUID()
                 .toString().replace("-", "").substring(0, 8)
                 + time;

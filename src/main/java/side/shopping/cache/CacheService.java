@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
@@ -43,9 +44,10 @@ public class CacheService {
     public String createKey() {
 
         LocalDateTime time = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd_HH:mm:ss");
         String key = UUID.randomUUID()
-                .toString().replace("-", "").substring(0, 8)
-                + time;
+                .toString().replace("-", "").substring(0, 8) + "_"
+                + time.format(dateTimeFormatter);
         return key;
     }
 }

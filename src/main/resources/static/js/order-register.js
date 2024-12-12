@@ -36,12 +36,14 @@ function pay(){
     })
     .then(response =>{
         if(response.ok){
-            return response.json().then(response =>{
-                var newKey = response.newKey;
+            console.log("response.ok");
+            return response.text().then(response =>{
+                var newKey = response;
                 window.location.href = `/payment/checkout?key=${newKey}`;
             })
         }
         else{
+            console.log("response error");
              return response.json().then(errorResponse =>{
                     alert(errorResponse.message);
                     })

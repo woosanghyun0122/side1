@@ -24,13 +24,14 @@ public class PaymentViewController {
     @Autowired
     private CacheService cacheService;
 
-    @Value("${payment.toss.test_client_api_key}")
+    @Value("${payment.toss.test_secrete_api_key}")
     private String clientKey;
 
     @GetMapping("/checkout")
     public String checkout(@RequestParam("key") String key, Model model) {
 
         OrderToPayDto order = (OrderToPayDto) cacheService.getCacheValue(key);
+        log.info("price={}", order.getTotalPrice());
         model.addAttribute("order", order);
         model.addAttribute("clientKey", clientKey);
 

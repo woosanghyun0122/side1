@@ -43,6 +43,8 @@ public class UsersService {
                     .userId(loginUser.getUserid())
                     .userName(loginUser.getUserName())
                     .nickName(loginUser.getNickName())
+                    .phone(loginUser.getPhone())
+                    .email(loginUser.getEmail())
                     .role(loginUser.getRole())
                     .build();
 
