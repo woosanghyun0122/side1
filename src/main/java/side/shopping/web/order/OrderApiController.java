@@ -13,6 +13,7 @@ import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
 import side.shopping.exception.CustomException;
 import side.shopping.repository.order.dto.FindOrderItemDto;
+import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UpdateOrderItemDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
@@ -20,6 +21,7 @@ import side.shopping.web.order.service.OrderItemService;
 import side.shopping.web.order.service.OrderService;
 import side.shopping.web.product.service.ProductService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static side.shopping.exception.ErrorCode.*;
@@ -34,9 +36,6 @@ public class OrderApiController {
 
     @Autowired
     private OrderItemService itemService;
-
-    @Autowired
-    private ProductService productService;
 
     @Autowired
     private CacheService cacheService;
@@ -55,19 +54,20 @@ public class OrderApiController {
      * 즉시 구매
      */
     @PostMapping("/buyInstant")
-    public ResponseEntity<?> orderItem(@RequestBody FindOrderItemDto dto) {
+    public ResponseEntity<?> orderItem(@RequestBody OrderItemDto dto) {
 
-        OrderItem item = productService.instantOrderItem(dto.getProductId());
-        item.setAmount(dto.getAmount());
-        item.setTotalPrice(item.getAmount() * item.getProduct().getPrice());
+        // 아이템 목록 저장
+        OrderItemDto item = OrderItemDto.builder()
+                .productId(dto.getProductId())
+                .amount(dto.getAmount())
+                .itemPrice(dto.getItemPrice())
+                .build();
 
-        Order order = new Order();
-        order.getOrderItemList().add(item);
-        order.setTotalPrice(order.registerTotalPrice(order.getOrderItemList()));
+        List<OrderItemDto> list = new ArrayList<>();
+        list.add(item);
 
         String key = cacheService.createKey();
-
-        cacheService.setOrderList(key,order);
+        cacheService.setCacheValue(key,list);
 
         return ResponseEntity.status(HttpStatus.OK).body(key);
     }

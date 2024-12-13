@@ -23,6 +23,7 @@ import side.shopping.domain.order.OrderItem;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
 import side.shopping.repository.order.dto.FindOrderItemDto;
+import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
 import side.shopping.repository.product.dto.FindProductDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
@@ -61,15 +62,15 @@ public class OrderViewController {
     public String register(@RequestParam(name = "key") String key, Model model) {
 
         log.info("key={}", key);
-        Order order = (Order) cacheService.getCacheValue(key);
+        List<OrderItemDto> list = (List<OrderItemDto>) cacheService.getCacheValue(key);
 
-        if (order == null) {
+        if (list.isEmpty()) {
             throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
         }
 
         model.addAttribute("key", key);
-        model.addAttribute("order",order);
-        model.addAttribute("orderList", order.getOrderItemList());
+        model.addAttribute("order",new Order());
+        model.addAttribute("orderList", list);
         model.addAttribute("method", Arrays.asList(Method.values()));
 
         return "/order/order-register";

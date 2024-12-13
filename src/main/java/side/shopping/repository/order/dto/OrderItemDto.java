@@ -14,7 +14,7 @@ public class OrderItemDto {
     private String productName;
     private int productPrice;
     private int amount;
-    private int totalPrice;
+    private int itemPrice;
     private String req;
     private Status status;
 }

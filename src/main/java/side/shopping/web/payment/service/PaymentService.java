@@ -28,9 +28,6 @@ public class PaymentService {
     CacheService cacheService;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     ProductService productService;
 
 
@@ -39,14 +36,9 @@ public class PaymentService {
      *  결제하기 완
      * */
     @Transactional
-    public Payment requestTossPayment(Payment payment, String userid, Order order) {
+    public Payment requestTossPayment(String userid, Order order) {
 
-        // 회원정보 조회
-        Users loginUser = userRepository.findByUserid(userid)
-                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
-
-        // 주문에 회원 정보 세팅
-        order.setUser(loginUser);
+        Payment payment = new Payment();
         // 결제에 주문 정보 세팅
         payment.setOrder(order);
 

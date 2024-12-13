@@ -37,13 +37,19 @@ public class Order {
     private String orderNum;
 
     @Column
-    private String name;
+    private String orderName;
+
+    @Column
+    private String customerName;
 
     @Embedded
     private Address address;
 
     @Column
-    private String phone;
+    private String customerPhone;
+
+    @Column
+    private String customerEmail;
 
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
@@ -54,6 +60,8 @@ public class Order {
     private int totalCount;
 
     private int totalPrice;
+
+    private String orderItemListKey;
 
     @Column(name = "order_date")
     private String orderDate;
@@ -113,8 +121,8 @@ public class Order {
         return UserOrderListDto.builder()
                 .orderNum(order.getOrderNum())
                 .productName(order.getOrderItemList().get(0).getProduct().getName() + " 외 " + order.orderItemList.size()+"건")
-                .name(order.getName())
-                .phone(order.getPhone())
+                .name(order.getOrderName())
+                .phone(order.getCustomerPhone())
                 .method(String.valueOf(order.getMethod()))
                 .totalCount(order.getTotalCount())
                 .totalPrice(order.getTotalPrice())
@@ -129,17 +137,16 @@ public class Order {
                 .addressDetail(dto.getAddressDetail())
                 .build();
 
-        this.name = dto.getName();
+        this.orderName = dto.getName();
         this.address = modifyAddress;
     }
 
     public void setOrder(Order order) {
 
-        this.orderNum = createOrderNum();
         if (!order.getOrderItemList().isEmpty()) {
-            this.name = order.getOrderItemList().get(0).getProduct().getName() + "외 " + (order.getOrderItemList().size() - 1) + "건";
+            this.orderName = order.getOrderItemList().get(0).getProduct().getName() + "외 " + (order.getOrderItemList().size() - 1) + "건";
         } else {
-            this.name = "상품 없음";  // 리스트가 비어 있을 경우 처리
+            this.orderName = "상품 없음";  // 리스트가 비어 있을 경우 처리
         }
         this.address = order.getAddress();
         this.method = order.getMethod();
@@ -148,43 +155,7 @@ public class Order {
         this.orderDate = LocalDateTime.now().toString().substring(0,8);
     }
 
-    public OrderToPayDto toOrderToPayDto() {
 
-        OrderToPayDto orderToPayDto = new OrderToPayDto();
-
-        orderToPayDto.setOrderNum(this.orderNum);
-        orderToPayDto.setOrderName(this.name);
-        orderToPayDto.setMethod(this.method);
-        orderToPayDto.setOrderItemList(this.orderItemList.stream()
-                .map(orderItem -> {
-                    OrderItemDto orderItemDto = new OrderItemDto();
-                    orderItemDto.setProductId(orderItem.getProduct().getProductId());
-                    orderItemDto.setProductName(orderItem.getProduct().getName());
-                    orderItemDto.setProductPrice(orderItem.getProduct().getPrice());
-                    orderItemDto.setAmount(orderItem.getAmount());
-                    orderItemDto.setStatus(orderItem.getStatus());
-                    orderItemDto.setTotalPrice(orderItem.getTotalPrice());
-                    return orderItemDto;
-                }).collect(Collectors.toList()));
-        orderToPayDto.setTotalAmount(this.totalPrice);
-        orderToPayDto.setOrderNum(this.orderNum);
-        orderToPayDto.setCustomerName(this.user.getUserName());
-        orderToPayDto.setCustomerEmail(this.user.getEmail());
-        orderToPayDto.setUserPhone(this.user.getPhone());
-
-        return orderToPayDto;
-
-    }
-
-    public String createOrderNum() {
-
-        LocalDateTime time = LocalDateTime.now();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd_HH:mm:ss");
-        String key = UUID.randomUUID()
-                .toString().replace("-", "").substring(0, 8)
-                + time;
-        return key;
-    }
 
 
 

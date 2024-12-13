@@ -17,8 +17,8 @@
         <input type="hidden" id="key" th:value="${key}">
         <input type="hidden" id="clientKey" th:value="${clientKey}">
         <form th:object="${order}">
-            <label for="name">받는 분</label>
-            <input type="text" th:field="*{name}">
+            <label for="customerName">받는 분</label>
+            <input type="text" th:field="*{customerName}">
 
             <label for="zipcode">우편번호</label>
             <input type="text"  th:field="*{address.zipCode}">
@@ -27,8 +27,11 @@
             <input type="text"  th:field="*{address.address}">
             <input type="text"  th:field="*{address.addressDetail}">
 
-            <label for="phone">핸드폰 번호</label>
-            <input type="text"  th:field="*{phone}">
+            <label for="customerPhone">핸드폰 번호</label>
+            <input type="text"  th:field="*{customerPhone}">
+
+            <label for="customerEmail">이메일</label>
+            <input type="text"  th:field="*{customerEmail}">
         </form>
     </section>
 

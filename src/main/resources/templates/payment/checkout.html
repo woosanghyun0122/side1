@@ -7,7 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/toss.css}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>토스페이먼츠 샘플 프로젝트</title>
+  <title>결제하기</title>
   <!-- 토스페이먼츠 SDK 추가 -->
   <script src="https://js.tosspayments.com/v1/payment-widget"></script>
   <script src="/js/checkout.js"></script>
@@ -28,6 +28,8 @@
         <input type="hidden" th:field="*{method}">
         <input type="hidden" th:field="*{totalAmount}">
         <input type="hidden" id="clientKey" th:value="${clientKey}">
+        <input type="hidden" id="key" th:value="${key}">
+
       </form>
       </div>
     <!-- 이용약관 UI -->

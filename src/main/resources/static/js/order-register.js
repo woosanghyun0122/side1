@@ -1,5 +1,5 @@
 
-var key,clientKey,name,zipCode,address,addressDetail,phone,method;
+var key,clientKey,name,zipCode,address,addressDetail,phone,method,email;
 
 function pay(){
 
@@ -10,6 +10,7 @@ function pay(){
     address = document.getElementById('address.address').value;
     addressDetail = document.getElementById('address.addressDetail').value;
     phone = document.getElementById('phone').value;
+    email = document.getElementById('customerEmail').value;
     method = getSelectedMethod();
 
     var addressDto = {
@@ -19,10 +20,12 @@ function pay(){
     };
 
     var order ={
-        key: key,
-        name: name,
-        phone: phone,
+
+        orderItemKey: key,
+        customerName: name,
+        customerPhone: phone,
         method: method,
+        customerEmail: email,
         address: addressDto
     }
 
@@ -36,14 +39,12 @@ function pay(){
     })
     .then(response =>{
         if(response.ok){
-            console.log("response.ok");
             return response.text().then(response =>{
                 var newKey = response;
                 window.location.href = `/payment/checkout?key=${newKey}`;
             })
         }
         else{
-            console.log("response error");
              return response.json().then(errorResponse =>{
                     alert(errorResponse.message);
                     })

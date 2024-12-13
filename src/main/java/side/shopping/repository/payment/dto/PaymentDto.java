@@ -28,7 +28,7 @@ public class PaymentDto {
 
     private String failUrl; // 실패 시 url
 
-    private String orderKey;
+    private String orderNum;
 
     public Payment toEntity() {
         return Payment.builder()

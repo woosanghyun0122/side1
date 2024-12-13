@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import side.shopping.cache.CacheService;
 import side.shopping.config.TossPaymentConfig;
 import side.shopping.domain.order.Order;
+import side.shopping.domain.order.OrderItem;
+import side.shopping.domain.payment.Payment;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
+import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.OrderToPayDto;
 import side.shopping.repository.payment.dto.PaymentDto;
 import side.shopping.repository.payment.dto.PaymentResDto;
@@ -26,6 +29,7 @@ import side.shopping.web.payment.service.PaymentService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 import static side.shopping.exception.ErrorCode.*;
 
@@ -47,55 +51,40 @@ public class PaymentApiController {
     }
 
 
-    @PostMapping("/checkout/{key}")
-    public ResponseEntity setOrder(@RequestBody @Validated Order order
-            , @PathVariable(name = "key") String key
-            ,HttpServletRequest request) {
+    @PostMapping("/checkout")
+    public ResponseEntity setOrder(@RequestBody @Validated OrderToPayDto order) {
 
-        HttpSession session = request.getSession(false);
-        LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
+        List<OrderItemDto> list = (List<OrderItemDto>) cacheService.getCacheValue(order.getOrderItemKey());
+        int totalPrice = list.stream()
+                .mapToInt(item -> item.getItemPrice() * item.getAmount())
+                .sum();
 
-        // redis에서 값가져오기
-        Order myOrder = (Order) cacheService.getCacheValue(key);
+        order.setTotalAmount(totalPrice);
+        order.setOrderNum(order.createOrderNum());
+        if (list.size() == 1) {
+            order.setOrderName(list.get(0).getProductName());
+        }else{
+            order.setOrderName(list.get(0).getProductName() +" 외 "+(list.size() -1)+"건");
+        }
+        String key = cacheService.createKey();
+        cacheService.setCacheValue(key, order);
 
-        log.info("myorder={}", myOrder.getOrderItemList().get(0).getProduct().getName());
-
-        settingOrder(myOrder, order, loginUser);
-
-        OrderToPayDto dto = myOrder.toOrderToPayDto();
-        cacheService.removeCache(key);
-
-        String newKey = cacheService.createKey();
-        cacheService.setOrderList(newKey, dto);
-
-        return ResponseEntity.status(HttpStatus.OK).body(newKey);
+        return ResponseEntity.status(HttpStatus.OK).body(key);
 
     }
 
-    @PostMapping("/toss")
-    public ResponseEntity requestTossPayment(@RequestBody @Validated PaymentDto dto, HttpServletRequest request) {
+    @PostMapping("/toss/${key}")
+    public ResponseEntity requestTossPayment(@RequestBody @Validated PaymentDto dto, @PathVariable("key") String key, HttpServletRequest request) {
 
 
-        log.info("언제오나보자");
-        HttpSession session = request.getSession(false);
-        LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
 
 
-        Order order = (Order) cacheService.getCacheValue(dto.getOrderKey());
-        order.setAddress(dto.getAddress());
-
-        PaymentResDto resDto = service.requestTossPayment(dto.toEntity(), loginUser.getUserId()
-                , order).toPaymentResDto();
-        resDto.setSuccessUrl(resDto.getSuccessUrl() == null ? config.getSuccessUrl() : resDto.getSuccessUrl());
-        resDto.setFailUrl(resDto.getFailUrl() == null ? config.getFailUrl() : resDto.getFailUrl());
-
-        return ResponseEntity.ok().body(resDto);
-
+        return ResponseEntity.ok().build();
     }
 
     private void settingOrder(Order order1, Order order2, LoginResponseDto dto) {
 
-        String orderName;
+/*        String orderName;
 
         if (!order1.getOrderItemList().isEmpty()) {
             orderName = order1.getOrderItemList().get(0).getProduct().getName() + "외 " + (order1.getOrderItemList().size() - 1) + "건";
@@ -109,7 +98,7 @@ public class PaymentApiController {
         LoginResponseDto loginUser = new LoginResponseDto();
 
         order1.setOrderNum(order2.createOrderNum());
-        order1.setName(orderName);
+        order1.setOrderName(orderName);
         order1.setAddress(order2.getAddress());
         order1.setMethod(order2.getMethod());
         order1.setTotalCount(order1.registerTotalAmount(order1.getOrderItemList()));
@@ -118,7 +107,7 @@ public class PaymentApiController {
         order1.setUser(loginUser.toUsers(dto));
 
         log.info("setOrderNum={},setName={}, setAddress={},setMethod={},setTotalPrice={},setOrderDate={},setUserName={},setUserPhone={},setUserEmail={}",
-                order1.getOrderNum(), order1.getName(), order1.getAddress(), order1.getMethod(), order1.getTotalPrice(), order1.getOrderDate(), order1.getUser().getUserName(), order1.getUser().getPhone(), order1.getUser().getEmail()
-        );
+                order1.getOrderNum(), order1.getOrderName(), order1.getAddress(), order1.getMethod(), order1.getTotalPrice(), order1.getOrderDate(), order1.getUser().getUserName(), order1.getUser().getPhone(), order1.getUser().getEmail()
+        );*/
     }
 }

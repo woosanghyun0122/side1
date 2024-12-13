@@ -10,10 +10,13 @@ function pay(){
 
     var productId = document.getElementById('productId').value;
     var amount = document.getElementById('quantity').value;
+    var price = document.getElementById('price').value;
+
 
     var item ={
         productId: productId,
         amount: amount
+        price: price
     };
 
     fetch('/api/order/buyInstant',{

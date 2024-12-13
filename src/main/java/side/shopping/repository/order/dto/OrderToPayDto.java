@@ -1,10 +1,15 @@
 package side.shopping.repository.order.dto;
 
 import lombok.*;
+import side.shopping.domain.Address;
 import side.shopping.domain.order.Method;
+import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -21,17 +26,39 @@ public class OrderToPayDto {
 
     private String customerEmail;
 
-    private String userPhone;
+    private String customerPhone;
 
     private Method method;
 
-    private List<OrderItemDto> orderItemList;
+    private String orderItemKey;
 
     private int totalAmount;
 
-    private int totalPrice;
-
     private String orderDate;
+
+    private Address customerAddress;
+
+    public Order toOrder() {
+
+        return Order.builder()
+                .orderNum(this.orderNum)
+                .customerName(this.customerName)
+                .address(this.customerAddress)
+                .customerPhone(this.customerPhone)
+                .method(this.method)
+                .orderDate(this.orderDate)
+                .build();
+    }
+
+    public String createOrderNum() {
+
+        LocalDateTime time = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("YYYYMMdd_HHmmss");
+        String key = UUID.randomUUID()
+                .toString().replace("-", "").substring(0, 8)
+                + dateTimeFormatter.format(time);
+        return key;
+    }
 
 
 }

@@ -13,6 +13,9 @@ import side.shopping.domain.order.Order;
 import side.shopping.repository.order.dto.OrderToPayDto;
 import side.shopping.web.order.service.OrderService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Controller
 @RequestMapping("/payment")
@@ -31,10 +34,31 @@ public class PaymentViewController {
     public String checkout(@RequestParam("key") String key, Model model) {
 
         OrderToPayDto order = (OrderToPayDto) cacheService.getCacheValue(key);
-        log.info("price={}", order.getTotalPrice());
+        model.addAttribute("key", key);
         model.addAttribute("order", order);
         model.addAttribute("clientKey", clientKey);
 
         return "/payment/checkout";
     }
+
+    @GetMapping("/success")
+    public String success(@RequestParam("paymentType")String paymentType
+                          ,@RequestParam("orderId") String orderId
+                          ,@RequestParam("paymentKey")String paymentKey
+                          ,@RequestParam("amount")int amount
+                          ,Model model
+                          ) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("paymentType", paymentType);
+        map.put("orderId", orderId);
+        map.put("paymentKey", paymentKey);
+        map.put("amount", amount);
+
+        model.addAttribute("result", map);
+
+        return "/payment/success";
+    }
+
+
 }

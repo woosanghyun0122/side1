@@ -11,11 +11,20 @@ async function main() {
   const tossPayments = PaymentWidget(widgetClientKey, customerKey);
 
   const paymentWidget = PaymentWidget(widgetClientKey, customerKey);
+  const orderId = document.getElementById('orderNum').value;
+  const orderName = document.getElementById("orderName").value;
+  const customerEmail = document.getElementById('customerEmail').value;
+  const customerName = document.getElementById('customerName').value;
+  const userPhone = document.getElementById('userPhone').value;
 
+  const order ={
+    orderName : orderName,
+
+  }
 
       const paymentMethodWidget = paymentWidget.renderPaymentMethods(
         "#payment-method",
-        { value: 50000 },
+        { value: value },
         { variantKey: "DEFAULT" }
       );
 
@@ -25,14 +34,24 @@ async function main() {
       )
 
   button.addEventListener("click", async function () {
-    paymentWidget.requestPayment({
-      orderId: document.getElementById('orderNum').value,
-      orderName: document.getElementById("orderName").value,
-      successUrl: window.location.origin + "/success.html",
-      failUrl: window.location.origin + "/fail.html",
-      customerEmail: document.getElementById('customerEmail').value,
-      customerName: document.getElementById('customerName').value,
-      customerMobilePhone: document.getElementById('userPhone').value
-    });
+
+    const key = document.getElementById('key').value;
+
+
+    .then(response =>{
+        if(response.ok){
+                paymentWidget.requestPayment({
+                  orderId: orderId,
+                  orderName: orderName,
+                  successUrl: window.location.href = `/payment/success?key=${key}`,
+                  failUrl: window.location.origin + "/payment/fail",
+                  customerEmail: customerEmail,
+                  customerName: customerName,
+                  customerMobilePhone: userPhone
+                });
+        }
+    })
+
+
   });
 }

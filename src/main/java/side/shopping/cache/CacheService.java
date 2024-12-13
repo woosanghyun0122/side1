@@ -22,7 +22,7 @@ public class CacheService {
         this.template = template;
     }
 
-    public void setOrderList(String key, Object list) {
+    public void setCacheValue(String key, Object list) {
 
         log.info("redis saveKey={}", key);
         template.opsForValue().set(key,list);
