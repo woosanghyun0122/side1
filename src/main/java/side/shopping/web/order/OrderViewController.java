@@ -64,12 +64,19 @@ public class OrderViewController {
         log.info("key={}", key);
         List<OrderItemDto> list = (List<OrderItemDto>) cacheService.getCacheValue(key);
 
+        log.info("productName={}, productPrice={}", list.get(0).getProductName(), list.get(0).getProductPrice());
+
         if (list.isEmpty()) {
             throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
         }
 
+        int totalPrice = list.stream()
+                .mapToInt(item -> item.getProductPrice() * item.getAmount())
+                .sum();
+
         model.addAttribute("key", key);
         model.addAttribute("order",new Order());
+        model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("orderList", list);
         model.addAttribute("method", Arrays.asList(Method.values()));
 

@@ -55,11 +55,6 @@ public class PaymentApiController {
     public ResponseEntity setOrder(@RequestBody @Validated OrderToPayDto order) {
 
         List<OrderItemDto> list = (List<OrderItemDto>) cacheService.getCacheValue(order.getOrderItemKey());
-        int totalPrice = list.stream()
-                .mapToInt(item -> item.getItemPrice() * item.getAmount())
-                .sum();
-
-        order.setTotalAmount(totalPrice);
         order.setOrderNum(order.createOrderNum());
         if (list.size() == 1) {
             order.setOrderName(list.get(0).getProductName());
@@ -72,14 +67,17 @@ public class PaymentApiController {
         return ResponseEntity.status(HttpStatus.OK).body(key);
 
     }
-
-    @PostMapping("/toss/${key}")
+    @PostMapping("/toss/{key}")
     public ResponseEntity requestTossPayment(@RequestBody @Validated PaymentDto dto, @PathVariable("key") String key, HttpServletRequest request) {
 
+        OrderToPayDto order = (OrderToPayDto) cacheService.getCacheValue(key);
 
-
-
-        return ResponseEntity.ok().build();
+        if (dto.getPrice() == order.getTotalAmount() && dto.getOrderNum().equals(order.getOrderNum())) {
+            String paymentKey = cacheService.createKey();
+            return ResponseEntity.status(HttpStatus.OK).body(paymentKey);
+        } else {
+            throw new CustomException(PAYMENT_ERROR.getCode(), PAYMENT_ERROR.getMessage());
+        }
     }
 
     private void settingOrder(Order order1, Order order2, LoginResponseDto dto) {

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Detail</title>
@@ -20,9 +19,9 @@
         <form th:object="${detail}" method="POST">
         <div class="details-section">
             <p class="product-viewCount">[[*{viewCount}]]명이 조회했어요</p>
-            <h1 class="product-title" th:field="*{name}">Product Name</h1>
-            <p class="product-price" th:field="*{price}">Price</p>
-            <p class="product-description" th:field="*{content}"></p>
+            <h1 class="product-title" id="name" th:text="*{name}" th:value="*{name}">Product Name</h1>
+            <p class="product-price" id="price" th:text="*{price}" th:value="*{price}">Price</p>
+            <p class="product-description" id="content"  th:text="*{content}" th:value="*{content}"></p>
 
             <!-- 옵션 선택 -->
             <div class="product-options">

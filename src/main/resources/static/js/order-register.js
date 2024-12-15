@@ -5,12 +5,13 @@ function pay(){
 
     key = document.getElementById('key').value;
     clientKey = document.getElementById('clientKey').value;
-    name = document.getElementById('name').value;
+    name = document.getElementById('customerName').value;
     zipCode = document.getElementById('address.zipCode').value;
     address = document.getElementById('address.address').value;
     addressDetail = document.getElementById('address.addressDetail').value;
-    phone = document.getElementById('phone').value;
+    phone = document.getElementById('customerPhone').value;
     email = document.getElementById('customerEmail').value;
+    totalAmount = document.getElementById('totalPrice').innerText.replace('원','');
     method = getSelectedMethod();
 
     var addressDto = {
@@ -20,17 +21,16 @@ function pay(){
     };
 
     var order ={
-
         orderItemKey: key,
         customerName: name,
         customerPhone: phone,
         method: method,
         customerEmail: email,
-        address: addressDto
+        address: addressDto,
+        totalAmount: totalAmount
     }
 
-    fetch(`/api/v1/payments/checkout/${key}`,{
-
+    fetch('/api/v1/payments/checkout',{
         method:'POST',
         headers: {
             'Content-Type':'application/json',

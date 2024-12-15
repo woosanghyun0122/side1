@@ -54,17 +54,12 @@ public class OrderApiController {
      * 즉시 구매
      */
     @PostMapping("/buyInstant")
-    public ResponseEntity<?> orderItem(@RequestBody OrderItemDto dto) {
+    public ResponseEntity<?> orderItem(@RequestBody @Validated OrderItemDto dto) {
 
-        // 아이템 목록 저장
-        OrderItemDto item = OrderItemDto.builder()
-                .productId(dto.getProductId())
-                .amount(dto.getAmount())
-                .itemPrice(dto.getItemPrice())
-                .build();
+        log.info("productName={}, productPrice={}", dto.getProductName(), dto.getProductPrice());
 
         List<OrderItemDto> list = new ArrayList<>();
-        list.add(item);
+        list.add(dto);
 
         String key = cacheService.createKey();
         cacheService.setCacheValue(key,list);

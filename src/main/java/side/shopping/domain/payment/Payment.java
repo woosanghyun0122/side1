@@ -26,11 +26,14 @@ public class Payment {
     @Column
     private String orderName;
 
+    @Column
+    private int price;
+
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
     private Method method;
 
-    @Column
+    @Column(unique = true)
     private String paymentKey;
 
     @Column(name = "pay_success_yn")
@@ -63,7 +66,7 @@ public class Payment {
                 .orderName(orderName)
                 .orderNum(order.getOrderNum())
                 .customerEmail(order.getUser().getEmail())
-                .customerName(order.getName())
+                .customerName(order.getCustomerName())
                 .createdAt(String.valueOf(order.getCreatedAt()))
                 .cancelYN(paySuccessYN)
                 .failReason(failReason)

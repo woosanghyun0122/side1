@@ -42,15 +42,13 @@ public class PaymentViewController {
     }
 
     @GetMapping("/success")
-    public String success(@RequestParam("paymentType")String paymentType
-                          ,@RequestParam("orderId") String orderId
+    public String success(@RequestParam("orderId") String orderId
                           ,@RequestParam("paymentKey")String paymentKey
                           ,@RequestParam("amount")int amount
                           ,Model model
                           ) {
 
         Map<String, Object> map = new HashMap<>();
-        map.put("paymentType", paymentType);
         map.put("orderId", orderId);
         map.put("paymentKey", paymentKey);
         map.put("amount", amount);

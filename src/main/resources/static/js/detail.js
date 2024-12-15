@@ -1,3 +1,8 @@
+
+
+console.log("name>>>>>>>>>>"+productName);
+console.log("price>>>>>>>>>>"+price);
+
 function toggleWishlist() {
 
         const icon = document.getElementById('heart').querySelector('.fa-heart');
@@ -8,15 +13,17 @@ function toggleWishlist() {
 
 function pay(){
 
+    var productName = document.getElementById('name').innerText;
     var productId = document.getElementById('productId').value;
     var amount = document.getElementById('quantity').value;
-    var price = document.getElementById('price').value;
+    var price = document.getElementById('price').innerText;
 
 
     var item ={
         productId: productId,
-        amount: amount
-        price: price
+        amount: amount,
+        productName: productName,
+        productPrice: price
     };
 
     fetch('/api/order/buyInstant',{

@@ -3,6 +3,8 @@ package side.shopping.repository.order.dto;
 import lombok.*;
 import side.shopping.domain.order.Status;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -14,7 +16,11 @@ public class OrderItemDto {
     private String productName;
     private int productPrice;
     private int amount;
-    private int itemPrice;
     private String req;
     private Status status;
+
+
+
 }
+
+

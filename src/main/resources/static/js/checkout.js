@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function main() {
   const button = document.getElementById('payment-button');
-  const value = document.getElementById('totalAmount').value;
+  const totalAmount = document.getElementById('totalAmount').value;
 
   const widgetClientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
   const customerKey = 'xhhdbLrOD24-ywjgsdV2d';
@@ -15,43 +15,56 @@ async function main() {
   const orderName = document.getElementById("orderName").value;
   const customerEmail = document.getElementById('customerEmail').value;
   const customerName = document.getElementById('customerName').value;
-  const userPhone = document.getElementById('userPhone').value;
+  const userPhone = document.getElementById('customerPhone').value;
 
-  const order ={
-    orderName : orderName,
+  const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+    "#payment-method",
+    { value: totalAmount },
+    { variantKey: "DEFAULT" }
+  );
 
-  }
+  paymentWidget.renderAgreement(
+    "#agreement",
+    { variantKey: "AGREEMENT" }
+  );
 
-      const paymentMethodWidget = paymentWidget.renderPaymentMethods(
-        "#payment-method",
-        { value: value },
-        { variantKey: "DEFAULT" }
-      );
-
-      paymentWidget.renderAgreement(
-        "#agreement",
-        { variantKey: "AGREEMENT" }
-      )
+  const confirm = {
+    orderNum: orderId,
+    price: totalAmount
+  };
 
   button.addEventListener("click", async function () {
+    // 클릭 이벤트 내에서 key 값을 가져옵니다.
+    var key = document.getElementById('key').value;
 
-    const key = document.getElementById('key').value;
-
-
-    .then(response =>{
-        if(response.ok){
-                paymentWidget.requestPayment({
-                  orderId: orderId,
-                  orderName: orderName,
-                  successUrl: window.location.href = `/payment/success?key=${key}`,
-                  failUrl: window.location.origin + "/payment/fail",
-                  customerEmail: customerEmail,
-                  customerName: customerName,
-                  customerMobilePhone: userPhone
-                });
-        }
+    fetch(`/api/v1/payments/toss/{key})`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(confirm)
     })
-
-
+    .then(response => {
+      if (response.ok) {
+        return response.text().then(paymentKey => {
+          paymentWidget.requestPayment({
+            orderId: orderId,
+            orderName: orderName,
+            successUrl: `/payment/success?paymentKey=${paymentKey}&key=${key}`, // 템플릿 리터럴 수정
+            failUrl: window.location.origin + "/payment/fail",
+            customerEmail: customerEmail,
+            customerName: customerName,
+            customerMobilePhone: userPhone
+          });
+        });
+      } else {
+        return response.text().then(errorMessage => {
+          alert(errorMessage);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
   });
 }

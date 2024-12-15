@@ -60,8 +60,8 @@
             <tr th:each="item : ${orderList}">
                 <td><input type="checkbox" name="index" th:checked="true"></td>
                 <td><img alt="상품 이미지"></td>
-                <td th:text="${item.product.name}"></td>
-                <td th:text="${item.product.price} + '원'"></td>
+                <td th:text="${item.productName}"></td>
+                <td th:text="${item.productPrice} + '원'"></td>
                 <td th:text="${item.amount}"></td>
             </tr>
             </tbody>
@@ -70,7 +70,7 @@
 
     <!-- 총 가격 -->
     <div class="total-price">
-        총 금액: <span th:text="${order.totalPrice} + '원'"></span>
+        총 금액: <span id="totalPrice" th:text="${totalPrice} + '원'"></span>
     </div>
 
     <!-- 결제 버튼 -->
