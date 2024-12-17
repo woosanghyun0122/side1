@@ -1,6 +1,7 @@
 package side.shopping.repository.order.dto;
 
 import lombok.*;
+import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.order.Status;
 
 import java.util.List;
@@ -19,7 +20,13 @@ public class OrderItemDto {
     private String req;
     private Status status;
 
+    public OrderItem toOrderItem(OrderItemDto dto) {
 
+        OrderItem item = new OrderItem();
+        item.setAmount(dto.getAmount());
+        item.setTotalPrice(dto.getAmount() * dto.getProductPrice());
+        return item;
+    }
 
 }
 

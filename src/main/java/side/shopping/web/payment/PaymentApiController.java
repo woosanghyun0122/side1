@@ -13,9 +13,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import side.shopping.cache.CacheService;
 import side.shopping.config.TossPaymentConfig;
+import side.shopping.domain.order.Method;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.payment.Payment;
+import side.shopping.domain.product.Product;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
@@ -25,11 +27,13 @@ import side.shopping.repository.payment.dto.PaymentDto;
 import side.shopping.repository.payment.dto.PaymentResDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.payment.service.PaymentService;
+import side.shopping.web.product.service.ProductService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static side.shopping.exception.ErrorCode.*;
 
@@ -40,14 +44,15 @@ import static side.shopping.exception.ErrorCode.*;
 public class PaymentApiController {
 
     private final TossPaymentConfig config;
-    private final PaymentService service;
 
     @Autowired
     CacheService cacheService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     public PaymentApiController(TossPaymentConfig config, PaymentService service) {
         this.config = config;
-        this.service = service;
     }
 
 
@@ -67,22 +72,50 @@ public class PaymentApiController {
         return ResponseEntity.status(HttpStatus.OK).body(key);
 
     }
-    @PostMapping("/toss/{key}")
-    public ResponseEntity requestTossPayment(@RequestBody @Validated PaymentDto dto, @PathVariable("key") String key, HttpServletRequest request) {
+    @PostMapping("/toss")
+    public ResponseEntity requestTossPayment(@RequestBody @Validated PaymentDto dto, HttpServletRequest request) {
 
-        OrderToPayDto order = (OrderToPayDto) cacheService.getCacheValue(key);
+        OrderToPayDto order = (OrderToPayDto) cacheService.getCacheValue(dto.getOrderKey());
+
 
         if (dto.getPrice() == order.getTotalAmount() && dto.getOrderNum().equals(order.getOrderNum())) {
-            String paymentKey = cacheService.createKey();
-            return ResponseEntity.status(HttpStatus.OK).body(paymentKey);
+
+            HttpSession session = request.getSession(false);
+            LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
+
+            String paymentKey = dto.getOrderKey();
+
+            Payment payment = paymentService.savePayment
+                    (Payment.builder()
+                            .orderName(dto.getOrderName())
+                            .price(order.getTotalAmount())
+                            .paymentKey(paymentKey)
+                            .orderNum(order.getOrderNum())
+                            .paySuccessYN(true)
+                            .build()
+            );
+            return ResponseEntity.status(HttpStatus.OK).body(payment);
         } else {
             throw new CustomException(PAYMENT_ERROR.getCode(), PAYMENT_ERROR.getMessage());
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     private void settingOrder(Order order1, Order order2, LoginResponseDto dto) {
 
-/*        String orderName;
+*//*        String orderName;
 
         if (!order1.getOrderItemList().isEmpty()) {
             orderName = order1.getOrderItemList().get(0).getProduct().getName() + "외 " + (order1.getOrderItemList().size() - 1) + "건";
@@ -106,6 +139,6 @@ public class PaymentApiController {
 
         log.info("setOrderNum={},setName={}, setAddress={},setMethod={},setTotalPrice={},setOrderDate={},setUserName={},setUserPhone={},setUserEmail={}",
                 order1.getOrderNum(), order1.getOrderName(), order1.getAddress(), order1.getMethod(), order1.getTotalPrice(), order1.getOrderDate(), order1.getUser().getUserName(), order1.getUser().getPhone(), order1.getUser().getEmail()
-        );*/
-    }
+        );*//*
+    }*/
 }

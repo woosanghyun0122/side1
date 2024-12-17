@@ -40,8 +40,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Transactional
-    @Query("update Product p set p.saleCount = p.saleCount +1 where p.productId = :productId")
+    @Query("update Product p set p.saleCount = p.saleCount +1, p.quantity = p.quantity -1 where p.productId = :productId")
     void updateSaleCount(@Param("productId") long productId);
+
+
 
     // 상품 등록
     Product save(Product product);

@@ -51,10 +51,6 @@ public class Order {
     @Column
     private String customerEmail;
 
-    @Column(name = "payment_method")
-    @Enumerated(EnumType.STRING)
-    private Method method;
-
     private String req;
 
     private int totalCount;
@@ -77,12 +73,14 @@ public class Order {
     @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
     private Users user = new Users();
 
+    @OneToOne
+    @JoinColumn(name = "paymentKey",referencedColumnName = "paymentKey")
+    private Payment payment;
+
+
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<OrderItem> orderItemList = new ArrayList<>();
-
-    @OneToOne(mappedBy = "order")
-    private Payment payment;
 
     @PrePersist
     public void onCreate() {
@@ -100,22 +98,6 @@ public class Order {
     }
 
 
-    public int registerTotalPrice (List<OrderItem> orderItemList) {
-
-        int totalPrice = 0;
-
-        for (OrderItem orderItem : orderItemList) {
-            totalPrice = totalPrice + orderItem.getTotalPrice();
-        }
-
-        return totalPrice;
-    }
-
-    public int registerTotalAmount(List<OrderItem> orderItemList) {
-        return orderItemList.size();
-    }
-
-
     public UserOrderListDto toUserOrderListDto(Order order){
 
         return UserOrderListDto.builder()
@@ -123,7 +105,6 @@ public class Order {
                 .productName(order.getOrderItemList().get(0).getProduct().getName() + " 외 " + order.orderItemList.size()+"건")
                 .name(order.getOrderName())
                 .phone(order.getCustomerPhone())
-                .method(String.valueOf(order.getMethod()))
                 .totalCount(order.getTotalCount())
                 .totalPrice(order.getTotalPrice())
                 .build();
@@ -140,26 +121,5 @@ public class Order {
         this.orderName = dto.getName();
         this.address = modifyAddress;
     }
-
-    public void setOrder(Order order) {
-
-        if (!order.getOrderItemList().isEmpty()) {
-            this.orderName = order.getOrderItemList().get(0).getProduct().getName() + "외 " + (order.getOrderItemList().size() - 1) + "건";
-        } else {
-            this.orderName = "상품 없음";  // 리스트가 비어 있을 경우 처리
-        }
-        this.address = order.getAddress();
-        this.method = order.getMethod();
-        this.totalCount = order.registerTotalAmount(order.getOrderItemList());
-        this.totalPrice = order.registerTotalPrice(order.getOrderItemList());
-        this.orderDate = LocalDateTime.now().toString().substring(0,8);
-    }
-
-
-
-
-
-
-
 
 }

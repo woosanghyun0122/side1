@@ -225,17 +225,13 @@ INSERT INTO `category` (`category_id`, `category_name`, `depth`, `parent_id`, `c
 ('CAT00501', '소설', 2, 'CAT005', NOW(), NOW()),
 ('CAT00502', '기타', 2, 'CAT005', NOW(), NOW());
 
--- side.`order` definition
-
--- side.orders definition
-
 -- side.orders definition
 
 CREATE TABLE `orders` (
   `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `total_price` int DEFAULT NULL,
-  `order_date` varchar(26) NOT NULL,
+  `order_date` timestamp NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
   `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '구매자명',
@@ -246,14 +242,16 @@ CREATE TABLE `orders` (
   `req` varchar(100) DEFAULT NULL COMMENT '배송요청사항',
   `payment_method` varchar(100) DEFAULT NULL,
   `zip_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `payment_key` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`order_num`),
   KEY `order_users_FK` (`userid`),
-  CONSTRAINT `order_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
+  KEY `orders_payment_FK` (`payment_key`),
+  CONSTRAINT `order_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`),
+  CONSTRAINT `orders_payment_FK` FOREIGN KEY (`payment_key`) REFERENCES `payment` (`payment_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- side.order_item definition
 
--- side.order_item definition
 
 CREATE TABLE `order_item` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -275,7 +273,6 @@ CREATE TABLE `order_item` (
   CONSTRAINT `order_item_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- side.payment definition
 
 -- side.payment definition
 
@@ -295,7 +292,8 @@ CREATE TABLE `payment` (
   `fail_reason` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `order_name` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `payment_unique` (`payment_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- side.image definition

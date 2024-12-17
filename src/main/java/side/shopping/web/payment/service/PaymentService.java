@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import side.shopping.cache.CacheService;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.payment.Payment;
@@ -14,8 +15,7 @@ import side.shopping.repository.users.UserRepository;
 import side.shopping.web.category.CategoryService;
 import side.shopping.web.product.service.ProductService;
 
-import static side.shopping.exception.ErrorCode.SAVE_ERROR;
-import static side.shopping.exception.ErrorCode.SELECT_ERROR;
+import static side.shopping.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -30,25 +30,33 @@ public class PaymentService {
     @Autowired
     ProductService productService;
 
+    /**
+     * 결제 내역 조회
+     */
+    public Payment findByPaymentKey(String key) {
+
+        if (!StringUtils.hasText(key)) {
+            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
+        }
+
+        return paymentRepository.findByPaymentKey(key)
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+    }
+
+
+    /**
+     * 유저별 결제 내역 조회
+     */
 
 
     /**
      *  결제하기 완
      * */
     @Transactional
-    public Payment requestTossPayment(String userid, Order order) {
+    public Payment savePayment(Payment payment) {
 
-        Payment payment = new Payment();
-        // 결제에 주문 정보 세팅
-        payment.setOrder(order);
-
-        try {
-            order.getOrderItemList().stream()
-                    .forEach(item ->{
-                        productService.saleCountUpdate(item.getId());
-                    });
+        try{
             return paymentRepository.save(payment);
-
         } catch (Exception e){
             throw new CustomException(SAVE_ERROR.getCode(), SAVE_ERROR.getMessage());
         }

@@ -4,6 +4,7 @@
   const paymentKey = urlParams.get("paymentKey");
   const orderId = urlParams.get("orderId");
   const amount = urlParams.get("amount");
+  const method = urlParams.get("method");
 
   async function confirm() {
 
@@ -11,6 +12,7 @@
       paymentKey: paymentKey,
       orderId: orderId,
       amount: amount,
+      method: method
     };
 
     const response = await fetch("/confirm", {

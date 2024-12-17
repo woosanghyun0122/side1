@@ -45,15 +45,8 @@ public class PaymentViewController {
     public String success(@RequestParam("orderId") String orderId
                           ,@RequestParam("paymentKey")String paymentKey
                           ,@RequestParam("amount")int amount
-                          ,Model model
+                          ,@RequestParam("method") String method
                           ) {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("orderId", orderId);
-        map.put("paymentKey", paymentKey);
-        map.put("amount", amount);
-
-        model.addAttribute("result", map);
 
         return "/payment/success";
     }

@@ -16,6 +16,7 @@ async function main() {
   const customerEmail = document.getElementById('customerEmail').value;
   const customerName = document.getElementById('customerName').value;
   const userPhone = document.getElementById('customerPhone').value;
+  const key = document.getElementById('key').value;
 
   const paymentMethodWidget = paymentWidget.renderPaymentMethods(
     "#payment-method",
@@ -30,14 +31,15 @@ async function main() {
 
   const confirm = {
     orderNum: orderId,
-    price: totalAmount
+    price: totalAmount,
+    orderKey: key
   };
 
   button.addEventListener("click", async function () {
     // 클릭 이벤트 내에서 key 값을 가져옵니다.
-    var key = document.getElementById('key').value;
 
-    fetch(`/api/v1/payments/toss/{key})`, {
+
+    fetch('/api/v1/payments/toss', {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -50,7 +52,7 @@ async function main() {
           paymentWidget.requestPayment({
             orderId: orderId,
             orderName: orderName,
-            successUrl: `/payment/success?paymentKey=${paymentKey}&key=${key}`, // 템플릿 리터럴 수정
+            successUrl: window.location.origin + '/payment/success', // 템플릿 리터럴 수정
             failUrl: window.location.origin + "/payment/fail",
             customerEmail: customerEmail,
             customerName: customerName,

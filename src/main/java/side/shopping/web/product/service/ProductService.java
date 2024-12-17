@@ -125,6 +125,14 @@ public class ProductService {
      */
     public void saleCountUpdate(Long productId) {
 
+
+        Product product = repository.findById(productId)
+                .orElseThrow(() -> new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage()));
+
+        if (product.getQuantity() == 0) {
+            throw new CustomException(NO_QUANTITY.getCode(), NO_QUANTITY.getMessage());
+        }
+
         try {
             repository.updateSaleCount(productId);
         } catch (Exception e) {
@@ -253,9 +261,9 @@ public class ProductService {
         }
     }
 
-    /**
+/*    *//**
      * 즉시구매 상품 조회
-     */
+     *//*
     public OrderItem instantOrderItem(Long id) {
 
         if (id == null) {
@@ -269,7 +277,7 @@ public class ProductService {
                 .product(item)
                 .build();
 
-    }
+    }*/
 
 
 

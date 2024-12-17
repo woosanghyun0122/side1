@@ -9,6 +9,7 @@ public enum ErrorCode {
     INVALID_USERID(1005,"아이디가 존재하지 않습니다."),
     INVALID_PASSWORD(1006,"비밀번호가 잘못되었습니다."),
     VARIABLE_ERROR(1007,"오류가 발생하였습니다."),
+    NO_QUANTITY(1008, "재고가 없습니다."),
     SERVER_ERROR(9000,"알 수 없는 오류가 발생하였습니다."),
     SAVE_ERROR(9001,"저장에 실패하였습니다."),
     UPDATE_ERROR(9002,"수정에 실패하였습니다."),

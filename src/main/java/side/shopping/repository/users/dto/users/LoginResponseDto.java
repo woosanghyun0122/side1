@@ -20,13 +20,13 @@ public class LoginResponseDto {
     private String email;
     private Role role;
 
-    public Users toUsers(LoginResponseDto dto){
+    public Users toUsers(){
 
         return Users.builder()
-                .userid(dto.getUserId())
-                .userName(dto.getUserName())
-                .phone(dto.getPhone())
-                .email(dto.getEmail())
+                .userid(this.userId)
+                .userName(this.userName)
+                .phone(this.phone)
+                .email(this.email)
                 .build();
     }
 

@@ -69,24 +69,6 @@ public class OrderApiController {
 
 
     /**
-     * 주문 등록
-     * */
-    @PostMapping("/register")
-    public ResponseEntity<?> save(@RequestBody @Validated Order order, List<OrderItem> orderList, HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false);
-        LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
-
-        if (loginUser == null) {
-            throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
-        }
-
-        Order newOrder = orderService.registerOrder(order, orderList, loginUser.getUserId());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-
-    }
-
-    /**
      * 주문 수정
      */
     @PutMapping("/modify-order")

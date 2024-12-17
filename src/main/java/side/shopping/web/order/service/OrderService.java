@@ -16,6 +16,8 @@ import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
 import side.shopping.repository.order.OrderRepository;
+import side.shopping.repository.order.dto.OrderItemDto;
+import side.shopping.repository.order.dto.OrderToPayDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
 import side.shopping.repository.users.UserRepository;
@@ -69,28 +71,23 @@ public class OrderService {
      * 주문 하기
      */
     @Transactional
-    public Order registerOrder(Order order, List<OrderItem> orderList, String userid) {
+    public Order registerOrder(OrderToPayDto dto, List<OrderItemDto> orderList) {
 
-        Users loginUser = userRepository.findByUserid(userid)
-                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
-
-        if (orderList.isEmpty()) {
-            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
-        }
-
-        Order saveOrder = toSaveOrder(order, orderList);
-        saveOrder.setUser(loginUser);
+        Order order = dto.toOrder();
+        List<OrderItem> itemList = orderList.stream()
+                .map(item -> {
+                    OrderItem orderItem = item.toOrderItem(item);
+                    Product product = productService.findDetail(item.getProductId());
+                    orderItem.setProduct(product);
+                    order.getOrderItemList().add(orderItem);
+                    return orderItem;
+                }).collect(Collectors.toList());
 
         try {
-            orderList.stream()
-                    .forEach(item ->{
-                        productService.saleCountUpdate(item.getId());
-                    });
-            return repository.save(saveOrder);
-        } catch (Exception e){
+            return repository.save(order);
+        } catch (EntityExistsException | DataIntegrityViolationException e) {
             throw new CustomException(SAVE_ERROR.getCode(), SAVE_ERROR.getMessage());
         }
-
     }
 
 

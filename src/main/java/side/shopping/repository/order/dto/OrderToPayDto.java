@@ -5,6 +5,7 @@ import side.shopping.domain.Address;
 import side.shopping.domain.order.Method;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
+import side.shopping.domain.users.Users;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,9 +29,9 @@ public class OrderToPayDto {
 
     private String customerPhone;
 
-    private Method method;
-
     private String orderItemKey;
+
+    private Users user;
 
     private int totalAmount;
 
@@ -45,7 +46,7 @@ public class OrderToPayDto {
                 .customerName(this.customerName)
                 .address(this.customerAddress)
                 .customerPhone(this.customerPhone)
-                .method(this.method)
+                .user(this.user)
                 .orderDate(this.orderDate)
                 .build();
     }

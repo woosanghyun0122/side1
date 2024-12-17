@@ -14,14 +14,12 @@ import side.shopping.domain.payment.Payment;
 @AllArgsConstructor
 public class PaymentDto {
 
-    @NotNull
     private Method method; // 결제 타입
 
     private int price;
 
     private Address address;
 
-    @NotNull
     private String orderName;
 
     private String successfulUrl; // 성공 시 리다이렉트 url
@@ -29,6 +27,8 @@ public class PaymentDto {
     private String failUrl; // 실패 시 url
 
     private String orderNum;
+
+    private String orderKey;
 
     public Payment toEntity() {
         return Payment.builder()

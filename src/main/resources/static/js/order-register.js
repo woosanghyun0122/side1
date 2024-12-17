@@ -12,7 +12,9 @@ function pay(){
     phone = document.getElementById('customerPhone').value;
     email = document.getElementById('customerEmail').value;
     totalAmount = document.getElementById('totalPrice').innerText.replace('원','');
+/*
     method = getSelectedMethod();
+*/
 
     var addressDto = {
             zipCode: zipCode,
@@ -24,7 +26,7 @@ function pay(){
         orderItemKey: key,
         customerName: name,
         customerPhone: phone,
-        method: method,
+/*        method: method,*/
         customerEmail: email,
         address: addressDto,
         totalAmount: totalAmount

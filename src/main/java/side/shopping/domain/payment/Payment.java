@@ -36,43 +36,24 @@ public class Payment {
     @Column(unique = true)
     private String paymentKey;
 
+    @Setter
     @Column(name = "pay_success_yn")
     private boolean paySuccessYN;
 
+    @Setter
     @Column(name = "cancel_reason")
     private String cancelReason;
 
     @Column
     private String failReason;
 
-    @Setter
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "orderNum")
-    private Order order;
+    @Column
+    private String orderNum;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-
-
-    public PaymentResDto toPaymentResDto() {
-
-        return PaymentResDto.builder()
-                .method(method.getDescription())
-                .price(order.getTotalPrice())
-                .orderName(orderName)
-                .orderNum(order.getOrderNum())
-                .customerEmail(order.getUser().getEmail())
-                .customerName(order.getCustomerName())
-                .createdAt(String.valueOf(order.getCreatedAt()))
-                .cancelYN(paySuccessYN)
-                .failReason(failReason)
-                .build();
-    }
-
-
 
 }

@@ -1,8 +1,3 @@
-
-
-console.log("name>>>>>>>>>>"+productName);
-console.log("price>>>>>>>>>>"+price);
-
 function toggleWishlist() {
 
         const icon = document.getElementById('heart').querySelector('.fa-heart');
