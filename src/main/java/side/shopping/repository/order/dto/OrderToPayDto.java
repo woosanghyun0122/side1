@@ -6,9 +6,11 @@ import side.shopping.domain.order.Method;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.users.Users;
+import side.shopping.repository.users.dto.users.LoginResponseDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,23 +33,36 @@ public class OrderToPayDto {
 
     private String orderItemKey;
 
-    private Users user;
+    private LoginResponseDto user;
 
     private int totalAmount;
 
     private String orderDate;
 
-    private Address customerAddress;
+    private String zipcode;
+
+    private String address;
+
+    private String addressDetail;
+
+
 
     public Order toOrder() {
 
+        Address customerAddress = Address.builder()
+                .zipCode(this.zipcode)
+                .address(this.address)
+                .addressDetail(this.addressDetail)
+                .build();
+
         return Order.builder()
                 .orderNum(this.orderNum)
+                .orderName(this.orderName)
                 .customerName(this.customerName)
-                .address(this.customerAddress)
+                .address(customerAddress)
                 .customerPhone(this.customerPhone)
-                .user(this.user)
                 .orderDate(this.orderDate)
+                .orderItemList(new ArrayList<>())
                 .build();
     }
 

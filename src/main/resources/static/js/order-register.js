@@ -26,9 +26,10 @@ function pay(){
         orderItemKey: key,
         customerName: name,
         customerPhone: phone,
-/*        method: method,*/
         customerEmail: email,
-        address: addressDto,
+        zipCode: zipCode,
+        address: address,
+        addressDetail: addressDetail,
         totalAmount: totalAmount
     }
 

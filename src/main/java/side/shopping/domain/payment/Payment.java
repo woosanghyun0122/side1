@@ -2,12 +2,7 @@ package side.shopping.domain.payment;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import side.shopping.domain.order.Method;
-import side.shopping.domain.order.Order;
-import side.shopping.domain.users.Users;
-import side.shopping.repository.payment.dto.PaymentResDto;
 
 import java.time.LocalDateTime;
 
@@ -29,10 +24,12 @@ public class Payment {
     @Column
     private int price;
 
+    @Setter
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
     private Method method;
 
+    @Setter
     @Column(unique = true)
     private String paymentKey;
 
@@ -44,16 +41,28 @@ public class Payment {
     @Column(name = "cancel_reason")
     private String cancelReason;
 
+    @Setter
     @Column
     private String failReason;
 
     @Column
     private String orderNum;
 
-    @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }

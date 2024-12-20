@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class PaymentResDto {
 
+
     private String method;
     private String orderName; // 주문 명
     private int price; // 가격
@@ -20,6 +21,7 @@ public class PaymentResDto {
     private boolean cancelYN;
     private String cancelReason;
     private String createdAt;
-    private String orderNum;
+    private String orderId;
+    private String type;
 
 }

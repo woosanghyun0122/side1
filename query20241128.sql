@@ -230,19 +230,18 @@ INSERT INTO `category` (`category_id`, `category_name`, `depth`, `parent_id`, `c
 CREATE TABLE `orders` (
   `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `total_price` int DEFAULT NULL,
-  `order_date` timestamp NOT NULL,
+  `order_date` varchar(30) NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
-  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '구매자명',
+  `order_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '구매자명',
   `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `address_detail` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `phone` varchar(13) DEFAULT NULL,
-  `total_count` int DEFAULT NULL,
-  `req` varchar(100) DEFAULT NULL COMMENT '배송요청사항',
+  `customer_phone` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `payment_method` varchar(100) DEFAULT NULL,
   `zip_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `payment_key` varchar(100) DEFAULT NULL,
+  `customer_email` varchar(100) DEFAULT NULL,
+  `customer_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`order_num`),
   KEY `order_users_FK` (`userid`),
   KEY `orders_payment_FK` (`payment_key`),
@@ -265,36 +264,34 @@ CREATE TABLE `order_item` (
   `product_name` varchar(100) DEFAULT NULL,
   `total_price` int DEFAULT NULL,
   `status` int DEFAULT NULL,
-  `reason` blob COMMENT '환불 사유',
+  `cancel_reason` blob COMMENT '환불 사유',
+  `userid` varchar(100) DEFAULT NULL COMMENT '판매자아이디',
   PRIMARY KEY (`id`),
   KEY `order_item_order_fk` (`order_num`),
   KEY `order_item_product_FK` (`product_id`),
   CONSTRAINT `order_item_order_fk` FOREIGN KEY (`order_num`) REFERENCES `orders` (`order_num`),
   CONSTRAINT `order_item_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 -- side.payment definition
 
 CREATE TABLE `payment` (
-  `id` varchar(255) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `pay_date` timestamp NOT NULL,
-  `payment_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `payment_status` varchar(255) DEFAULT NULL,
+  `payment_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `payment_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `price` int DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
-  `pay_success_yn` varchar(1) DEFAULT NULL,
+  `pay_success_yn` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `cancel_reason` varchar(100) DEFAULT NULL,
   `fail_reason` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `order_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `payment_unique` (`payment_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- side.image definition
 

@@ -22,8 +22,8 @@ public class OrderItem {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product = new Product();
+    @JoinColumn(name = "productId")
+    private Product product;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,7 +35,7 @@ public class OrderItem {
     private int amount;
 
     @Column
-    private String req;
+    private String cancelReason;
 
     @Column
     @ColumnDefault("1")
@@ -77,7 +77,7 @@ public class OrderItem {
 
         this.status = dto.getStatus();
         this.amount = dto.getAmount();
-        this.req = dto.getReq();
+        this.cancelReason = dto.getCancelReason();
     }
 
 

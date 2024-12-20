@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PaymentRepository extends JpaRepository<Payment,Long> {
 
     // 주문번호로 결제 조회
-    @Query("SELECT p FROM Payment p WHERE p.orderNum = :orderNum and p.paySuccessYn = true")
+    @Query("SELECT p FROM Payment p WHERE p.orderNum = :orderNum")
     Optional<Payment> findByOrderNum(@Param("orderNum") String orderNum);
 
     // 결제 키로 결제 조회

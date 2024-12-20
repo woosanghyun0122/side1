@@ -51,14 +51,6 @@ public class Order {
     @Column
     private String customerEmail;
 
-    private String req;
-
-    private int totalCount;
-
-    private int totalPrice;
-
-    private String orderItemListKey;
-
     @Column(name = "order_date")
     private String orderDate;
 
@@ -77,10 +69,12 @@ public class Order {
     @JoinColumn(name = "paymentKey",referencedColumnName = "paymentKey")
     private Payment payment;
 
-
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<OrderItem> orderItemList = new ArrayList<>();
+
+    @Transient
+    private String orderItemListKey;
+
 
     @PrePersist
     public void onCreate() {
@@ -105,8 +99,6 @@ public class Order {
                 .productName(order.getOrderItemList().get(0).getProduct().getName() + " 외 " + order.orderItemList.size()+"건")
                 .name(order.getOrderName())
                 .phone(order.getCustomerPhone())
-                .totalCount(order.getTotalCount())
-                .totalPrice(order.getTotalPrice())
                 .build();
     }
 

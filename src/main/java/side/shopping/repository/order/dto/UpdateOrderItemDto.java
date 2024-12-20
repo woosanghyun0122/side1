@@ -18,6 +18,6 @@ public class UpdateOrderItemDto {
 
     private int amount;
 
-    private String req;
+    private String cancelReason;
 
 }

@@ -29,26 +29,10 @@ async function main() {
     { variantKey: "AGREEMENT" }
   );
 
-  const confirm = {
-    orderNum: orderId,
-    price: totalAmount,
-    orderKey: key
-  };
 
   button.addEventListener("click", async function () {
     // 클릭 이벤트 내에서 key 값을 가져옵니다.
 
-
-    fetch('/api/v1/payments/toss', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(confirm)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.text().then(paymentKey => {
           paymentWidget.requestPayment({
             orderId: orderId,
             orderName: orderName,
@@ -58,15 +42,5 @@ async function main() {
             customerName: customerName,
             customerMobilePhone: userPhone
           });
-        });
-      } else {
-        return response.text().then(errorMessage => {
-          alert(errorMessage);
-        });
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
     });
-  });
 }

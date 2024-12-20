@@ -1,6 +1,7 @@
 package side.shopping.web.payment;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.payment.service.PaymentService;
 import side.shopping.web.product.service.ProductService;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -56,8 +59,13 @@ public class PaymentApiController {
     }
 
 
+
     @PostMapping("/checkout")
-    public ResponseEntity setOrder(@RequestBody @Validated OrderToPayDto order) {
+    public ResponseEntity setOrder(@RequestBody @Validated OrderToPayDto order,HttpServletRequest request) {
+
+
+        log.info("checkout!! customerName={} customerPhone={} customerEmail={} zipCode={} address={}"
+                , order.getCustomerName(), order.getCustomerPhone(), order.getCustomerEmail(), order.getZipcode(), order.getAddress());
 
         List<OrderItemDto> list = (List<OrderItemDto>) cacheService.getCacheValue(order.getOrderItemKey());
         order.setOrderNum(order.createOrderNum());
@@ -66,51 +74,38 @@ public class PaymentApiController {
         }else{
             order.setOrderName(list.get(0).getProductName() +" 외 "+(list.size() -1)+"건");
         }
-        String key = cacheService.createKey();
+        String key = order.getOrderNum();
+
         cacheService.setCacheValue(key, order);
 
         return ResponseEntity.status(HttpStatus.OK).body(key);
 
     }
-    @PostMapping("/toss")
-    public ResponseEntity requestTossPayment(@RequestBody @Validated PaymentDto dto, HttpServletRequest request) {
+/*    @PostMapping("/toss")
+    public ResponseEntity requestTossPayment(@RequestBody @Validated PaymentDto dto) {
 
         OrderToPayDto order = (OrderToPayDto) cacheService.getCacheValue(dto.getOrderKey());
 
+        log.info("order={}", order.getOrderNum());
+
 
         if (dto.getPrice() == order.getTotalAmount() && dto.getOrderNum().equals(order.getOrderNum())) {
-
-            HttpSession session = request.getSession(false);
-            LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
 
             String paymentKey = dto.getOrderKey();
 
             Payment payment = paymentService.savePayment
                     (Payment.builder()
-                            .orderName(dto.getOrderName())
-                            .price(order.getTotalAmount())
+                            .orderName(order.getOrderName())
                             .paymentKey(paymentKey)
+                            .price(order.getTotalAmount())
                             .orderNum(order.getOrderNum())
-                            .paySuccessYN(true)
                             .build()
             );
             return ResponseEntity.status(HttpStatus.OK).body(payment);
         } else {
             throw new CustomException(PAYMENT_ERROR.getCode(), PAYMENT_ERROR.getMessage());
         }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
+    }*/
 
 /*
     private void settingOrder(Order order1, Order order2, LoginResponseDto dto) {

@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import side.shopping.domain.Address;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
+import side.shopping.domain.payment.Payment;
 import side.shopping.domain.product.Product;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
@@ -20,7 +21,10 @@ import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.OrderToPayDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
+import side.shopping.repository.payment.PaymentRepository;
+import side.shopping.repository.product.ProductRepository;
 import side.shopping.repository.users.UserRepository;
+import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.product.service.ProductService;
 import side.shopping.web.users.service.UsersService;
 
@@ -38,10 +42,13 @@ public class OrderService {
     private OrderRepository repository;
 
     @Autowired
-    private ProductService productService;
+    private ProductRepository productRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
 
     /**
@@ -73,11 +80,24 @@ public class OrderService {
     @Transactional
     public Order registerOrder(OrderToPayDto dto, List<OrderItemDto> orderList) {
 
+        Users customer = userRepository.findByUserid(dto.getUser().getUserId())
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+
+        Payment payment = paymentRepository.findByPaymentKey(dto.getOrderNum())
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+
         Order order = dto.toOrder();
+        order.setUser(customer);
+        order.setPayment(payment);
+
         List<OrderItem> itemList = orderList.stream()
                 .map(item -> {
                     OrderItem orderItem = item.toOrderItem(item);
-                    Product product = productService.findDetail(item.getProductId());
+                    Product product = productRepository.findById(item.getProductId())
+                            .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+
+                    log.info("product={}", product.getProductId());
+
                     orderItem.setProduct(product);
                     order.getOrderItemList().add(orderItem);
                     return orderItem;
