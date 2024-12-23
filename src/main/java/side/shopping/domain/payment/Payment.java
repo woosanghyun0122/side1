@@ -19,19 +19,19 @@ public class Payment {
     private Long paymentId;
 
     @Column
-    private String orderName;
+    private String orderNum;
 
-    @Column
-    private int price;
+    @Setter
+    @Column(unique = true)
+    private String paymentKey;
 
     @Setter
     @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
     private Method method;
 
-    @Setter
-    @Column(unique = true)
-    private String paymentKey;
+    @Column
+    private int price;
 
     @Setter
     @Column(name = "pay_success_yn")
@@ -44,9 +44,6 @@ public class Payment {
     @Setter
     @Column
     private String failReason;
-
-    @Column
-    private String orderNum;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

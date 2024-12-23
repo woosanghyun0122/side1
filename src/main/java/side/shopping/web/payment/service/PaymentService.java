@@ -79,6 +79,7 @@ public class PaymentService {
 
         String cacheKey = verifyPayment(orderId, amount);
 
+        // 주문 내역 저장
         Payment payment = (Payment) cacheService.getCacheValue(cacheKey);
         payment.setPaymentKey(paymentKey);
         payment.setPaySuccessYN(true);
@@ -86,11 +87,8 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         OrderToPayDto dto = (OrderToPayDto) cacheService.getCacheValue(orderId);
+        log.info("zipCode={} address={} detail={}",dto.getZipCode(),dto.getAddress(),dto.getAddressDetail());
         dto.setUser(loginUser);
-
-
-        log.info("success!! customerName={} customerPhone={} customerEmail={} zipCode={} address={}, totalPrice={}"
-                , dto.getCustomerName(), dto.getCustomerPhone(), dto.getCustomerEmail(), dto.getZipcode(), dto.getAddress(),dto.getTotalAmount());
 
 
         List<OrderItemDto> dtoList = (List<OrderItemDto>) cacheService.getCacheValue(dto.getOrderItemKey());
@@ -102,7 +100,7 @@ public class PaymentService {
     }
 
     /**
-     * 검증 및 주문 내역 저장
+     * 검증 및 주문 내역 캐시 저장
      */
     public String verifyPayment(String orderId, int amount) {
 
@@ -115,7 +113,6 @@ public class PaymentService {
                 log.info("savePayment={}", order.getOrderNum());
 
                 Payment payment = Payment.builder()
-                        .orderName(order.getOrderName())
                         .price(order.getTotalAmount())
                         .orderNum(order.getOrderNum())
                         .build();
@@ -160,19 +157,7 @@ public class PaymentService {
         return result;
     }
 
-    /**
-     *  결제하기 완
-     * */
-    @Transactional
-    public Payment savePayment(Payment payment) {
 
-        try{
-            return paymentRepository.save(payment);
-        } catch (Exception e){
-            throw new CustomException(SAVE_ERROR.getCode(), SAVE_ERROR.getMessage());
-        }
-
-    }
 
     /**
      * 결제 실패 시 상태 수정
@@ -190,6 +175,9 @@ public class PaymentService {
     }
 
 
+    /***
+     *  response 받아오는 header 설정
+     */
     private HttpHeaders getHeaders(){
 
         log.info("getHeaders");
@@ -208,6 +196,9 @@ public class PaymentService {
         return headers;
     }
 
+    /**
+     *  결제 방법 return
+     * */
     private Method getMethod(String value) {
 
         Method[] methods = Method.values();

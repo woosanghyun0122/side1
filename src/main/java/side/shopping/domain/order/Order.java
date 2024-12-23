@@ -36,23 +36,29 @@ public class Order {
     @Column(name = "order_num")
     private String orderNum;
 
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
+    private Users user = new Users();
+
     @Column
     private String orderName;
+
+    @OneToOne
+    @JoinColumn(name = "paymentKey",referencedColumnName = "paymentKey")
+    private Payment payment;
 
     @Column
     private String customerName;
 
-    @Embedded
-    private Address address;
+    @Column
+    private String customerEmail;
 
     @Column
     private String customerPhone;
 
-    @Column
-    private String customerEmail;
-
-    @Column(name = "order_date")
-    private String orderDate;
+    @Embedded
+    private Address address;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -60,17 +66,8 @@ public class Order {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
-    private Users user = new Users();
-
-    @OneToOne
-    @JoinColumn(name = "paymentKey",referencedColumnName = "paymentKey")
-    private Payment payment;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<OrderItem> orderItemList = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    private List<OrderItem> orderItemList;
 
     @Transient
     private String orderItemListKey;
@@ -80,7 +77,6 @@ public class Order {
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        this.orderDate = LocalDateTime.now().toString().substring(0,8);
     }
 
     @PreUpdate
@@ -89,6 +85,11 @@ public class Order {
     }
 
     public Order() {
+    }
+
+    public void addOrderItem(OrderItem item) {
+        this.orderItemList.add(item);
+        item.setOrder(this);
     }
 
 

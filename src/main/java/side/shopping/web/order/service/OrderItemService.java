@@ -47,7 +47,6 @@ public class OrderItemService {
                             .productPrice(item.getProduct().getPrice())
                             .amount(item.getAmount())
                             .status(item.getStatus())
-                            .orderDate(item.getOrder().getOrderDate())
                             .build();
                     return dto;
                 })

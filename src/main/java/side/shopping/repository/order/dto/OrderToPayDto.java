@@ -39,7 +39,7 @@ public class OrderToPayDto {
 
     private String orderDate;
 
-    private String zipcode;
+    private String zipCode;
 
     private String address;
 
@@ -50,7 +50,7 @@ public class OrderToPayDto {
     public Order toOrder() {
 
         Address customerAddress = Address.builder()
-                .zipCode(this.zipcode)
+                .zipCode(this.zipCode)
                 .address(this.address)
                 .addressDetail(this.addressDetail)
                 .build();
@@ -61,7 +61,7 @@ public class OrderToPayDto {
                 .customerName(this.customerName)
                 .address(customerAddress)
                 .customerPhone(this.customerPhone)
-                .orderDate(this.orderDate)
+                .customerEmail(this.customerEmail)
                 .orderItemList(new ArrayList<>())
                 .build();
     }

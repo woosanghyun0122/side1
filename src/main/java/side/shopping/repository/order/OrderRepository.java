@@ -10,5 +10,5 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, String> {
 
     // 회원별 주문 내역 조회
-    List<Order> findByUser_UseridOrderByOrderDateDesc(String userid);
+    List<Order> findByUser_UseridOrderByUpdatedAtDesc(String userid);
 }

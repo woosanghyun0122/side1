@@ -87,7 +87,7 @@ public class OrderViewController {
     /**
      * 주문 내역 조회 화면
      */
-    @GetMapping("/findOrderList")
+    @GetMapping("/myOrderList")
     public String findOrderList(HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession(false);
@@ -98,7 +98,7 @@ public class OrderViewController {
         }
 
         String loginId = loginUser.getUserId();
-        List<UserOrderListDto> list = orderService.findOrderList(loginId);
+        List<Order> list = orderService.findOrderList(loginId);
         model.addAttribute("orderList", list);
 
         return "/order/orderList";

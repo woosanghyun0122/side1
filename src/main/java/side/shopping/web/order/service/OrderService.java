@@ -54,24 +54,19 @@ public class OrderService {
     /**
      * 회원별 주문 내역 조회하기
      */
-    public List<UserOrderListDto> findOrderList(String userid) {
+    public List<Order> findOrderList(String userid) {
 
         if (!StringUtils.hasText(userid)) {
             throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
         }
 
-        List<Order> userOrderList = repository.findByUser_UseridOrderByOrderDateDesc(userid);
+        List<Order> userOrderList = repository.findByUser_UseridOrderByUpdatedAtDesc(userid);
 
         if (userOrderList.isEmpty()) {
             throw new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage());
         };
 
-        return userOrderList.stream()
-                .map(order ->{
-                    UserOrderListDto dto = order.toUserOrderListDto(order);
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        return userOrderList;
     }
 
     /**
@@ -80,13 +75,16 @@ public class OrderService {
     @Transactional
     public Order registerOrder(OrderToPayDto dto, List<OrderItemDto> orderList) {
 
+        // 주문 시 로그인 정보 저장
         Users customer = userRepository.findByUserid(dto.getUser().getUserId())
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
 
-        Payment payment = paymentRepository.findByPaymentKey(dto.getOrderNum())
-                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+        // 결제 내역 조회
+        Payment payment = paymentRepository.findByOrderNum(dto.getOrderNum())
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         Order order = dto.toOrder();
+        log.info("ordernum={}", order.getOrderNum());
         order.setUser(customer);
         order.setPayment(payment);
 
@@ -94,12 +92,12 @@ public class OrderService {
                 .map(item -> {
                     OrderItem orderItem = item.toOrderItem(item);
                     Product product = productRepository.findById(item.getProductId())
-                            .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+                            .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
                     log.info("product={}", product.getProductId());
 
                     orderItem.setProduct(product);
-                    order.getOrderItemList().add(orderItem);
+                    order.addOrderItem(orderItem);
                     return orderItem;
                 }).collect(Collectors.toList());
 

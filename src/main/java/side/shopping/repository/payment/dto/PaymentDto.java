@@ -33,7 +33,6 @@ public class PaymentDto {
     public Payment toEntity() {
         return Payment.builder()
                 .method(method)
-                .orderName(orderName)
                 .paySuccessYN(false)
                 .build();
     }

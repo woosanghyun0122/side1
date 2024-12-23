@@ -51,8 +51,8 @@
         </nav>
 
         <div class="user-menu">
-            <span th:if="${session.loginUser != null}" th:text="${session.loginUser.nickName} + '님'"></span>
-            <a th:href="@{/user/myPage}" class="icon" title="My Page">
+            <a th:if="${session.loginUser != null}" th:text="${session.loginUser.nickName} + '님'" th:href="@{/user/myPage}"></a>
+            <a th:href="@{/order/myOrderList}" class="icon" title="My Page">
                 <i class="fas fa-user"></i> <!-- 사용자 아이콘 -->
             </a>
             <a th:href="@{/zzim}" class="icon" title="Wishlist">

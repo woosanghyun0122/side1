@@ -17,14 +17,12 @@ public class OrderItemDto {
     private String productName;
     private int productPrice;
     private int amount;
-    private String req;
     private Status status;
 
     public OrderItem toOrderItem(OrderItemDto dto) {
 
         OrderItem item = new OrderItem();
         item.setAmount(dto.getAmount());
-        item.setTotalPrice(dto.getAmount() * dto.getProductPrice());
         return item;
     }
 

@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/orderList.css}">
+    <script src="/js/orderList.js"></script>
+    <title>주문 내역</title>
 </head>
 <body>
+<div class="container">
+    <h1>주문 내역</h1>
 
+    <!-- 각 주문별 반복 -->
+    <div th:each="order : ${orderList}" class="order-card">
+        <!-- 주문 헤더 정보 -->
+        <div class="order-header">
+            <div>
+                <div class="order-date" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">
+                </div>
+                <div class="order-number" th:text="'주문번호: ' + ${order.orderNum}">
+                </div>
+            </div>
+            <div class="total-amount" th:text="'총 결제금액: ' + ${#numbers.formatDecimal(order.payment.price, 0, 'COMMA', 0, 'POINT')} + '원'">
+            </div>
+        </div>
+
+        <!-- 상품 목록 -->
+        <div class="product-list">
+            <!-- 각 상품별 반복 -->
+            <div th:each="item : ${order.orderItem}" class="product-item">
+                <img class="product-image" alt="상품 이미지">
+
+                <div class="product-info">
+                    <div class="product-name" th:text="${item.product.name}">상품명</div>
+                    <div class="seller-name" th:text="'판매자: ' + ${item.product.user.userName}">판매자명</div>
+                </div>
+
+                <div class="product-price-info">
+                    <div class="quantity" th:text="'수량: ' + ${item.amount} + '개'">수량: 2개</div>
+                    <div class="price" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + '원'">
+                        89,000원
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

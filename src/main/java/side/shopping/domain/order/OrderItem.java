@@ -21,37 +21,32 @@ public class OrderItem {
     private long id;
 
     @Setter
-    @ManyToOne
-    @JoinColumn(name = "productId")
-    private Product product;
-
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_num")
     private Order order;
 
     @Setter
+    @ManyToOne
+    @JoinColumn(name = "productId")
+    private Product product;
+
+    @Setter
     @Column
     private int amount;
+
+    @Column(name = "order_status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column
     private String cancelReason;
 
-    @Column
-    @ColumnDefault("1")
-    @Enumerated(EnumType.ORDINAL)
-    private Status status;
-
-    @Setter
-    @Column(name = "total_price")
-    private int totalPrice;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
 
 
     @Builder
@@ -66,6 +61,7 @@ public class OrderItem {
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.status = Status.PAYMENT_CONFIRMED;
     }
 
     @PreUpdate

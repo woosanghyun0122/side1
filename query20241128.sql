@@ -228,25 +228,22 @@ INSERT INTO `category` (`category_id`, `category_name`, `depth`, `parent_id`, `c
 -- side.orders definition
 
 CREATE TABLE `orders` (
-  `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `order_date` varchar(30) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
-  `order_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '구매자명',
-  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `address_detail` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `customer_phone` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `payment_method` varchar(100) DEFAULT NULL,
-  `zip_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `payment_key` varchar(100) DEFAULT NULL,
-  `customer_email` varchar(100) DEFAULT NULL,
-  `customer_name` varchar(100) DEFAULT NULL,
+  `order_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문번호',
+  `userid` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문 시 로그인 아이디',
+  `order_name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '주문 명',
+  `payment_key` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '결제키',
+  `customer_name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문자 이름',
+  `customer_email` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문자 이메일',
+  `customer_phone` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '주문자 핸드폰 번호',
+  `zip_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '우편번호',
+  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '주소',
+  `address_detail` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '상세주소',
+  `created_at` timestamp NOT NULL COMMENT '생성일시',
+  `updated_at` timestamp NOT NULL COMMENT '변경일시',
   PRIMARY KEY (`order_num`),
   KEY `order_users_FK` (`userid`),
   KEY `orders_payment_FK` (`payment_key`),
-  CONSTRAINT `order_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`),
-  CONSTRAINT `orders_payment_FK` FOREIGN KEY (`payment_key`) REFERENCES `payment` (`payment_key`)
+  CONSTRAINT `orders_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- side.order_item definition
@@ -254,22 +251,17 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `order_item` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `product_id` int DEFAULT NULL,
-  `amount` int DEFAULT NULL,
-  `price` int DEFAULT NULL,
-  `order_date` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `product_name` varchar(100) DEFAULT NULL,
-  `total_price` int DEFAULT NULL,
-  `status` int DEFAULT NULL,
+  `order_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문번호',
+  `product_id` int NOT NULL COMMENT '상품 키',
+  `amount` int DEFAULT '0' COMMENT '수량',
+  `order_status` int DEFAULT '1' COMMENT '주문상태',
   `cancel_reason` blob COMMENT '환불 사유',
-  `userid` varchar(100) DEFAULT NULL COMMENT '판매자아이디',
+  `created_at` timestamp NOT NULL COMMENT '생성일시',
+  `updated_at` timestamp NOT NULL COMMENT '변경일시',
   PRIMARY KEY (`id`),
   KEY `order_item_order_fk` (`order_num`),
   KEY `order_item_product_FK` (`product_id`),
-  CONSTRAINT `order_item_order_fk` FOREIGN KEY (`order_num`) REFERENCES `orders` (`order_num`),
+  CONSTRAINT `order_item_orders_FK` FOREIGN KEY (`order_num`) REFERENCES `orders` (`order_num`),
   CONSTRAINT `order_item_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -278,17 +270,14 @@ CREATE TABLE `order_item` (
 
 CREATE TABLE `payment` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `order_num` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `payment_method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `payment_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `price` int DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
-  `pay_success_yn` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `cancel_reason` varchar(100) DEFAULT NULL,
-  `fail_reason` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `order_name` varchar(100) DEFAULT NULL,
+  `order_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문번호',
+  `payment_key` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '결제키',
+  `payment_method` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `price` int NOT NULL DEFAULT '0' COMMENT '결제 금액',
+  `pay_success_yn` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '결제성공여부',
+  `fail_reason` blob COMMENT '실패 이유',
+  `created_at` timestamp NOT NULL COMMENT '생성일시',
+  `updated_at` timestamp NOT NULL COMMENT '변경일시',
   PRIMARY KEY (`id`),
   UNIQUE KEY `payment_unique` (`payment_key`)
 ) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

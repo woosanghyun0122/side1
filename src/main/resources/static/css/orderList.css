@@ -1,0 +1,95 @@
+/* 전체 레이아웃 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 주문 카드 스타일 */
+        .order-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 주문 헤더 정보 */
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .order-date {
+            color: #666;
+        }
+
+        .order-number {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .total-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* 상품 목록 스타일 */
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .product-item {
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .seller-name {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .product-price-info {
+            text-align: right;
+        }
+
+        .quantity {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+        }
