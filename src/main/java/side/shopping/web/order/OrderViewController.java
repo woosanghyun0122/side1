@@ -104,6 +104,15 @@ public class OrderViewController {
         return "/order/orderList";
     }
 
+    /**
+     * 교환 팝업
+     */
+    @GetMapping("/exchange")
+    public String exchange() {
+
+        return "/order/exchange";
+    }
+
     @GetMapping("/modifyOrder/{orderNum}")
     public String modifyOrder(@PathVariable("orderNum") String orderNum, Model model) {
 

@@ -48,11 +48,12 @@
 
         .product-item {
             display: grid;
-            grid-template-columns: 100px 1fr auto;
+            grid-template-columns: 100px 1fr auto auto; /* 버튼을 위한 열 추가 */
             gap: 20px;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 6px;
+            align-items: center; /* 세로 중앙 정렬 */
         }
 
         .product-image {
@@ -93,3 +94,42 @@
             color: #2c3e50;
             font-size: 16px;
         }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            padding-left: 20px; /* 왼쪽 여백 추가 */
+            padding-right: 0; /* 기존 오른쪽 패딩 제거 */
+            margin-left: 0; /* 기존 margin-left: auto 제거 */
+            padding-top: 10px;
+        }
+
+        .exchange-btn, .refund-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .exchange-btn {
+            background-color: #fff;
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+
+        .refund-btn {
+            background-color: #fff;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .exchange-btn:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .refund-btn:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+

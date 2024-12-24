@@ -37,9 +37,9 @@ public class Payment {
     @Column(name = "pay_success_yn")
     private boolean paySuccessYN;
 
-    @Setter
+/*    @Setter
     @Column(name = "cancel_reason")
-    private String cancelReason;
+    private String cancelReason;*/
 
     @Setter
     @Column
