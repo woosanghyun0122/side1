@@ -261,47 +261,5 @@ public class ProductService {
         }
     }
 
-/*    *//**
-     * 즉시구매 상품 조회
-     *//*
-    public OrderItem instantOrderItem(Long id) {
-
-        if (id == null) {
-            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
-        }
-
-        Product item = repository.findById(id)
-                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
-
-        return OrderItem.builder()
-                .product(item)
-                .build();
-
-    }*/
-
-
-
-    /**
-     * 장바구니 -> 결제할 상품 조회
-     */
-    public List<FindProductDto> fromCartOrderList(Long[] list) {
-
-        List<Product> orderList = repository.findOrderList(list);
-
-        if (orderList.isEmpty()) {
-            throw new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage());
-        }
-
-        return orderList.stream()
-                .map(product -> {
-                    FindProductDto dto = FindProductDto.builder()
-                            .productId(product.getProductId())
-                            .name(product.getName())
-                            .price(product.getPrice())
-                            .sellerName(product.getUser().getNickName())
-                            .build();
-                    return dto;
-                }).collect(Collectors.toList());
-    }
 
 }

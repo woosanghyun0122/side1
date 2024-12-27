@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>장바구니</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" th:href="@{/css/cartList.css}">
+  <script src="/js/cartList.js"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+  <div class="cart-header">
+    <h1>장바구니</h1>
+  </div>
+
+  <div class="cart-items">
+    <!-- 각 상품 항목 반복 -->
+    <div class="cart-item" th:each="item : ${list}">
+      <input type="checkbox" class="cart-item-checkbox" th:value="${item.id}">
+
+      <img class="cart-item-image" alt="상품 이미지">
+
+      <div class="cart-item-info">
+        <h3 class="cart-item-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a> 상품명</h3>
+
+        <div class="cart-item-quantity">
+          <input type="number" class="quantity-input" th:value="${item.amount}">
+        </div>
+
+        <p class="cart-item-price" th:text="${#numbers.formatDecimal(item.product.price * item.amount, 0, 'COMMA', 0, 'POINT')} + '원'">
+          가격
+        </p>
+      </div>
+
+      <button class="cart-item-delete" th:onclick="deleteProduct([[${item.id}]])">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="cart-footer">
+    <button class="btn btn-delete" onclick="deleteSelected()">선택 삭제</button>
+    <button class="btn btn-purchase" onclick="purchaseSelected()">선택 구매</button>
+  </div>
+</div>
+</body>
+</html>

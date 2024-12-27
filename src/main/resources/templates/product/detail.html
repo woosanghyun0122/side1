@@ -32,7 +32,7 @@
             <!-- 구매 버튼 -->
             <div class="purchase-section">
                 <button type="button" class="buy-now" th:onclick="pay()">즉시 구매</button>
-                <a class="icon">
+                <a class="icon" th:onclick="goCart()">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
                 <a class="icon" id="heart" th:onclick="toggleWishlist()">

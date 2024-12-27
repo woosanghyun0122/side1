@@ -298,12 +298,19 @@ CREATE TABLE `image` (
 -- side.cart definition
 
 CREATE TABLE `cart` (
-  `product_id` int NOT NULL AUTO_INCREMENT,
-  `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NOT NULL,
+  `userid` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `amount` int NOT NULL,
   `created_at` timestamp NOT NULL,
-  PRIMARY KEY (`product_id`),
-  CONSTRAINT `cart_product_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
+  `updated_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cart_product_FK` (`product_id`),
+  KEY `cart_users_FK` (`userid`),
+  CONSTRAINT `cart_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  CONSTRAINT `cart_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 -- side.commoncode definition
 

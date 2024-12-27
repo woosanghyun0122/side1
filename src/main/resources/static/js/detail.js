@@ -43,3 +43,29 @@ function pay(){
     })
 }
 
+function goCart(){
+
+    var id = document.getElementById('productId').value;
+
+    fetch(`/cart/${id}`,{
+        method: 'POST'
+    })
+    .then(response =>{
+        if(response.ok){
+            return response.text().then(response =>{
+                if(confirm("장바구니에 저장되었습니다. 장바구니로 이동하시겠습니까?")){
+                    window.location.href = '/cart';
+                }
+                else{
+                    return;
+                }
+            }
+        }
+         else{
+              return response.json().then(errorResponse =>{
+                    alert(errorResponse.message);
+              })
+         }
+    })
+}
+
