@@ -13,9 +13,12 @@ public enum Status {
     ARRIVE(4,"배송 완료"),
     EXCHANGE(5, "교환 요청"),
     EXCHANGE_CONFIRM(6, "교환 승인"),
-    REFUND(7, "환불 요청"),
-    REFUND_CONFIRM(8, "환불 승인");
+    EXCHANGE_DENIED(7,"교환 거절"),
+    REFUND(8, "환불 요청"),
+    REFUND_CONFIRM(9, "환불 승인"),
+    REFUND_DENIED(10,"환불 거절")
     ;
+
 
     private final int value;
     private final String description;

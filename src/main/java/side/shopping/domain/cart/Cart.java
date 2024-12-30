@@ -19,7 +19,6 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
     @Setter
     @ManyToOne
     @JoinColumn(name = "productId")
@@ -28,7 +27,6 @@ public class Cart {
     @Column
     private int amount;
 
-    @Column
     @Setter
     @OneToOne
     @JoinColumn(name = "userid", referencedColumnName = "userid")

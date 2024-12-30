@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import side.shopping.domain.cart.Cart;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
+import side.shopping.repository.cart.dto.CartDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.cart.service.CartService;
 
@@ -42,8 +43,8 @@ public class CartController {
         return "/cart/cartList";
     }
 
-    @PostMapping("/cart/{id}")
-    public ResponseEntity saveCart(@PathVariable(name = "id") Long id, HttpServletRequest request) {
+    @PostMapping("/cart")
+    public ResponseEntity saveCart(@RequestBody CartDto dto, HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
         LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
@@ -52,7 +53,7 @@ public class CartController {
             throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
         }
 
-        cartService.saveCart(id, loginUser.getUserId());
+        cartService.saveCart(dto, loginUser.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }

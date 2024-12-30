@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/changeList.css}">
+  <script src="/js/changeList.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">교환/환불 요청 관리</h1>
+  </div>
+
+  <div class="request-tabs">
+    <div class="tab active" onclick="switchTab('exchange')">교환 요청</div>
+    <div class="tab" onclick="switchTab('refund')">환불 요청</div>
+  </div>
+
+  <!-- 교환 요청 테이블 -->
+  <table class="request-table" id="exchangeTable">
+    <thead>
+    <tr>
+      <th>요청일</th>
+      <th>구매자</th>
+      <th>상품명</th>
+      <th>수량</th>
+      <th>상태</th>
+      <th>사유</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 교환 요청 목록 -->
+    <tr th:each="request : ${exchangeList}" th:if="${exchangeList != null and !exchangeList.empty}">
+      <td class="request-date" th:text="${#temporals.format(request.updatedAt, 'yyyy-MM-dd HH:mm')}">2024-03-21 14:30</td>
+      <td th:text="${request.order.user.userName}">홍길동</td>
+      <td th:text="${request.product.name}">상품명</td>
+      <td th:text="${request.amount}">1</td>
+      <td> <span class="status-badge status-pending" th:text="${request.status.description}">승인 대기</span></td>
+      <td>
+        <div class="reason-text" th:text="${request.cancelReason.description}">사이즈가 맞지 않음</div>
+      </td>
+      <td>
+      </td>
+      <td>
+        <div class="action-buttons">
+            <button type="button" class="approve-btn" th:if="${request.status.description.equals('교환 요청')}" th:onclick="approve([[${request.id}]])">승인</button>
+            <button type="button" class="approve-btn" th:unless="${request.status.description.equals('교환 요청')}" th:onclick="approve([[${request.id}]])" disabled>승인</button>
+            <button type="button" class="reject-btn"  th:if="${request.status.description.equals('환불 요청')}" th:onclick="reject([[${request.id}]])">거절</button>
+            <button type="button" class="reject-btn"  th:unless="${request.status.description.equals('환불 요청')}"th:onclick="reject([[${request.id}]])" disabled>거절</button>
+        </div>
+      </td>
+    </tr>
+    <tr th:if="${exchangeList == null or exchangeList.empty}">
+      <td colspan="7" class="empty-state">교환 요청이 없습니다.</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- 환불 요청 테이블 -->
+  <table class="request-table" id="refundTable" style="display: none;">
+    <thead>
+    <tr>
+      <th>요청일</th>
+      <th>구매자</th>
+      <th>상품명</th>
+      <th>수량</th>
+      <th>사유</th>
+      <th>상태</th>
+      <th>액션</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 환불 요청 목록 -->
+    <tr th:each="request : ${refundRequests}" th:if="${refundRequests != null and !refundRequests.empty}">
+      <td class="request-date" th:text="${#temporals.format(request.createdAt, 'yyyy-MM-dd HH:mm')}">2024-03-21 14:30</td>
+      <td th:text="${request.buyer.name}">홍길동</td>
+      <td th:text="${request.product.name}">상품명</td>
+      <td th:text="${request.quantity}">1</td>
+      <td>
+        <div class="reason-text" th:text="${request.reason}">단순 변심</div>
+      </td>
+      <td>
+        <span class="status-badge status-pending">승인 대기</span>
+      </td>
+      <td>
+        <div class="action-buttons">
+            <button type="button" class="approve-btn" th:onclick="approve([[${request.id}]])">승인</button>
+            <button type="button" class="reject-btn" th:onclick="reject([[${request.id}]])">거절</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    <tr th:if="${refundRequests == null or refundRequests.empty}">
+      <td colspan="7" class="empty-state">환불 요청이 없습니다.</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+</body>
+</html>

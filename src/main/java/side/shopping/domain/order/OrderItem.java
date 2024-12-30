@@ -34,12 +34,15 @@ public class OrderItem {
     @Column
     private int amount;
 
+    @Setter
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Setter
     @Column
-    private String cancelReason;
+    @Enumerated(EnumType.STRING)
+    private Reason cancelReason;
 
 
     @Column(name = "created_at", nullable = false)
@@ -69,12 +72,6 @@ public class OrderItem {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void toOrderItem(UpdateOrderItemDto dto) {
-
-        this.status = dto.getStatus();
-        this.amount = dto.getAmount();
-        this.cancelReason = dto.getCancelReason();
-    }
 
 
 }

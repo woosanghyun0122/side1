@@ -133,3 +133,68 @@
             color: #fff;
         }
 
+        .empty-state-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 60px 20px;
+                    text-align: center;
+                    background-color: #f8f9fa;
+                    border-radius: 12px;
+                    margin: 20px auto;
+                    max-width: 500px;
+                }
+
+                .empty-state-icon {
+                    width: 120px;
+                    height: 120px;
+                    margin-bottom: 24px;
+                    background-color: #e9ecef;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .empty-state-icon svg {
+                    width: 60px;
+                    height: 60px;
+                    color: #adb5bd;
+                }
+
+                .empty-state-text {
+                    margin-bottom: 24px;
+                }
+
+                .empty-state-title {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #495057;
+                    margin-bottom: 12px;
+                }
+
+                .empty-state-description {
+                    font-size: 16px;
+                    color: #868e96;
+                    line-height: 1.5;
+                    margin-bottom: 24px;
+                }
+
+                .shopping-button {
+                    background-color: #228be6;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: background-color 0.2s;
+                    text-decoration: none;
+                }
+
+                .shopping-button:hover {
+                    background-color: #1c7ed6;
+                }
+

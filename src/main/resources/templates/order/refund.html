@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/exchange.css}">
+  <script src="/js/refund.js"></script>
+</head>
+<body>
+
+<!-- 환불 모달 -->
+<div id="refundModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">상품 환불 신청</h2>
+      <button class="close-button" onclick="closeModal('refundModal')">&times;</button>
+    </div>
+
+    <form th:action="@{/order/refund}" method="post">
+      <input type="hidden" name="orderItemId" th:value="${item.id}">
+
+      <div class="product-info">
+        <div class="product-name" th:text="${item.product.name}">상품명</div>
+        <div class="product-details">
+          <span th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + '원'">89,000원</span>
+          <span th:text="'수량: ' + ${item.amount} + '개'">수량: 1개</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">환불 사유 선택</label>
+        <select name="refundReason" class="form-select" required>
+          <option value="">환불 사유를 선택해주세요</option>
+          <option value="CHANGE_MIND">단순 변심</option>
+          <option value="WRONG_ITEM">잘못된 상품 배송</option>
+          <option value="DAMAGED">상품 손상</option>
+          <option value="DELAYED_DELIVERY">배송 지연</option>
+          <option value="QUALITY_ISSUE">품질 문제</option>
+          <option value="OTHER">기타</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">상세 사유</label>
+        <textarea name="refundDetail" class="form-textarea" placeholder="환불 사유를 자세히 적어주세요" required></textarea>
+      </div>
+
+      <div class="button-group">
+        <button type="button" class="cancel-button" onclick="closeModal('refundModal')">취소</button>
+        <button type="submit" class="submit-button">환불 신청</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

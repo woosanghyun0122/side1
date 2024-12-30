@@ -93,16 +93,6 @@ public class Order {
     }
 
 
-    public UserOrderListDto toUserOrderListDto(Order order){
-
-        return UserOrderListDto.builder()
-                .orderNum(order.getOrderNum())
-                .productName(order.getOrderItemList().get(0).getProduct().getName() + " 외 " + order.orderItemList.size()+"건")
-                .name(order.getOrderName())
-                .phone(order.getCustomerPhone())
-                .build();
-    }
-
     public void updateToOrder(UpdateOrderDto dto) {
 
         Address modifyAddress = Address.builder()

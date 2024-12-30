@@ -11,40 +11,61 @@
 <div class="container">
     <h1>주문 내역</h1>
 
-    <!-- 각 주문별 반복 -->
-    <div th:each="order : ${orderList}" class="order-card">
-        <!-- 주문 헤더 정보 -->
-        <div class="order-header">
-            <div>
-                <div class="order-date" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">
-                </div>
-                <div class="order-number" th:text="'주문번호: ' + ${order.orderNum}">
-                </div>
-            </div>
-            <div class="total-amount" th:text="'총 결제금액: ' + ${#numbers.formatDecimal(order.payment.price, 0, 'COMMA', 0, 'POINT')} + '원'">
-            </div>
+    <div th:if="${#lists.isEmpty(orderList)}" class="empty-state-container">
+        <div class="empty-state-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
         </div>
+        <div class="empty-state-text">
+            <h2 class="empty-state-title">아직 주문 내역이 없습니다</h2>
+            <p class="empty-state-description">
+                새로운 상품을 둘러보고<br>
+                첫 주문을 시작해보세요!
+            </p>
+        </div>
+        <a th:href="@{/}" class="shopping-button">
+            쇼핑하러 가기
+        </a>
+    </div>
 
-        <!-- 상품 목록 -->
-        <div class="product-list">
-            <!-- 각 상품별 반복 -->
-            <div th:each="item : ${order.orderItemList}" class="product-item">
-                <img class="product-image" alt="상품 이미지">
-
-                <div class="product-info">
-                    <div class="product-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a></div>
-                    <div class="seller-name" th:text="'판매자: ' + ${item.product.user.userName}">판매자명</div>
-                </div>
-
-                <div class="product-price-info">
-                    <div class="quantity" th:text="'수량: ' + ${item.amount} + '개'">수량: 2개</div>
-                    <div class="status" th:text="'주문 상태: '+${item.status}"></div>
-                    <div class="price" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + '원'">
-                        89,000원
+    <div th:unless="${#lists.isEmpty(orderList)}">
+        <!-- 기존 코드 유지 -->
+        <!-- 각 주문별 반복 -->
+        <div th:each="order : ${orderList}" class="order-card">
+            <!-- 주문 헤더 정보 -->
+            <div class="order-header">
+                <div>
+                    <div class="order-date" th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">
                     </div>
-                    <div class="button-group">
-                        <button class="exchange-btn">교환</button>
-                        <button class="refund-btn">환불</button>
+                    <div class="order-number" th:text="'주문번호: ' + ${order.orderNum}">
+                    </div>
+                </div>
+                <div class="total-amount" th:text="'총 결제금액: ' + ${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">
+                </div>
+            </div>
+
+            <!-- 상품 목록 -->
+            <div class="product-list">
+                <!-- 각 상품별 반복 -->
+                <div th:each="item : ${order.orderItemList}" class="product-item">
+                    <img class="product-image" alt="상품 이미지">
+
+                    <div class="product-info">
+                        <div class="product-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a></div>
+                        <div class="seller-name" th:text="'판매자: ' + ${item.product.user.userName}">판매자명</div>
+                    </div>
+
+                    <div class="product-price-info">
+                        <div class="quantity" th:text="'수량: ' + ${item.amount} + '개'">수량: 2개</div>
+                        <div class="status" th:text="'주문 상태: '+${item.status.description}"></div>
+                        <div class="price" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            89,000원
+                        </div>
+                        <div class="button-group">
+                            <button class="exchange-btn" th:onclick="exchange([[${item.id}]])">교환</button>
+                            <button class="refund-btn"  th:onclick="refund([[${item.id}]])">환불</button>
+                        </div>
                     </div>
                 </div>
             </div>

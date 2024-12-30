@@ -11,10 +11,12 @@ import side.shopping.domain.product.Product;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
 import side.shopping.repository.cart.CartRepository;
+import side.shopping.repository.cart.dto.CartDto;
 import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.product.ProductRepository;
 import side.shopping.repository.users.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,10 +43,6 @@ public class CartService {
 
         List<Cart> myList = cartRepository.findByUser_Userid(userid);
 
-        if (myList.isEmpty()) {
-            throw new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage());
-        }
-
         return myList;
     }
 
@@ -60,14 +58,16 @@ public class CartService {
         }
 
         return cartList.stream()
-                .map(item -> {
+                .map(item ->
+                {
                     return OrderItemDto.builder()
-                           .productId(item.getProduct().getProductId())
-                           .productName(item.getProduct().getName())
-                           .productPrice(item.getProduct().getPrice())
-                           .amount(item.getAmount())
-                           .build();
+                            .productId(item.getId())
+                            .productName(item.getProduct().getName())
+                            .productPrice(item.getProduct().getPrice())
+                            .amount(item.getAmount())
+                            .build();
                 }).collect(Collectors.toList());
+
     }
 
 
@@ -75,17 +75,19 @@ public class CartService {
      * 장바구니 저장
      */
     @Transactional
-    public Cart saveCart(Long productId, String userid) {
+    public Cart saveCart(CartDto dto, String userid) {
 
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         Users user = userRepository.findByUserid(userid)
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
 
-        Cart cart = new Cart();
-        cart.setProduct(product);
-        cart.setUser(user);
+        Cart cart = Cart.builder()
+                .user(user)
+                .product(product)
+                .amount(dto.getAmount())
+                .build();
 
         return cartRepository.save(cart);
     }

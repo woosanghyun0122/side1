@@ -3,40 +3,28 @@ package side.shopping.web.order;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import side.shopping.cache.CacheService;
-import side.shopping.domain.Address;
+import side.shopping.config.SessionManager;
 import side.shopping.domain.order.Method;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
+import side.shopping.domain.order.Reason;
 import side.shopping.exception.CustomException;
-import side.shopping.exception.ErrorCode;
-import side.shopping.repository.order.dto.FindOrderItemDto;
 import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
-import side.shopping.repository.product.dto.FindProductDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.order.service.OrderItemService;
 import side.shopping.web.order.service.OrderService;
-import side.shopping.web.product.service.ProductService;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static side.shopping.exception.ErrorCode.*;
 
@@ -54,6 +42,9 @@ public class OrderViewController {
     @Autowired
     private CacheService cacheService;
 
+    @Autowired
+    private SessionManager sessionManager;
+
 
     /**
      * 주문 하기 화면
@@ -64,7 +55,7 @@ public class OrderViewController {
         log.info("key={}", key);
         List<OrderItemDto> list = (List<OrderItemDto>) cacheService.getCacheValue(key);
 
-        log.info("productName={}, productPrice={}", list.get(0).getProductName(), list.get(0).getProductPrice());
+        log.info("list={}", list.get(0));
 
         if (list.isEmpty()) {
             throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
@@ -98,7 +89,7 @@ public class OrderViewController {
         }
 
         String loginId = loginUser.getUserId();
-        List<Order> list = orderService.findOrderList(loginId);
+        List<UserOrderListDto> list = orderService.findOrderList(loginId);
         model.addAttribute("orderList", list);
 
         return "/order/orderList";
@@ -108,20 +99,41 @@ public class OrderViewController {
      * 교환 팝업
      */
     @GetMapping("/exchange")
-    public String exchange() {
+    public String exchange(@RequestParam(name = "id")Long id, Model model) {
 
+        OrderItem item = itemService.findById(id);
+        model.addAttribute("item", item);
+        model.addAttribute("reasons", Reason.values());
         return "/order/exchange";
     }
 
-    @GetMapping("/modifyOrder/{orderNum}")
-    public String modifyOrder(@PathVariable("orderNum") String orderNum, Model model) {
+    /**
+     * 환불 팝업
+     */
+    @GetMapping("/refund")
+    public String refund(@RequestParam(name = "id")Long id, Model model) {
 
-        if (!StringUtils.hasText(orderNum)) {
-            throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
-        }
-
-        List<FindOrderItemDto> orderList = itemService.findOrderItemList(orderNum);
-        model.addAttribute("orderList", orderList);
-        return "/order/modifyOrder";
+        OrderItem item = itemService.findById(id);
+        model.addAttribute("item", item);
+        return "/order/refund";
     }
+
+    /**
+     *
+     * */
+    @GetMapping("/requestList")
+    public String changeList(Model model) {
+
+        LoginResponseDto loginUser = sessionManager.getLoginUser();
+
+        List<OrderItem> exchangeList = itemService.findExchangeList(loginUser.getUserId());
+        List<OrderItem> refundList = itemService.findRefundList(loginUser.getUserId());
+
+        model.addAttribute("exchangeList", exchangeList);
+        model.addAttribute("refundList", refundList);
+
+        return "/order/changeList";
+    }
+
+
 }

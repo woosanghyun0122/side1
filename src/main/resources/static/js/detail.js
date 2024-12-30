@@ -1,3 +1,6 @@
+let productId, productName, amount, price;
+let item ={};
+
 function toggleWishlist() {
 
         const icon = document.getElementById('heart').querySelector('.fa-heart');
@@ -8,18 +11,7 @@ function toggleWishlist() {
 
 function pay(){
 
-    var productName = document.getElementById('name').innerText;
-    var productId = document.getElementById('productId').value;
-    var amount = document.getElementById('quantity').value;
-    var price = document.getElementById('price').innerText;
-
-
-    var item ={
-        productId: productId,
-        amount: amount,
-        productName: productName,
-        productPrice: price
-    };
+    initializeVariables();
 
     fetch('/api/order/buyInstant',{
         method:'POST',
@@ -45,10 +37,12 @@ function pay(){
 
 function goCart(){
 
-    var id = document.getElementById('productId').value;
+    initializeVariables();
 
-    fetch(`/cart/${id}`,{
-        method: 'POST'
+    fetch('/cart',{
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(item)
     })
     .then(response =>{
         if(response.ok){
@@ -59,7 +53,7 @@ function goCart(){
                 else{
                     return;
                 }
-            }
+            })
         }
          else{
               return response.json().then(errorResponse =>{
@@ -67,5 +61,21 @@ function goCart(){
               })
          }
     })
+}
+
+
+function initializeVariables() {
+    // DOM 요소로부터 값을 초기화
+    productId = document.getElementById('productId').value;
+    productName = document.getElementById('name').innerText;
+    amount = document.getElementById('quantity').value;
+    price = document.getElementById('price').innerText;
+
+    item = {
+        productId: productId,
+        amount: amount,
+        productName: productName,
+        productPrice: price
+    };
 }
 

@@ -14,35 +14,58 @@
     <h1>장바구니</h1>
   </div>
 
-  <div class="cart-items">
-    <!-- 각 상품 항목 반복 -->
-    <div class="cart-item" th:each="item : ${list}">
-      <input type="checkbox" class="cart-item-checkbox" th:value="${item.id}">
 
-      <img class="cart-item-image" alt="상품 이미지">
+  <div th:if="${#lists.isEmpty(list)}" class="empty-state-container">
+    <div class="empty-state-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+      </svg>
+    </div>
+    <div class="empty-state-text">
+      <h2 class="empty-state-title">장바구니가 비어있습니다.</h2>
+      <p class="empty-state-description">
+        새로운 상품을 둘러보고<br>
+        장바구니에 담아보세요!
+      </p>
+    </div>
+    <a th:href="@{/}" class="shopping-button">
+      쇼핑하러 가기
+    </a>
+  </div>
 
-      <div class="cart-item-info">
-        <h3 class="cart-item-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a> 상품명</h3>
+  <div th:unless="${#lists.isEmpty(list)}">
+    <!-- 기존 코드 유지 -->
+    <div class="cart-items">
+      <!-- 각 상품 항목 반복 -->
+      <div class="cart-item" th:each="item : ${list}">
+        <input type="checkbox" class="cart-item-checkbox" th:value="${item.id}">
 
-        <div class="cart-item-quantity">
-          <input type="number" class="quantity-input" th:value="${item.amount}">
+        <img class="cart-item-image" alt="상품 이미지">
+
+        <div class="cart-item-info">
+          <h3 class="cart-item-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a></h3>
+
+          <div class="cart-item-quantity">
+            <p type="text" class="quantity-input" th:text="'수량: ' + ${item.amount}">
+          </div>
+
+          <p class="cart-item-price" th:text="${#numbers.formatDecimal(item.product.price * item.amount, 0, 'COMMA', 0, 'POINT')} + '원'">
+            가격
+          </p>
         </div>
 
-        <p class="cart-item-price" th:text="${#numbers.formatDecimal(item.product.price * item.amount, 0, 'COMMA', 0, 'POINT')} + '원'">
-          가격
-        </p>
+        <button class="cart-item-delete" th:onclick="deleteProduct([[${item.id}]])">
+          <i class="fas fa-trash"></i>
+        </button>
       </div>
+    </div>
 
-      <button class="cart-item-delete" th:onclick="deleteProduct([[${item.id}]])">
-        <i class="fas fa-trash"></i>
-      </button>
+    <div class="cart-footer">
+      <button class="btn btn-delete" onclick="deleteSelected()">선택 삭제</button>
+      <button class="btn btn-purchase" onclick="purchaseSelected()">선택 구매</button>
     </div>
   </div>
 
-  <div class="cart-footer">
-    <button class="btn btn-delete" onclick="deleteSelected()">선택 삭제</button>
-    <button class="btn btn-purchase" onclick="purchaseSelected()">선택 구매</button>
-  </div>
 </div>
 </body>
 </html>

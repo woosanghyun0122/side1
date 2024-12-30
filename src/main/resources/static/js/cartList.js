@@ -41,13 +41,13 @@ function deleteSelected(){
 
         const carts = getCheckedValues();
 
-        if(checkboxes.length == 0){
+        if(carts.length == 0){
             alert("삭제할 항목을 선택하세요");
             return;
         }
 
         fetch('/cart',{
-            method: 'POST',
+            method: 'DELETE',
             headers:{
                 'Content-Type':'application/json'
             },
@@ -57,6 +57,7 @@ function deleteSelected(){
                 if(response.ok){
                     return response.text().then(result =>{
                         alert(result);
+                        window.location.reload();
                     })
                 }
                 else{
@@ -65,9 +66,4 @@ function deleteSelected(){
                     })
                 }
             })
-}
-
-function deleteProduct(productId){
-
-
 }

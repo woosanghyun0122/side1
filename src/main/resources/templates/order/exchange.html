@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/exchange.css}">
+  <script src="/js/exchange.js"></script>
+</head>
+<body>
+<form th:object="${item}">
+  <div class="exchange-container">
+    <div class="exchange-header">
+      <h2 class="exchange-title">상품 교환 신청</h2>
+    </div>
+
+    <div class="product-info">
+      <div class="product-name" th:text="${item.product.name}">상품명</div>
+      <div class="product-details">
+        <span th:text="${#numbers.formatDecimal(item.product.price * item.amount, 0, 'COMMA', 0, 'POINT')} + '원'">89,000원</span>
+        <span th:text="'수량: ' + ${item.amount} + '개'">수량: 1개</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">교환 사유 선택</label>
+      <select name="exchangeReason" class="form-select">
+        <option>교환 사유를 선택해주세요</option>
+        <option th:each="reason : ${reasons}" th:value="${reason.value}" th:text="${reason.description}"></option>
+      </select>
+    </div>
+
+    <div class="button-group">
+      <button type="button" class="submit-button" onclick="submitExchange()">교환 신청</button>
+      <button type="button" class="cancel-button" onclick="window.close()">취소</button>
+    </div>
+  </div>
+</form>
+</body>
+<script th:inline="javascript">
+
+  function submitExchange(){
+
+    const itemId = [[${item.id}]]
+    const exchangeReason = document.querySelector('select[name="exchangeReason"]').value;
+
+    const updateDto = {
+        id: itemId,
+        cancelReason: exchangeReason
+    };
+
+    fetch('/api/order/exchange',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(updateDto)
+    })
+    .then(response =>{
+      if(response.ok){
+        return response.text().then(message =>{
+            alert(message);
+            window.close();
+        })
+      }
+      else{
+        alert("교환 신청에 실패하였습니다.");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("알 수 없는 오류가 발생했습니다.");
+    });
+  }
+</script>
+</html>

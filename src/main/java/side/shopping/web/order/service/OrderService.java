@@ -54,19 +54,22 @@ public class OrderService {
     /**
      * 회원별 주문 내역 조회하기
      */
-    public List<Order> findOrderList(String userid) {
+    public List<UserOrderListDto> findOrderList(String userid) {
 
         if (!StringUtils.hasText(userid)) {
             throw new CustomException(VARIABLE_ERROR.getCode(), VARIABLE_ERROR.getMessage());
         }
 
-        List<Order> userOrderList = repository.findByUser_UseridOrderByUpdatedAtDesc(userid);
-
-        if (userOrderList.isEmpty()) {
-            throw new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage());
-        };
-
-        return userOrderList;
+        List<Order> list = repository.findByUser_UseridOrderByUpdatedAtDesc(userid);
+        return list.stream()
+                .map(order -> {
+                    return UserOrderListDto.builder()
+                            .orderNum(order.getOrderNum())
+                            .totalPrice(order.getPayment().getPrice())
+                            .orderDate(order.getCreatedAt())
+                            .orderItemList(order.getOrderItemList())
+                            .build();
+                }).collect(Collectors.toList());
     }
 
     /**

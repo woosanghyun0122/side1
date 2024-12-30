@@ -1,7 +1,5 @@
 package side.shopping.web.order;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,25 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import side.shopping.cache.CacheService;
-import side.shopping.domain.cart.Cart;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
-import side.shopping.exception.CustomException;
-import side.shopping.repository.order.dto.FindOrderItemDto;
 import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UpdateOrderItemDto;
-import side.shopping.repository.product.dto.FindProductDto;
-import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.cart.service.CartService;
 import side.shopping.web.order.service.OrderItemService;
 import side.shopping.web.order.service.OrderService;
-import side.shopping.web.product.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static side.shopping.exception.ErrorCode.*;
 
 @Slf4j
 @RestController
@@ -52,16 +42,13 @@ public class OrderApiController {
     @PostMapping("/buyList")
     public ResponseEntity orderList(@RequestBody List<Long> list) {
 
-        log.info("list={}", list);
         List<OrderItemDto> orderList = cartService.cartToOrderList(list);
 
         String key = cacheService.createKey();
-        cacheService.setCacheValue(key,list);
+        cacheService.setCacheValue(key,orderList);
 
         return ResponseEntity.status(HttpStatus.OK).body(key);
     }
-
-
 
     /**
      * 즉시 구매
@@ -80,6 +67,46 @@ public class OrderApiController {
         return ResponseEntity.status(HttpStatus.OK).body(key);
     }
 
+    /**
+     * 교환 신청
+     */
+    @PutMapping("/exchange")
+    public ResponseEntity exchange(@RequestBody @Validated UpdateOrderItemDto dto) {
+
+        OrderItem item = itemService.exchange(dto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * 교환 신청
+     */
+    @PutMapping("/refund")
+    public ResponseEntity refund(@RequestBody @Validated UpdateOrderItemDto dto) {
+
+        OrderItem item = itemService.refund(dto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    /**
+     * 교환/환불 신청 승인
+     */
+    @PutMapping("/approve/{id}")
+    public ResponseEntity approve(@PathVariable(name = "id") Long id) {
+
+        OrderItem item = itemService.requestApprove(id);
+        return ResponseEntity.status(HttpStatus.OK).body("승인되었습니다");
+    }
+
+    /**
+     * 교환/환불 신청 거절
+     */
+    @PutMapping("/reject/{id}")
+    public ResponseEntity reject(@PathVariable(name = "id") Long id) {
+
+        OrderItem item = itemService.requestDenied(id);
+        return ResponseEntity.status(HttpStatus.OK).body("거절되었습니다");
+    }
+
 
     /**
      * 주문 수정
@@ -89,16 +116,6 @@ public class OrderApiController {
 
         Order modifyOrder = orderService.modifyOrder(dto);
         return ResponseEntity.status(HttpStatus.OK).body("주문 내역을 수정하였습니다.");
-    }
-
-    /**
-     * 주문 개별 상품 수정
-     */
-    @PutMapping("/modify-orderItem")
-    public ResponseEntity<?> modifyOrderItem(@RequestBody @Validated UpdateOrderItemDto dto) {
-
-        OrderItem item = itemService.modifyOrderItem(dto);
-        return ResponseEntity.status(HttpStatus.OK).body("요청에 성공하였습니다.");
     }
 
 
