@@ -6,6 +6,8 @@
   <script src="/js/changeList.js"></script>
 </head>
 <body>
+<div th:replace="~{fragments/header :: header}"></div>
+
 <div class="container">
   <div class="dashboard-header">
     <h1 class="dashboard-title">교환/환불 요청 관리</h1>
@@ -24,9 +26,10 @@
       <th>구매자</th>
       <th>상품명</th>
       <th>수량</th>
+      <th>재고</th>
       <th>상태</th>
       <th>사유</th>
-      <th></th>
+      <th> </th>
     </tr>
     </thead>
     <tbody>
@@ -36,6 +39,7 @@
       <td th:text="${request.order.user.userName}">홍길동</td>
       <td th:text="${request.product.name}">상품명</td>
       <td th:text="${request.amount}">1</td>
+      <td th:text="${request.product.quantity}">1</td>
       <td> <span class="status-badge status-pending" th:text="${request.status.description}">승인 대기</span></td>
       <td>
         <div class="reason-text" th:text="${request.cancelReason.description}">사이즈가 맞지 않음</div>
@@ -65,23 +69,25 @@
       <th>구매자</th>
       <th>상품명</th>
       <th>수량</th>
+      <th>재고</th>
       <th>사유</th>
       <th>상태</th>
-      <th>액션</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <!-- 환불 요청 목록 -->
-    <tr th:each="request : ${refundRequests}" th:if="${refundRequests != null and !refundRequests.empty}">
-      <td class="request-date" th:text="${#temporals.format(request.createdAt, 'yyyy-MM-dd HH:mm')}">2024-03-21 14:30</td>
+    <tr th:each="request : ${refundList}" th:if="${refundList != null and !refundList.empty}">
+      <td class="request-date" th:text="${#temporals.format(request.updatedAt, 'yyyy-MM-dd HH:mm')}">2024-03-21 14:30</td>
       <td th:text="${request.buyer.name}">홍길동</td>
       <td th:text="${request.product.name}">상품명</td>
-      <td th:text="${request.quantity}">1</td>
+      <td th:text="${request.amount}">1</td>
+      <td th:text="${request.product.quantity}">1</td>
       <td>
-        <div class="reason-text" th:text="${request.reason}">단순 변심</div>
+        <div class="reason-text" th:text="${request.cancelReason.description}">단순 변심</div>
       </td>
       <td>
-        <span class="status-badge status-pending">승인 대기</span>
+        <span class="status-badge status-pending" th:text="${request.status.description}">승인 대기</span>
       </td>
       <td>
         <div class="action-buttons">

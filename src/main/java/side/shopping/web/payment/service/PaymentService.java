@@ -79,7 +79,7 @@ public class PaymentService {
 
         String cacheKey = verifyPayment(orderId, amount);
 
-        // 주문 내역 저장
+        // 결제 내역 저장
         Payment payment = (Payment) cacheService.getCacheValue(cacheKey);
         payment.setPaymentKey(paymentKey);
         payment.setPaySuccessYN(true);

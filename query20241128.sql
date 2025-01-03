@@ -254,8 +254,9 @@ CREATE TABLE `order_item` (
   `order_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문번호',
   `product_id` int NOT NULL COMMENT '상품 키',
   `amount` int DEFAULT '0' COMMENT '수량',
-  `order_status` int DEFAULT '1' COMMENT '주문상태',
+  `order_status` varchar(20) COMMENT '주문상태',
   `cancel_reason` blob COMMENT '환불 사유',
+  `reject_reason` blob COMMENT '반려 사유',
   `created_at` timestamp NOT NULL COMMENT '생성일시',
   `updated_at` timestamp NOT NULL COMMENT '변경일시',
   PRIMARY KEY (`id`),
@@ -311,6 +312,19 @@ CREATE TABLE `cart` (
   CONSTRAINT `cart_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+CREATE TABLE `zzim` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NOT NULL,
+  `userid` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cart_product_FK` (`product_id`),
+  KEY `cart_users_FK` (`userid`),
+  CONSTRAINT `cart_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  CONSTRAINT `cart_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- side.commoncode definition
 

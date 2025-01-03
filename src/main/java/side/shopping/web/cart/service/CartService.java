@@ -61,7 +61,7 @@ public class CartService {
                 .map(item ->
                 {
                     return OrderItemDto.builder()
-                            .productId(item.getId())
+                            .productId(item.getProduct().getProductId())
                             .productName(item.getProduct().getName())
                             .productPrice(item.getProduct().getPrice())
                             .amount(item.getAmount())

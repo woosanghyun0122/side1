@@ -74,7 +74,7 @@ public class OrderApiController {
     public ResponseEntity exchange(@RequestBody @Validated UpdateOrderItemDto dto) {
 
         OrderItem item = itemService.exchange(dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body("교환 신청에 성공하였습니다.");
     }
 
     /**
@@ -84,27 +84,27 @@ public class OrderApiController {
     public ResponseEntity refund(@RequestBody @Validated UpdateOrderItemDto dto) {
 
         OrderItem item = itemService.refund(dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body("환불 신청에 성공하였습니다.");
     }
 
     /**
      * 교환/환불 신청 승인
      */
-    @PutMapping("/approve/{id}")
-    public ResponseEntity approve(@PathVariable(name = "id") Long id) {
+    @PutMapping("/approve")
+    public ResponseEntity approve(@RequestBody UpdateOrderItemDto dto) {
 
-        OrderItem item = itemService.requestApprove(id);
+        OrderItem item = itemService.requestApprove(dto);
         return ResponseEntity.status(HttpStatus.OK).body("승인되었습니다");
     }
 
     /**
      * 교환/환불 신청 거절
      */
-    @PutMapping("/reject/{id}")
-    public ResponseEntity reject(@PathVariable(name = "id") Long id) {
+    @PutMapping("/reject")
+    public ResponseEntity reject(UpdateOrderItemDto dto) {
 
-        OrderItem item = itemService.requestDenied(id);
-        return ResponseEntity.status(HttpStatus.OK).body("거절되었습니다");
+        OrderItem item = itemService.requestDenied(dto);
+        return ResponseEntity.status(HttpStatus.OK).body("반려 처리가 완료되었습니다");
     }
 
 

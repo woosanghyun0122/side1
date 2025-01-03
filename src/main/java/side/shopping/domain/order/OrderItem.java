@@ -44,6 +44,11 @@ public class OrderItem {
     @Enumerated(EnumType.STRING)
     private Reason cancelReason;
 
+    @Setter
+    @Column
+    @Enumerated(EnumType.STRING)
+    private RejectReason rejectReason;
+
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

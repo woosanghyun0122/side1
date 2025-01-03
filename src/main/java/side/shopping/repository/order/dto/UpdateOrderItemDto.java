@@ -15,10 +15,10 @@ public class UpdateOrderItemDto {
 
     private long id;
 
-    private Status status;
-
     private int amount;
 
     private String cancelReason;
+
+    private String rejectReason;
 
 }

@@ -15,3 +15,9 @@ function refund(id){
         window.open(openUrl,'_blank',popOption);
     }
 }
+
+function reloadData() {
+    // 데이터 재조회 로직 (AJAX 또는 페이지 새로고침)
+    console.log("Reloading data...");
+    location.reload(); // 페이지 새로고침
+}

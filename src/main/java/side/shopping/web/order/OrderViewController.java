@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import side.shopping.cache.CacheService;
 import side.shopping.config.SessionManager;
-import side.shopping.domain.order.Method;
-import side.shopping.domain.order.Order;
-import side.shopping.domain.order.OrderItem;
-import side.shopping.domain.order.Reason;
+import side.shopping.domain.order.*;
 import side.shopping.exception.CustomException;
 import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.UserOrderListDto;
@@ -115,8 +112,23 @@ public class OrderViewController {
 
         OrderItem item = itemService.findById(id);
         model.addAttribute("item", item);
+        model.addAttribute("reasons", Reason.values());
         return "/order/refund";
     }
+
+    /**
+     * 교환/환불 반려 팝업
+     */
+    @GetMapping("/reject")
+    public String reject(@RequestParam(name = "id")Long id, Model model) {
+
+        OrderItem item = itemService.findById(id);
+        model.addAttribute("item", item);
+        model.addAttribute("reasons", RejectReason.values());
+        return "/order/reject";
+    }
+
+
 
     /**
      *

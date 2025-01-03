@@ -55,7 +55,6 @@
                         <div class="product-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a></div>
                         <div class="seller-name" th:text="'판매자: ' + ${item.product.user.userName}">판매자명</div>
                     </div>
-
                     <div class="product-price-info">
                         <div class="quantity" th:text="'수량: ' + ${item.amount} + '개'">수량: 2개</div>
                         <div class="status" th:text="'주문 상태: '+${item.status.description}"></div>
@@ -63,8 +62,10 @@
                             89,000원
                         </div>
                         <div class="button-group">
-                            <button class="exchange-btn" th:onclick="exchange([[${item.id}]])">교환</button>
-                            <button class="refund-btn"  th:onclick="refund([[${item.id}]])">환불</button>
+                            <button class="exchange-btn" th:if="${item.status.value.equals('PAYMENT_CONFIRMED') || item.status.value.equals('PACKING') ||item.status.value.equals('ARRIVE')}" th:onclick="exchange([[${item.id}]])">교환</button>
+                            <button class="exchange-btn" th:if="${item.status.value.equals('EXCHANGE')}" th:onclick="exchangeCancel([[${item.id}]])">교환 취소</button>
+                            <button class="refund-btn"  th:if="${item.status.value.equals('PAYMENT_CONFIRMED') || item.status.value.equals('PACKING') || item.status.value.equals('ARRIVE')}" th:onclick="refund([[${item.id}]])">환불</button>
+                            <button class="refund-btn"  th:if="${item.status.value.equals('REFUND')}" th:onclick="refund([[${item.id}]])">환불 취소</button>
                         </div>
                     </div>
                 </div>

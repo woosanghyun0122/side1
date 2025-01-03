@@ -3,9 +3,11 @@ package side.shopping.web.order.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.order.Reason;
+import side.shopping.domain.order.RejectReason;
 import side.shopping.domain.order.Status;
 import side.shopping.domain.product.Product;
 import side.shopping.exception.CustomException;
@@ -41,26 +43,18 @@ public class OrderItemService {
 
     /**
      * 교환 서비스
-     * 상품 재고가 0개일 시, 교환 불가
-     * 12/30
-     * 로직 변경점
-     * 교환/ 환불 신청은 무조건 가능하게
-     * 거부할 시에 사유를 적고 왜 거부가 되었는지 주문 내역에서 보이게 하기.
-     * 컬럼 추가 : 반려 사유
+     * 신청은 무조건 가능
      */
+    @Transactional
     public OrderItem exchange(UpdateOrderItemDto dto) {
 
         OrderItem item = repository.findById(dto.getId())
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
 
         try {
-            if (checkAmount(dto.getId(), dto.getAmount())) {
                 item.setStatus(Status.EXCHANGE);
                 item.setCancelReason(getReason(dto.getCancelReason()));
                 return item;
-            } else {
-                throw new CustomException(NO_QUANTITY.getCode(), NO_QUANTITY.getMessage());
-            }
         } catch (Exception e) {
             log.info("error={}", e);
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
@@ -69,21 +63,18 @@ public class OrderItemService {
 
     /**
      * 환불 서비스
-     * 상품 재고가 0개일 시, 환불 불가
+     * 신청은 무조건 가능
      */
+    @Transactional
     public OrderItem refund(UpdateOrderItemDto dto) {
 
         OrderItem item = repository.findById(dto.getId())
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
 
         try {
-            if (checkAmount(item.getProduct().getProductId(), dto.getAmount())) {
                 item.setStatus(Status.REFUND);
                 item.setCancelReason(getReason(dto.getCancelReason()));
                 return item;
-            } else {
-                throw new CustomException(NO_QUANTITY.getCode(), NO_QUANTITY.getMessage());
-            }
         } catch (Exception e) {
             log.info("error={}", e);
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
@@ -111,9 +102,10 @@ public class OrderItemService {
     /**
      * 교환/환불 승인
      */
-    public OrderItem requestApprove(Long id) {
+    @Transactional
+    public OrderItem requestApprove(UpdateOrderItemDto dto) {
 
-        OrderItem item = repository.findById(id)
+        OrderItem item = repository.findById(dto.getId())
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
 
         try {
@@ -132,16 +124,19 @@ public class OrderItemService {
     /**
      * 교환/환불 거절
      */
-    public OrderItem requestDenied(Long id) {
+    @Transactional
+    public OrderItem requestDenied(UpdateOrderItemDto dto) {
 
-        OrderItem item = repository.findById(id)
+        OrderItem item = repository.findById(dto.getId())
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
 
         try {
             if (item.getStatus().equals(Status.EXCHANGE)) {
                 item.setStatus(Status.EXCHANGE_DENIED);
+                item.setRejectReason(getRejectReason(dto.getRejectReason()));
             } else if (item.getStatus().equals(Status.REFUND)) {
                 item.setStatus(Status.REFUND_DENIED);
+                item.setRejectReason(getRejectReason(dto.getRejectReason()));
             }
             return item;
         } catch (Exception e) {
@@ -169,6 +164,20 @@ public class OrderItemService {
     private Reason getReason(String value) {
 
         Reason[] reasons = Reason.values();
+        int i=0;
+
+        for (i=0; i< reasons.length; i ++){
+
+            if (reasons[i].getValue().equals(value)) {
+                return reasons[i];
+            }
+        }
+        return reasons[i];
+    }
+
+    private RejectReason getRejectReason(String value) {
+
+        RejectReason[] reasons = RejectReason.values();
         int i=0;
 
         for (i=0; i< reasons.length; i ++){
