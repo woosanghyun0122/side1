@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Mall</title>
     <link rel="stylesheet" th:href="@{../css/index.css}">
+    <script src="/js/index.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
@@ -20,18 +22,22 @@
     <section class="product-list" th:each="product : ${TopList}">
         <div class="product-card">
             <img src="https://via.placeholder.com/200" alt="Product 1">
-            <h3 th:text="${product.name}">Product 1</h3>
-            <span th:text="${product.price}">$29.99</span>
-            <button>Add to Cart</button>
+            <a th:onclick="zzim([[${product.productId}]])" class="icon" title="Wishlist">
+                <i th:attr="class=${product.zzim ? 'fas fa-heart' : 'far fa-heart'}" th:data-id="${product.productId}"></i>
+            </a>
+            <h3><a th:text="${product.name}" th:href="@{/product/detail/{id}(id=${product.id}}"></a></h3>
+            <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '원'">$29.99</span>
         </div>
     </section>
     <h2>최신 상품</h2>
     <section class="product-list" th:each="product : ${RecentList}">
         <div class="product-card">
             <img src="https://via.placeholder.com/200" alt="Product 1">
-            <h3 th:text="${product.name}">Product 1</h3>
-            <span th:text="${product.price}">$29.99</span>
-            <button>Add to Cart</button>
+            <a th:onclick="zzim([[${product.productId}]])" class="icon" title="Wishlist">
+                <i th:attr="class=${product.zzim ? 'fas fa-heart' : 'far fa-heart'}"></i>
+            </a>
+            <h3><a th:text="${product.name}" th:href="@{/product/detail/{id}(id=${product.productId}}"></a></h3>
+            <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '원'">$29.99</span>
         </div>
     </section>
 </main>

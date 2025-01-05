@@ -19,6 +19,8 @@ public class FindProductDto {
 
     private String sellerName;
 
+    private Boolean zzim;
+
     public FindProductDto() {
     }
 }

@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum RejectReason {
 
+    NO_STOCK("NO_STOCK","재고 부족"),
     EXPIRED("EXPIRED","기한 만료"),
-    NO_STOCK("NO_STOCK","사이즈 미스"),
     CUSTOMER_ERROR("CUSTOMER_ERROR","고객 과실")
     ;
 

@@ -49,7 +49,6 @@ public class OrderItem {
     @Enumerated(EnumType.STRING)
     private RejectReason rejectReason;
 
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

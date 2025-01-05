@@ -58,6 +58,7 @@
                     <div class="product-price-info">
                         <div class="quantity" th:text="'수량: ' + ${item.amount} + '개'">수량: 2개</div>
                         <div class="status" th:text="'주문 상태: '+${item.status.description}"></div>
+                        <div class="status" th:if="${item.rejectReason != null}" th:text="'거절 사유: '+${item.rejectReason.description}"></div>
                         <div class="price" th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + '원'">
                             89,000원
                         </div>

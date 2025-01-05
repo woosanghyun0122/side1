@@ -60,10 +60,13 @@ public class ZzimService {
      * 찜 삭제
      */
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long productId, String userid) {
+
+        Zzim zzim = repository.findByUser_useridAndProduct_productId(userid, productId)
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         try {
-            repository.deleteById(id);
+            repository.deleteById(zzim.getId());
         } catch (Exception e) {
             log.info("error={}", e);
             throw new CustomException(DELETE_ERROR.getCode(), DELETE_ERROR.getMessage());

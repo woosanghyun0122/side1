@@ -57,6 +57,7 @@ public class ProductService {
                     dto.setProductId(product.getProductId());
                     dto.setPrice(product.getPrice());
                     dto.setName(product.getName());
+                    dto.setZzim(false);
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -80,6 +81,7 @@ public class ProductService {
                     dto.setProductId(product.getProductId());
                     dto.setPrice(product.getPrice());
                     dto.setName(product.getName());
+                    dto.setZzim(false);
                     return dto;
                 })
                 .collect(Collectors.toList());
