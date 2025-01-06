@@ -7,6 +7,8 @@ import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
 
+import java.util.Optional;
+
 @Component
 public class SessionManager {
 
@@ -19,6 +21,7 @@ public class SessionManager {
         if (loginUser == null) {
             throw new CustomException(ErrorCode.LOGIN_ERROR.getCode(), ErrorCode.LOGIN_ERROR.getMessage());
         }
+
         return loginUser;
     }
 

@@ -16,6 +16,9 @@ import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.repository.users.dto.users.UpdateUserDto;
 import side.shopping.web.users.service.UsersService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
@@ -28,8 +31,6 @@ public class UserApiController {
     public ResponseEntity<?> login(@RequestBody @Validated LoginDto dto
             , HttpServletRequest request
             , @RequestParam(value = "redirectURL" , defaultValue = "/") String redirectURL) {
-
-        log.info("redirectURL ={}", redirectURL);
 
         LoginResponseDto loginUser = service.login(dto);
 

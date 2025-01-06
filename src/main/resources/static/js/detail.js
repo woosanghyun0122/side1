@@ -1,12 +1,43 @@
 let productId, productName, amount, price;
 let item ={};
 
-function toggleWishlist() {
+function toggleWishlist(productId) {
 
-        const icon = document.getElementById('heart').querySelector('.fa-heart');
-        icon.classList.toggle('fas'); // 채워진 하트로 변경
-        icon.classList.toggle('far'); // 빈 하트로 변경
-        icon.classList.toggle('filled'); // 색상을 위한 클래스 추가
+    const heartIcon = document.getElementById('heart').querySelector('.fa-heart');
+    const isZzim = heartIcon.classList.contains('far');
+    console.log(isZzim);
+
+    if(isZzim){
+        fetch(`/zzim/${productId}`,{
+           method: 'POST'
+        })
+        .then(response =>{
+            if(response.ok){
+                heartIcon.classList.remove('far');
+                heartIcon.classList.add('fas');
+                heartIcon.classList.toggle('filled');
+            }
+            else if(response.status == 500){
+                alert("로그인이 필요합니다.");
+                window.location.href='/user/login';
+            }
+        })
+    }
+    else{
+        fetch(`/zzim/${productId}`,{
+                   method: 'DELETE'
+                })
+                .then(response =>{
+                    if(response.ok){
+                        heartIcon.classList.add('far');
+                        heartIcon.classList.remove('fas');
+                        heartIcon.classList.remove('filled');
+                    }
+                    else{
+                        alert("오류가 발생하였습니다.");
+                    }
+                })
+    }
 }
 
 function pay(){

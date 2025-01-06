@@ -1,17 +1,22 @@
 package side.shopping.web.zzim;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import side.shopping.config.SessionManager;
 import side.shopping.domain.zzim.Zzim;
-import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.zzim.service.ZzimService;
+
+import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -24,16 +29,15 @@ public class ZzimController {
     private SessionManager sessionManager;
 
 
-
     /**
      * 찜 리스트 화면 조회
      */
-    @GetMapping("/zzim")
+    @GetMapping("/zzimList")
     public String zzimList(Model model) {
 
         String userid = sessionManager.getLoginUser().getUserId();
         model.addAttribute("list", service.findZzimList(userid));
-        return "/zzim/list";
+        return "/zzim/zzimList";
     }
 
     /**
@@ -41,7 +45,7 @@ public class ZzimController {
      */
     @ResponseBody
     @PostMapping("/zzim/{productId}")
-    public ResponseEntity saveZzim(@PathVariable Long productId) {
+    public ResponseEntity saveZzim(@PathVariable(name = "productId") Long productId) {
 
         String userid = sessionManager.getLoginUser().getUserId();
         Zzim zzim = service.saveZzim(productId,userid);
@@ -53,7 +57,7 @@ public class ZzimController {
      */
     @ResponseBody
     @DeleteMapping("/zzim/{productId}")
-    public ResponseEntity deleteZzim(@PathVariable Long productId) {
+    public ResponseEntity deleteZzim(@PathVariable(name = "productId") Long productId) {
 
         String userid = sessionManager.getLoginUser().getUserId();
         service.delete(productId, userid);

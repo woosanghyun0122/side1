@@ -35,8 +35,8 @@
                 <a class="icon" th:onclick="goCart()">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
-                <a class="icon" id="heart" th:onclick="toggleWishlist()">
-                    <i class="far fa-heart"></i> <!-- 빈 하트 아이콘 -->
+                <a class="icon" id="heart" th:onclick="toggleWishlist([[*{productId}]])">
+                    <i th:attr="class=${#lists.contains(idList,detail.productId) && !#lists.isEmpty(idList) ? 'fas fa-heart filled' : 'far fa-heart'}"></i>
                 </a>
             </div>
         </div>

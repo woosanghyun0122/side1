@@ -1,6 +1,7 @@
 
 function login() {
 
+
     const loginId = document.getElementById('loginId').value;
     const password = document.getElementById('password').value;
     const redirectURL = document.getElementById('url').value;
@@ -12,7 +13,7 @@ function login() {
                password : password
     }
 
-    fetch( `/api/user/login?redirectURL=${redirectURL}`,{
+    fetch('/api/user/login?redirectURL='+redirectURL,{
         method: 'POST',
         headers:{
             'Content-Type': 'application/json',
@@ -22,7 +23,6 @@ function login() {
     .then(response =>{
         if(response.ok){
             return response.text().then(response =>{
-                console.log("response="+response);
                 window.location.href = response;
             })
         }

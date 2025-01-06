@@ -23,9 +23,9 @@
         <div class="product-card">
             <img src="https://via.placeholder.com/200" alt="Product 1">
             <a th:onclick="zzim([[${product.productId}]])" class="icon" title="Wishlist">
-                <i th:attr="class=${product.zzim ? 'fas fa-heart' : 'far fa-heart'}" th:data-id="${product.productId}"></i>
+                <i th:attr="class=${#lists.contains(idList,product.productId) && !#lists.isEmpty(idList) ? 'fas fa-heart filled' : 'far fa-heart'}" th:data-id="${product.productId}"></i>
             </a>
-            <h3><a th:text="${product.name}" th:href="@{/product/detail/{id}(id=${product.id}}"></a></h3>
+            <h3><a th:text="${product.name}" th:href="@{'/product/detail/' + ${product.productId}}"></a></h3>
             <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '원'">$29.99</span>
         </div>
     </section>
@@ -34,9 +34,9 @@
         <div class="product-card">
             <img src="https://via.placeholder.com/200" alt="Product 1">
             <a th:onclick="zzim([[${product.productId}]])" class="icon" title="Wishlist">
-                <i th:attr="class=${product.zzim ? 'fas fa-heart' : 'far fa-heart'}"></i>
+                <i th:attr="class=${#lists.contains(idList,product.productId) && !#lists.isEmpty(idList) ? 'fas fa-heart filled' : 'far fa-heart'}" th:data-id="${product.productId}"></i>
             </a>
-            <h3><a th:text="${product.name}" th:href="@{/product/detail/{id}(id=${product.productId}}"></a></h3>
+            <h3><a th:text="${product.name}" th:href="@{'/product/detail/' + ${product.productId}}"></a></h3>
             <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '원'">$29.99</span>
         </div>
     </section>

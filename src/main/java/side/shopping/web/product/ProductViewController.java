@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
+import side.shopping.config.SessionManager;
 import side.shopping.domain.product.Category;
 import side.shopping.domain.product.Product;
 import side.shopping.domain.users.Role;
+import side.shopping.domain.zzim.Zzim;
 import side.shopping.exception.CustomException;
 import side.shopping.exception.ErrorCode;
 import side.shopping.repository.product.dto.FindProductDto;
@@ -25,10 +27,13 @@ import side.shopping.repository.product.dto.FindSellerProductDto;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
 import side.shopping.web.category.CategoryService;
 import side.shopping.web.product.service.ProductService;
+import side.shopping.web.zzim.service.ZzimService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping("/product")
@@ -41,6 +46,12 @@ public class ProductViewController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private ZzimService zzimService;
+
+    @Autowired
+    private SessionManager sessionManager;
+
 
     /**
      * 제품 상세보기
@@ -50,18 +61,25 @@ public class ProductViewController {
 
         HttpSession session = request.getSession(false);
         Product detail = service.findDetail(id);
+        List<Long> idList = new ArrayList<>();
 
         if(session == null){
             service.viewCountUpdate(id);
         }
         else{
             LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
+
+            idList = zzimService.findZzimList(loginUser.getUserId()).stream()
+                    .map(zzim -> zzim.getProduct().getProductId())
+                    .collect(Collectors.toList());
+
             if (loginUser.getUserId() != detail.getUser().getUserid()) {
                 service.viewCountUpdate(id);
             }
         }
 
         model.addAttribute("detail", detail);
+        model.addAttribute("idList", idList);
 
         return "/product/detail";
     }
@@ -70,7 +88,19 @@ public class ProductViewController {
      * 카테고리별 조회
      * */
     @GetMapping("/category/{categoryId}")
-    public String categoryList(@PathVariable(name = "categoryId") String categoryId, Model model) {
+    public String categoryList(@PathVariable(name = "categoryId") String categoryId, Model model,HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        List<Long> idList = new ArrayList<>();
+
+
+        if (session == null) {
+            String userid = sessionManager.getLoginUser().getUserId();
+            List<Zzim> zzimList = zzimService.findZzimList(userid);
+            idList = zzimList.stream()
+                    .map(zzim -> zzim.getProduct().getProductId())
+                    .collect(Collectors.toList());
+        }
 
         List<Product> list = service.findByCategoryId(categoryId);
         model.addAttribute("list", list);
