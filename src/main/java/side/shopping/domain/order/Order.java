@@ -1,8 +1,6 @@
 package side.shopping.domain.order;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,19 +8,12 @@ import lombok.Setter;
 import side.shopping.domain.Address;
 import side.shopping.domain.payment.Payment;
 import side.shopping.domain.users.Users;
-import side.shopping.repository.order.dto.OrderItemDto;
-import side.shopping.repository.order.dto.OrderToPayDto;
-import side.shopping.repository.order.dto.UpdateOrderDto;
-import side.shopping.repository.order.dto.UserOrderListDto;
+import side.shopping.repository.admin.dto.OrderListDto;
+import side.shopping.repository.order.dto.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "orders")
@@ -39,6 +30,7 @@ public class Order {
     @Setter
     @ManyToOne
     @JoinColumn(name = "userid", referencedColumnName = "userid", nullable = false)
+    @Builder.Default
     private Users user = new Users();
 
     @Column
@@ -105,4 +97,17 @@ public class Order {
         this.address = modifyAddress;
     }
 
+    public OrderListDto toOrderListDto() {
+
+        return OrderListDto.builder()
+                .orderNum(this.orderNum)
+                .orderName(this.orderName)
+                .userid(this.user.getUserid())
+                .userName(this.user.getUserName())
+                .customerName(this.customerName)
+                .customerPhone(this.customerPhone)
+                .orderDate(this.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .orderModifyDate(this.updatedAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .build();
+    }
 }

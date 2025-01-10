@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import side.shopping.domain.users.Role;
 import side.shopping.domain.users.Users;
 import side.shopping.repository.users.dto.users.FindUserDto;
 import side.shopping.repository.users.dto.users.LoginDto;
@@ -33,6 +34,10 @@ public class UserApiController {
             , @RequestParam(value = "redirectURL" , defaultValue = "/") String redirectURL) {
 
         LoginResponseDto loginUser = service.login(dto);
+
+        if (loginUser.getRole().equals(Role.ADMIN)) {
+            redirectURL = "/admin";
+        }
 
         // 비밀번호 확인 로직
         HttpSession session = request.getSession(true);

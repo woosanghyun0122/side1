@@ -53,13 +53,13 @@
 
         <div class="user-menu">
             <a th:if="${session.loginUser != null}" th:text="${session.loginUser.nickName} + '님'" th:href="@{/user/myPage}"></a>
-            <a th:href="@{/order/myOrderList}" class="icon" title="My Page">
+            <a th:href="@{/order/myOrderList}" class="icon" title="주문내역">
                 <i class="fas fa-user"></i> <!-- 사용자 아이콘 -->
             </a>
-            <a th:href="@{/zzimList}" class="icon" title="Wishlist">
+            <a th:href="@{/zzimList}" class="icon" title="위시리스트">
                 <i class="fas fa-heart"></i>
             </a>
-            <a th:href="@{/cart}" class="icon" title="Cart">
+            <a th:href="@{/cart}" class="icon" title="장바구니">
                 <i class="fas fa-shopping-cart"></i>
             </a>
             <a th:if="${session.loginUser == null}" th:href="@{/user/login}" class="login">Login</a>

@@ -4,16 +4,17 @@ import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import side.shopping.domain.users.Role;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
+import side.shopping.repository.admin.dto.UserListDto;
 import side.shopping.repository.users.UserRepository;
-import side.shopping.repository.users.dto.users.FindUserDto;
-import side.shopping.repository.users.dto.users.LoginDto;
-import side.shopping.repository.users.dto.users.LoginResponseDto;
-import side.shopping.repository.users.dto.users.UpdateUserDto;
+import side.shopping.repository.users.dto.users.*;
 
 import java.util.NoSuchElementException;
 
@@ -129,6 +130,22 @@ public class UsersService {
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
         }
     }
+
+    /**
+     * 관리자 회원 조회
+     */
+    public Page<UserListDto> findUserInfo(Pageable pageable, String role) {
+
+        if (role.equals(Role.ADMIN.getValue())) {
+            Page<Users> users = repository.findAll(pageable);
+            return users.map(Users::toUserListDto);
+        }
+        else{
+            throw new CustomException(LOGIN_ROLE_ERROR.getCode(), LOGIN_ROLE_ERROR.getMessage());
+        }
+
+    }
+
 
     @Transactional
     public void delete(Long id) {

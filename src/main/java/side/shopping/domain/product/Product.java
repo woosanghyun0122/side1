@@ -5,15 +5,12 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
-import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.users.Users;
+import side.shopping.repository.admin.dto.ProductListDto;
 import side.shopping.repository.product.dto.SaveProductDto;
 import side.shopping.repository.product.dto.UpdateProductDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Entity
@@ -107,5 +104,18 @@ public class Product {
                 .user(user)
                 .build();
 
+    }
+
+    public ProductListDto toProductListDto() {
+
+        return ProductListDto.builder()
+                .productId(this.productId)
+                .name(this.name)
+                .price(this.price)
+                .quantity(this.quantity)
+                .saleCount(this.saleCount)
+                .sellerId(this.user.getUserid())
+                .sellerNickName(this.user.getNickName())
+                .build();
     }
 }

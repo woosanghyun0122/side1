@@ -7,12 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import side.shopping.domain.product.Product;
+import side.shopping.repository.admin.AdminRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, AdminRepository {
 
 
     // 판매량 순 동일 시 조회수 순 5개
@@ -42,12 +42,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void updateSaleCount(@Param("productId") long productId);
 
 
-
     // 상품 등록
     Product save(Product product);
 
     // 삭제
     void deleteByProductId(long id);
+
 
 
 }

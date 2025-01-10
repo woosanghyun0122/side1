@@ -12,7 +12,7 @@
     <div class="product-view">
         <!-- 이미지 섹션 -->
         <div class="image-section">
-            <img alt="Product Image" class="product-image">
+            <img src="https://placehold.co/10x10" alt="Product Image" class="product-image">
         </div>
 
         <!-- 상세 정보 섹션 -->
@@ -20,7 +20,7 @@
         <div class="details-section">
             <p class="product-viewCount">[[*{viewCount}]]명이 조회했어요</p>
             <h1 class="product-title" id="name" th:text="*{name}" th:value="*{name}">Product Name</h1>
-            <p class="product-price" id="price" th:text="*{price}" th:value="*{price}">Price</p>
+            <p class="product-price" id="price" th:text="${#numbers.formatDecimal(detail.price, 0, 'COMMA', 0, 'POINT')} + '원'" th:value="*{price}">Price</p>
             <p class="product-description" id="content"  th:text="*{content}" th:value="*{content}"></p>
 
             <!-- 옵션 선택 -->
@@ -32,10 +32,10 @@
             <!-- 구매 버튼 -->
             <div class="purchase-section">
                 <button type="button" class="buy-now" th:onclick="pay()">즉시 구매</button>
-                <a class="icon" th:onclick="goCart()">
+                <a class="iconDetail" th:onclick="goCart()">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
-                <a class="icon" id="heart" th:onclick="toggleWishlist([[*{productId}]])">
+                <a class="iconDetail" id="heart" th:onclick="toggleWishlist([[*{productId}]])">
                     <i th:attr="class=${#lists.contains(idList,detail.productId) && !#lists.isEmpty(idList) ? 'fas fa-heart filled' : 'far fa-heart'}"></i>
                 </a>
             </div>

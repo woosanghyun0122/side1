@@ -5,19 +5,20 @@ import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import side.shopping.domain.product.Category;
 import side.shopping.domain.product.Product;
+import side.shopping.domain.users.Role;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
+import side.shopping.repository.admin.dto.ProductListDto;
 import side.shopping.repository.category.CategoryRepository;
 import side.shopping.repository.product.ProductRepository;
-import side.shopping.repository.product.dto.FindProductDto;
-import side.shopping.repository.product.dto.FindSellerProductDto;
-import side.shopping.repository.product.dto.SaveProductDto;
-import side.shopping.repository.product.dto.UpdateProductDto;
+import side.shopping.repository.product.dto.*;
 import side.shopping.repository.users.UserRepository;
 import side.shopping.repository.users.dto.users.LoginResponseDto;
 
@@ -253,6 +254,20 @@ public class ProductService {
             repository.deleteByProductId(id);
         } catch (Exception e) {
             throw new CustomException(DELETE_ERROR.getCode(), DELETE_ERROR.getMessage());
+        }
+    }
+
+    /**
+     * 관리자 조회
+     */
+    public Page<ProductListDto> findProductInfo(Pageable pageable, String role) {
+
+        if (role.equals(Role.ADMIN.getValue())) {
+            Page<Product> products = repository.findAll(pageable);
+            return products.map(Product::toProductListDto);
+        }
+        else{
+            throw new CustomException(LOGIN_ROLE_ERROR.getCode(), LOGIN_ROLE_ERROR.getMessage());
         }
     }
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import side.shopping.domain.order.Order;
 import side.shopping.repository.users.dto.users.UpdateUserDto;
+import side.shopping.repository.admin.dto.UserListDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class Users {
     private LocalDateTime updated_at;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Order> orderList = new ArrayList<Order>();
 
 
@@ -81,6 +83,17 @@ public class Users {
         this.email = dto.getEmail();
         this.address1 = dto.getAddress1();
         this.address2 = dto.getAddress2();
+    }
+
+    public UserListDto toUserListDto() {
+        return UserListDto.builder()
+                .userid(this.userid)
+                .userName(this.userName)
+                .nickName(this.nickName)
+                .phone(this.phone)
+                .email(this.email)
+                .role(this.role)
+                .build();
     }
 
     @PrePersist

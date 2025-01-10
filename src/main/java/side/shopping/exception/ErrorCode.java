@@ -16,7 +16,8 @@ public enum ErrorCode {
     DELETE_ERROR(9003, "저장에 실패하였습니다."),
     SELECT_ERROR(9004, "조회에 실패하였습니다."),
     LOGIN_ERROR(9005, "로그인 상태가 아닙니다"),
-    PAYMENT_ERROR(9006, "결제 중 오류가 발생하였습니다.")
+    PAYMENT_ERROR(9006, "결제 중 오류가 발생하였습니다."),
+    LOGIN_ROLE_ERROR(9007, "관리자 계정만 접속할 수 있습니다.")
     ;
 
     private final int code;

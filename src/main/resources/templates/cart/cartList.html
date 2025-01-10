@@ -40,7 +40,7 @@
       <div class="cart-item" th:each="item : ${list}">
         <input type="checkbox" class="cart-item-checkbox" th:value="${item.id}">
 
-        <img class="cart-item-image" alt="상품 이미지">
+        <img src="https://placehold.co/10x10" class="cart-item-image" alt="상품 이미지">
 
         <div class="cart-item-info">
           <h3 class="cart-item-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a></h3>
@@ -53,17 +53,14 @@
             가격
           </p>
         </div>
-
-        <button class="cart-item-delete" th:onclick="deleteProduct([[${item.id}]])">
-          <i class="fas fa-trash"></i>
-        </button>
+      </div>
+      <div class="cart-footer">
+        <button class="btn btn-purchase" onclick="purchaseSelected()">선택 구매</button>
+        <button class="btn btn-delete" onclick="deleteSelected()">선택 삭제</button>
       </div>
     </div>
 
-    <div class="cart-footer">
-      <button class="btn btn-delete" onclick="deleteSelected()">선택 삭제</button>
-      <button class="btn btn-purchase" onclick="purchaseSelected()">선택 구매</button>
-    </div>
+
   </div>
 
 </div>

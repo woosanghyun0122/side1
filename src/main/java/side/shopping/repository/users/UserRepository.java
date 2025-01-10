@@ -3,12 +3,12 @@ package side.shopping.repository.users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import side.shopping.domain.users.Users;
-import side.shopping.repository.users.dto.users.FindUserDto;
+import side.shopping.repository.admin.AdminRepository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<Users,Long> {
+public interface UserRepository extends JpaRepository<Users,Long>, AdminRepository {
 
     // 로그인
     Optional<Users> findByUserid(String userid);

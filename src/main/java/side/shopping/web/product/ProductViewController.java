@@ -73,7 +73,7 @@ public class ProductViewController {
                     .map(zzim -> zzim.getProduct().getProductId())
                     .collect(Collectors.toList());
 
-            if (loginUser.getUserId() != detail.getUser().getUserid()) {
+            if (!loginUser.getUserId().equals(detail.getUser().getUserid())) {
                 service.viewCountUpdate(id);
             }
         }
@@ -94,7 +94,7 @@ public class ProductViewController {
         List<Long> idList = new ArrayList<>();
 
 
-        if (session == null) {
+        if (session != null) {
             String userid = sessionManager.getLoginUser().getUserId();
             List<Zzim> zzimList = zzimService.findZzimList(userid);
             idList = zzimList.stream()
@@ -104,6 +104,7 @@ public class ProductViewController {
 
         List<Product> list = service.findByCategoryId(categoryId);
         model.addAttribute("list", list);
+        model.addAttribute("idList", idList);
         return "/product/categoryList";
     }
 
@@ -111,11 +112,14 @@ public class ProductViewController {
      * 카테고리별 조회 상위
      * */
     @GetMapping("/category/top/{parentId}")
-    public String parentList(@PathVariable(name = "parentId") String parentId, Model model) {
+    public String parentList(@PathVariable(name = "parentId") String parentId, Model model, HttpServletRequest request) {
 
         List<Product> list = service.findByParentId(parentId);
 
         List<Category> categories = categoryService.findDepth(1);
+
+        HttpSession session = request.getSession(false);
+        List<Long> idList = new ArrayList<>();
 
         String parentName = categories.stream()
                 .filter(name -> name.getCategoryId().equals(parentId))
@@ -123,8 +127,18 @@ public class ProductViewController {
                 .findFirst()
                 .orElse(null);
 
+        if (session != null) {
+            String userid = sessionManager.getLoginUser().getUserId();
+            List<Zzim> zzimList = zzimService.findZzimList(userid);
+            idList = zzimList.stream()
+                    .map(zzim -> zzim.getProduct().getProductId())
+                    .collect(Collectors.toList());
+        }
+
         model.addAttribute("parentName", parentName);
         model.addAttribute("list", list);
+        model.addAttribute("idList", idList);
+
         return "/product/categoryList";
     }
 

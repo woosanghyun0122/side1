@@ -21,6 +21,13 @@ header {
     height: 60px; /* 상단바 높이 고정 */
 }
 
+.icon {
+    font-size: 22px;
+    color: #999; /* 기본 아이콘 색상 */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
 /* 로고를 좌측 끝에 고정 */
 .logo {
     font-size: 1.5em;

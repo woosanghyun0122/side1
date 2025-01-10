@@ -2,34 +2,28 @@ package side.shopping.web.order.service;
 
 import jakarta.persistence.EntityExistsException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import side.shopping.domain.Address;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
 import side.shopping.domain.payment.Payment;
 import side.shopping.domain.product.Product;
+import side.shopping.domain.users.Role;
 import side.shopping.domain.users.Users;
 import side.shopping.exception.CustomException;
-import side.shopping.exception.ErrorCode;
+import side.shopping.repository.admin.dto.OrderListDto;
 import side.shopping.repository.order.OrderRepository;
-import side.shopping.repository.order.dto.OrderItemDto;
-import side.shopping.repository.order.dto.OrderToPayDto;
-import side.shopping.repository.order.dto.UpdateOrderDto;
-import side.shopping.repository.order.dto.UserOrderListDto;
+import side.shopping.repository.order.dto.*;
 import side.shopping.repository.payment.PaymentRepository;
 import side.shopping.repository.product.ProductRepository;
 import side.shopping.repository.users.UserRepository;
-import side.shopping.repository.users.dto.users.LoginResponseDto;
-import side.shopping.web.product.service.ProductService;
-import side.shopping.web.users.service.UsersService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static side.shopping.exception.ErrorCode.*;
@@ -127,6 +121,19 @@ public class OrderService {
         } catch (Exception e) {
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
         }
+    }
+
+
+    /**
+     * 관리자 주문 내역 조회
+     */
+    public Page<OrderListDto> findOrderInfo(Pageable pageable, String role) {
+
+        if (role.equals(Role.ADMIN.getValue())) {
+
+        }
+
+        return null;
     }
 
 

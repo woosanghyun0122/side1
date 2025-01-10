@@ -38,7 +38,7 @@
     <div class="cart-items">
       <!-- 각 상품 항목 반복 -->
       <div class="cart-item" th:each="item : ${list}">
-        <img class="cart-item-image" alt="상품 이미지">
+        <img src="https://placehold.co/10x10" class="cart-item-image" alt="상품 이미지">
 
         <div class="cart-item-info">
           <h3 class="cart-item-name"><a th:href="@{'/product/detail/' + ${item.product.productId}}" th:text="${item.product.name}"></a></h3>

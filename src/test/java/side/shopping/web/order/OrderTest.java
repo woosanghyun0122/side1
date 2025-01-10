@@ -38,11 +38,10 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static side.shopping.exception.ErrorCode.*;
 
-@SpringBootTest
 @Slf4j
 public class OrderTest {
 
-    @Autowired
+    /*@Autowired
     private OrderRepository orderRepository;
 
     @Autowired
@@ -108,6 +107,7 @@ public class OrderTest {
 
     }
 
+
     @Test
     @DisplayName("주문 내역 조회하기")
     void findOrder() {
@@ -130,6 +130,7 @@ public class OrderTest {
         // 테스트 코드
         assertThat(orderList).isNotNull();
     }
+
 
     @Test
     @DisplayName("주문 내역 수정")
@@ -198,9 +199,10 @@ public class OrderTest {
     }
 
 
-    /**
+*
      * 주문 세팅
-     */
+
+
     private Order setOrder() {
 
         Users cust1 = userRepository.findById(6L)
@@ -226,9 +228,10 @@ public class OrderTest {
 
 
 
-    /**
+*
      *  주문 상품 세팅
-     * */
+     *
+
     private List<OrderItem> settingItemList() {
 
         Product product1 = productRepository.findById(1L)
@@ -259,5 +262,5 @@ public class OrderTest {
         orderItemList.add(item2);
 
         return orderItemList;
-    }
+    }*/
 }

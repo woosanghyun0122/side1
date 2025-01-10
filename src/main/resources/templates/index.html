@@ -14,14 +14,14 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <section class="banner">
-    <img src="https://via.placeholder.com/1200x400" alt="Banner">
+    <img src="https://placehold.co/1200x400" alt="Banner">
 </section>
 
 <main>
     <h2>인기 상품</h2>
-    <section class="product-list" th:each="product : ${TopList}">
-        <div class="product-card">
-            <img src="https://via.placeholder.com/200" alt="Product 1">
+    <section class="product-list">
+        <div class="product-card" th:each="product : ${TopList}">
+            <img src="https://placehold.co/100x100" alt="image">
             <a th:onclick="zzim([[${product.productId}]])" class="icon" title="Wishlist">
                 <i th:attr="class=${#lists.contains(idList,product.productId) && !#lists.isEmpty(idList) ? 'fas fa-heart filled' : 'far fa-heart'}" th:data-id="${product.productId}"></i>
             </a>
@@ -29,10 +29,11 @@
             <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '원'">$29.99</span>
         </div>
     </section>
+
     <h2>최신 상품</h2>
-    <section class="product-list" th:each="product : ${RecentList}">
-        <div class="product-card">
-            <img src="https://via.placeholder.com/200" alt="Product 1">
+    <section class="product-list">
+        <div class="product-card" th:each="product : ${RecentList}">
+            <img src="https://placehold.co/100x100" alt="image">
             <a th:onclick="zzim([[${product.productId}]])" class="icon" title="Wishlist">
                 <i th:attr="class=${#lists.contains(idList,product.productId) && !#lists.isEmpty(idList) ? 'fas fa-heart filled' : 'far fa-heart'}" th:data-id="${product.productId}"></i>
             </a>
