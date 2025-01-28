@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.convert.Jsr310Converters;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +26,12 @@ import side.shopping.repository.admin.dto.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class AdminRepositoryImpl implements AdminRepository {
@@ -43,20 +46,23 @@ public class AdminRepositoryImpl implements AdminRepository {
 
         List<UserListDto> usersList =  queryFactory
                                             .select
-                                                    (Projections.bean(UserListDto.class, users.userid, users.userName
+                                                    (Projections.fields(UserListDto.class, users.userid, users.userName
                                                             , users.nickName, users.phone, users.email, users.role))
                                             .from(users)
-                                            .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity))
+                                            .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity))
                                             .offset(pageable.getOffset())
                                             .limit(pageable.getPageSize())
                                             .fetch();
 
+        log.info("SQL 쿼리 결과: {}", usersList.get(0).getPhone());
+
         JPAQuery<Long> totalCount = queryFactory
                 .select(users.count())
                 .from(users)
-                .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity));
+                .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity));
 
-        return PageableExecutionUtils.getPage(usersList, pageable, () -> totalCount.fetch().size());
+
+        return PageableExecutionUtils.getPage(usersList, pageable, totalCount::fetchOne);
     }
 
     @Override
@@ -66,10 +72,10 @@ public class AdminRepositoryImpl implements AdminRepository {
         QProduct product = QProduct.product;
 
         List<ProductListDto> productList = queryFactory
-                .select(Projections.bean(ProductListDto.class, product.productId, product.name, product.price
-                        , product.quantity, product.saleCount, product.user.userid, product.user.nickName))
+                .select(Projections.fields(ProductListDto.class, product.productId, product.name, product.price
+                        , product.quantity, product.saleCount, product.user.userid.as("sellerId"), product.user.nickName.as("sellerNickName")))
                 .from(product)
-                .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity))
+                .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -77,9 +83,9 @@ public class AdminRepositoryImpl implements AdminRepository {
         JPAQuery<Long> totalCount = queryFactory
                 .select(product.count())
                 .from(product)
-                .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity));
+                .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity));
 
-        return PageableExecutionUtils.getPage(productList, pageable, () -> totalCount.fetch().size());
+        return PageableExecutionUtils.getPage(productList, pageable, totalCount::fetchOne);
     }
 
     @Override
@@ -89,11 +95,11 @@ public class AdminRepositoryImpl implements AdminRepository {
         QOrder order = QOrder.order;
 
         List<OrderListDto> orderList = queryFactory
-                .select(Projections.bean(OrderListDto.class,order.orderNum,order.orderName,order.user.userid,order.user.userName
+                .select(Projections.fields(OrderListDto.class,order.orderNum,order.orderName,order.user.userid,order.user.userName
                 ,order.customerName,order.customerPhone,order.createdAt,order.updatedAt)
                 )
                 .from(order)
-                .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity),orderNumEq(dto.getOrderNum(),entity))
+                .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity),orderNumEq(dto.getOrderNum(),entity))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -101,9 +107,9 @@ public class AdminRepositoryImpl implements AdminRepository {
         JPAQuery<Long> totalCount = queryFactory
                 .select(order.count())
                 .from(order)
-                .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity));
+                .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity));
 
-        return PageableExecutionUtils.getPage(orderList, pageable, () -> totalCount.fetch().size());
+        return PageableExecutionUtils.getPage(orderList, pageable, totalCount::fetchOne);
     }
 
     @Override
@@ -113,10 +119,10 @@ public class AdminRepositoryImpl implements AdminRepository {
         QPayment payment = QPayment.payment;
 
         List<PaymentListDto> paymentList = queryFactory
-                .select(Projections.bean(PaymentListDto.class,payment.orderNum,payment.paymentKey,payment.price,payment.createdAt
+                .select(Projections.fields(PaymentListDto.class,payment.orderNum,payment.paymentKey,payment.price,payment.createdAt
                 ))
                 .from(payment)
-                .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity))
+                .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -124,9 +130,9 @@ public class AdminRepositoryImpl implements AdminRepository {
         JPAQuery<Long> totalCount = queryFactory
                 .select(payment.count())
                 .from(payment)
-                .where(useridEq(dto.getUserid(), entity), betweenDate(dto.getStartDate(), dto.getEndDate(), entity));
+                .where(useridEq(dto.getUserid(), entity), betweenDate(parsingDate(dto.getStartDate()), parsingDate(dto.getEndDate()), entity));
 
-        return PageableExecutionUtils.getPage(paymentList, pageable, () -> totalCount.fetch().size());
+        return PageableExecutionUtils.getPage(paymentList, pageable, totalCount::fetchOne);
     }
 
     private BooleanExpression useridEq(String useridCond, String entity) {
@@ -183,6 +189,15 @@ public class AdminRepositoryImpl implements AdminRepository {
         } else {
             return hasText(orderNumCond) ? payment.orderNum.eq(orderNumCond) : null;
         }
+    }
+
+    private LocalDateTime parsingDate(String date) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        LocalDateTime dateTime = localDate.atStartOfDay();
+        log.info("dateTime={}", dateTime);
+        return dateTime;
     }
 
 

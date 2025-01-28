@@ -38,7 +38,7 @@
                 <div>
                     <div class="order-date" th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">
                     </div>
-                    <div class="order-number" th:text="'주문번호: ' + ${order.orderNum}">
+                    <div class="order-number"><a th:href="@{/order/modify(num=${order.orderNum})}" th:text="'주문번호: ' + ${order.orderNum}"></a>
                     </div>
                 </div>
                 <div class="total-amount" th:text="'총 결제금액: ' + ${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + '원'">

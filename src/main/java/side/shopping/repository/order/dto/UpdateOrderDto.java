@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import side.shopping.domain.Address;
 
 @Getter
 @Builder
@@ -14,17 +15,11 @@ public class UpdateOrderDto {
 
     private String orderNum;
 
-    @NotBlank
-    private String name;
+    private String customerName;
 
-    @NotBlank(message = "우편번호를 입력하세요")
-    private String zipCode;
+    private String customerPhone;
 
-    @NotBlank(message = "주소를 입력하세요")
-    private String address;
+    private String customerEmail;
 
-    private String addressDetail;
-
-
-
+    private Address address;
 }

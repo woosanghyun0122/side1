@@ -12,6 +12,4 @@ function search(){
         endDate : endDate
     }
 
-
-
 }

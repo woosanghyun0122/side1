@@ -72,16 +72,16 @@
                 <th>실명</th>
                 <th>핸드폰</th>
                 <th>이메일</th>
-                <th>이메일</th>
+                <th>역할</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item, iterStat : ${results}">
-                <td th:text="${totalElements - (page * size) - iterStat.index}">1</td>
-                <td th:text="${item.userId}">user123</td>
-                <td th:text="${item.userName}">user123</td>
+            <tr th:each="item, itemStat : ${results}">
+                <td th:text="${itemStat.index +1}">1</td>
+                <td th:text="${item.userid}">user123</td>
                 <td th:text="${item.nickName}">user123</td>
-                <td th:text="${String.format('%s-%s-%s', item.phone.substring(0, 3), item.phone.substring(3, 7), item.phone.substring(7))}">ORD123456</td>
+                <td th:text="${item.userName}">user123</td>
+                <td th:text="${item.phone}">
                 <td th:text="${item.email}">ORD123456</td>
                 <td th:text="${item.role.value}"></td>
             </tr>
@@ -101,9 +101,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item, iterStat : ${results}">
-                <td th:text="${totalElements - (page * size) - iterStat.index}">1</td>
-                <td th:text="${item.productId}">user123</td>
+            <tr th:each="item, itemStat : ${results}">
+                <td th:text="${itemStat.index +1}">1</td>
                 <td th:text="${item.name}">ORD123456</td>
                 <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">ORD123456</td>
                 <td th:text="${#numbers.formatDecimal(item.quantity, 0, 'COMMA', 0, 'POINT')}">ORD123456</td>
@@ -129,8 +128,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item, iterStat : ${results}">
-                <td th:text="${totalElements - (page * size) - iterStat.index}">1</td>
+            <tr th:each="item, itemStat : ${results}">
+                <td th:text="${itemStat.index +1}">1</td>
                 <td th:text="${#temporals.format(item.orderDate, 'yyyy-MM-dd')}">2024-01-09</td>
                 <td th:text="${#temporals.format(item.orderModifyDate, 'yyyy-MM-dd')}">2024-01-09</td>
                 <td th:text="${item.orderNum}">user123</td>
@@ -138,7 +137,7 @@
                 <td th:text="${item.userid}">user123</td>
                 <td th:text="${item.userName}">user123</td>
                 <td th:text="${item.customerName}">ORD123456</td>
-                <td th:text="${String.format('%s-%s-%s', item.customerPhone.substring(0, 3), item.customerPhone.substring(3, 7), item.customerPhone.substring(7))}">ORD123456</td>
+                <td th:text="${item.customerPhone}">ORD123456</td>
             </tr>
             </tbody>
         </table>
@@ -153,8 +152,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item, iterStat : ${results}">
-                <td th:text="${totalElements - (page * size) - iterStat.index}">1</td>
+            <tr th:each="item, itemStat : ${results}">
+                <td th:text="${itemStat.index +1}">1</td>
                 <td th:text="${#temporals.format(item.paymentTime, 'yyyy-MM-dd HH:mm:ss')}">2024-01-09</td>
                 <td th:text="${item.orderNum}">ORD123456</td>
                 <td th:text="${item.paymentKey}">2024-01-09</td>
@@ -165,31 +164,21 @@
 
         <!-- 페이징 -->
         <div class="pagination" th:if="${not #lists.isEmpty(results)}">
-            <a th:href="@{${#httpServletRequest.requestURI}(page=0, size=${size})}"
-               th:class="${page == 0} ? 'disabled' : ''">
+            <a th:href="@{${httpServletRequest.requestURI}(entity=${dto.entity},userid=${dto.userid},orderNum=${dto.orderNum},startDate=${dto.startDate},endDate=${dto.endDate},page=0, size=${size})}"
+               th:class="${currentPage == 0} ? 'disabled' : ''">
                 &laquo;
             </a>
 
-            <a th:href="@{${#httpServletRequest.requestURI}(page=${page - 1}, size=${size})}"
-               th:if="${page > 0}">
-                이전
-            </a>
-
-            <th:block th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
-                <a th:href="@{${#httpServletRequest.requestURI}(page=${pageNum}, size=${size})}"
+            <th:block th:each="pageNum : ${#numbers.sequence(0, endPage - 1)}">
+                <a th:href="@{${httpServletRequest.requestURI}(entity=${dto.entity},userid=${dto.userid},orderNum=${dto.orderNum},startDate=${dto.startDate},endDate=${dto.endDate},page=${pageNum}, size=${size})}"
                    th:text="${pageNum + 1}"
-                   th:class="${pageNum == page} ? 'active' : ''">
+                   th:class="${pageNum == currentPage} ? 'active' : ''">
                     1
                 </a>
             </th:block>
 
-            <a th:href="@{${#httpServletRequest.requestURI}(page=${page + 1}, size=${size})}"
-               th:if="${page < totalPages - 1}">
-                다음
-            </a>
-
-            <a th:href="@{${#httpServletRequest.requestURI}(page=${totalPages - 1}, size=${size})}"
-               th:class="${page == totalPages - 1} ? 'disabled' : ''">
+            <a th:href="@{${httpServletRequest.requestURI}(entity=${dto.entity},userid=${dto.userid},orderNum=${dto.orderNum},startDate=${dto.startDate},endDate=${dto.endDate},page=${endPage}, size=${size})}"
+               th:class="${currentPage == endPage - 1} ? 'disabled' : ''">
                 &raquo;
             </a>
         </div>

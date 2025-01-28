@@ -1,5 +1,7 @@
 package side.shopping.web.admin;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
+@Slf4j
 @Controller
 public class AdminController {
 
@@ -54,17 +59,18 @@ public class AdminController {
         return "/admin";
     }
 
-    @ResponseBody
     @GetMapping("/admin/search")
-    public ResponseEntity search(Model model,
-                                 @RequestParam(name = "page", defaultValue = "0") int page,
-                                 @RequestParam(name="size",defaultValue = "10") int size,
-                                 @RequestParam(name = "entity") String entity,
-                                 @RequestParam(name = "userid") String userid,
-                                 @RequestParam(name = "orderNum") String orderNum,
-                                 @RequestParam(name = "startDate") LocalDate startDate,
-                                 @RequestParam(name = "endDate")LocalDate endDate
-                                 ){
+    public String search(Model model,
+                         @RequestParam(name = "page", defaultValue = "0") int page,
+                         @RequestParam(name="size",defaultValue = "10") int size,
+                         @RequestParam(name = "entity") String entity,
+                         @RequestParam(name = "userid") String userid,
+                         @RequestParam(name = "orderNum") String orderNum,
+                         @RequestParam(name = "startDate") String startDate,
+                         @RequestParam(name = "endDate")String endDate
+                         , HttpServletRequest request
+                         ){
+
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -76,28 +82,33 @@ public class AdminController {
                 .endDate(endDate)
                 .build();
 
-        if (dto.getEntity().equals("user")) {
-            Page<UserListDto> list = service.findUser(pageable, dto);
-            model.addAttribute("results", list);
-            model.addAttribute("entity", dto.getEntity());
-            model.addAttribute("totalElements", list.getTotalElements());
-        } else if (dto.getEntity().equals("product")) {
-            Page<ProductListDto> list = service.findProduct(pageable, dto);
-            model.addAttribute("results", list);
-            model.addAttribute("entity", dto.getEntity());
-            model.addAttribute("totalElements", list.getTotalElements());
+        model.addAttribute("dto", dto);
+        model.addAttribute("httpServletRequest", request);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
 
+        Page<?> list;
+
+        if (dto.getEntity().equals("user")) {
+            log.info("startDate={},endDate={}", startDate, endDate);
+            list = service.findUser(pageable, dto);
+        } else if (dto.getEntity().equals("product")) {
+            list = service.findProduct(pageable, dto);
         } else if (dto.getEntity().equals("order")) {
-            Page<OrderListDto> list = service.findOrder(pageable, dto);
-            model.addAttribute("results", list);
-            model.addAttribute("entity", dto.getEntity());
-            model.addAttribute("totalElements", list.getTotalElements());
+            list = service.findOrder(pageable, dto);
         } else {
-            Page<PaymentListDto> list = service.findAllPayment(pageable, dto);
-            model.addAttribute("results", list);
-            model.addAttribute("entity", dto.getEntity());
-            model.addAttribute("totalElements", list.getTotalElements());
+            list = service.findAllPayment(pageable, dto);
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        model.addAttribute("results", list.getContent());
+        model.addAttribute("entity", dto.getEntity());
+        model.addAttribute("totalElements", list.getTotalElements());
+        model.addAttribute("endPage", list.getTotalPages()); // 전체 페이지 수가 0부터 시작해서 -1
+
+        log.info("endPage={}", list.getTotalPages());
+        log.info("totalElements={}", list.getTotalElements());
+
+
+        return "/admin";
     }
 }

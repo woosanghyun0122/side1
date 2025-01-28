@@ -44,12 +44,8 @@ function pay(){
 
     initializeVariables();
 
-    fetch('/api/order/buyInstant',{
-        method:'POST',
-        headers:{
-            'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify(item)
+    fetch('/api/order/buyInstant?Id='+productId+'&amount='+amount,{
+        method:'GET'
     })
     .then(response =>{
         if(response.ok){
@@ -98,15 +94,12 @@ function goCart(){
 function initializeVariables() {
     // DOM 요소로부터 값을 초기화
     productId = document.getElementById('productId').value;
-    productName = document.getElementById('name').innerText;
     amount = document.getElementById('quantity').value;
-    price = document.getElementById('price').innerText;
 
     item = {
-        productId: productId,
-        amount: amount,
-        productName: productName,
-        productPrice: price
-    };
+        productId : productId,
+        amount : amount
+    }
+
 }
 

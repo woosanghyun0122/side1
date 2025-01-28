@@ -85,18 +85,6 @@ public class Order {
     }
 
 
-    public void updateToOrder(UpdateOrderDto dto) {
-
-        Address modifyAddress = Address.builder()
-                .zipCode(dto.getZipCode())
-                .address(dto.getAddress())
-                .addressDetail(dto.getAddressDetail())
-                .build();
-
-        this.orderName = dto.getName();
-        this.address = modifyAddress;
-    }
-
     public OrderListDto toOrderListDto() {
 
         return OrderListDto.builder()

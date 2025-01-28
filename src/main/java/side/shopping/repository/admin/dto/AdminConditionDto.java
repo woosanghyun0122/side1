@@ -17,9 +17,9 @@ public class AdminConditionDto {
 
     private String orderNum;
 
-    private LocalDateTime startDate;
+    private String startDate;
 
-    private LocalDateTime endDate;
+    private String endDate;
 
 
 }

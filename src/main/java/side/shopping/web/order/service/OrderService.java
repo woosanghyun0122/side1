@@ -116,24 +116,20 @@ public class OrderService {
             Order order = repository.findById(dto.getOrderNum())
                     .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(),SELECT_ERROR.getMessage()));
 
-            order.updateToOrder(dto);
+            log.info("orderAddress={}", order.getAddress().getAddressDetail());
+
+            order.setAddress(dto.getAddress());
+            order.setCustomerName(dto.getCustomerName());
+            order.setCustomerPhone(dto.getCustomerPhone());
+            order.setCustomerEmail(dto.getCustomerEmail());
+
+            log.info("orderAddress={}", order.getAddress().getAddressDetail());
+
             return order;
         } catch (Exception e) {
+            log.info("error={}",e);
             throw new CustomException(UPDATE_ERROR.getCode(), UPDATE_ERROR.getMessage());
         }
-    }
-
-
-    /**
-     * 관리자 주문 내역 조회
-     */
-    public Page<OrderListDto> findOrderInfo(Pageable pageable, String role) {
-
-        if (role.equals(Role.ADMIN.getValue())) {
-
-        }
-
-        return null;
     }
 
 

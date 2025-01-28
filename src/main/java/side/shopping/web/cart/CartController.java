@@ -49,10 +49,6 @@ public class CartController {
         HttpSession session = request.getSession(false);
         LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
 
-        if (loginUser == null) {
-            throw new CustomException(SERVER_ERROR.getCode(), SERVER_ERROR.getMessage());
-        }
-
         cartService.saveCart(dto, loginUser.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).build();
 

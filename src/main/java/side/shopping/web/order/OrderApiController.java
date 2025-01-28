@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import side.shopping.cache.CacheService;
 import side.shopping.domain.order.Order;
 import side.shopping.domain.order.OrderItem;
+import side.shopping.domain.product.Product;
 import side.shopping.repository.order.dto.OrderItemDto;
 import side.shopping.repository.order.dto.UpdateOrderDto;
 import side.shopping.repository.order.dto.UpdateOrderItemDto;
 import side.shopping.web.cart.service.CartService;
 import side.shopping.web.order.service.OrderItemService;
 import side.shopping.web.order.service.OrderService;
+import side.shopping.web.product.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,9 @@ public class OrderApiController {
 
     @Autowired
     private OrderItemService itemService;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private CacheService cacheService;
@@ -53,13 +58,19 @@ public class OrderApiController {
     /**
      * 즉시 구매
      */
-    @PostMapping("/buyInstant")
-    public ResponseEntity<?> orderItem(@RequestBody @Validated OrderItemDto dto) {
+    @GetMapping("/buyInstant")
+    public ResponseEntity<?> orderItem(@RequestParam(name = "Id") Long productId, @RequestParam(name = "amount") int amount) {
 
-        log.info("productName={}, productPrice={}", dto.getProductName(), dto.getProductPrice());
+        Product product = productService.findDetail(productId);
 
         List<OrderItemDto> list = new ArrayList<>();
-        list.add(dto);
+        list.add(OrderItemDto.builder()
+                .productId(productId)
+                .productName(product.getName())
+                .productPrice(product.getPrice())
+                .amount(amount)
+                .build()
+        );
 
         String key = cacheService.createKey();
         cacheService.setCacheValue(key,list);
@@ -111,11 +122,11 @@ public class OrderApiController {
     /**
      * 주문 수정
      */
-    @PutMapping("/modify-order")
+    @PutMapping("/modify")
     public ResponseEntity<?> modifyOrder(@RequestBody @Validated UpdateOrderDto dto) {
 
         Order modifyOrder = orderService.modifyOrder(dto);
-        return ResponseEntity.status(HttpStatus.OK).body("주문 내역을 수정하였습니다.");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 

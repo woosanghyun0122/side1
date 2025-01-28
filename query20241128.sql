@@ -4,15 +4,15 @@
 
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `userid` varchar(255) NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `nickname` varchar(255) DEFAULT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `address1` varchar(255) DEFAULT NULL,
-  `address2` varchar(255) DEFAULT NULL,
-  `role` varchar(255) DEFAULT NULL,
+  `userid` varchar(15) NOT NULL,
+  `password` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `username` varchar(18) DEFAULT NULL,
+  `nickname` varchar(30) DEFAULT NULL,
+  `phone` varchar(13) DEFAULT NULL,
+  `email` varchar(30) DEFAULT NULL,
+  `address1` varchar(100) DEFAULT NULL,
+  `address2` varchar(100) DEFAULT NULL,
+  `role` varchar(6) DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
   PRIMARY KEY (`id`),
@@ -38,11 +38,11 @@ INSERT INTO users (userid,password,username,nickname,phone,email,address1,addres
 
 CREATE TABLE `product` (
   `product_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `userid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '판매자 ID',
+  `name` varchar(60) DEFAULT NULL,
+  `userid` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '판매자 ID',
   `price` int DEFAULT NULL,
   `content` text,
-  `category_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `category_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `quantity` int DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
@@ -93,16 +93,16 @@ INSERT INTO `product` (`name`, `userid`, `price`, `content`, `category_id`, `qua
 
 -- Women Clothing (하위 카테고리: CAT00202)
 INSERT INTO `product` (`name`, `userid`, `price`, `content`, `category_id`, `quantity`, `created_at`, `updated_at`) VALUES
-('Zara Women\'s Dress', 'user031', 80000, 'Elegant floral dress', 'CAT00202', 50, NOW(), NOW()),
-('H&M Women\'s Blazer', 'user032', 39000, 'Professional blazer for women', 'CAT00202', 40, NOW(), NOW()),
-('Forever 21 Skirt', 'user033', 30000, 'A-line mini skirt', 'CAT00202', 70, NOW(), NOW()),
-('Uniqlo Women\'s Sweater', 'user034', 39000, 'Soft and warm sweater', 'CAT00202', 90, NOW(), NOW()),
-('Coach Handbag', 'user035', 250000, 'Leather handbag with spacious interior', 'CAT00202', 20, NOW(), NOW()),
-('Michael Kors Watch', 'user036', 180000, 'Elegant wrist watch', 'CAT00202', 30, NOW(), NOW()),
-('Aldo Women\'s Heels', 'user037', 89000, 'Stylish high heels', 'CAT00202', 25, NOW(), NOW()),
-('Gucci Scarf', 'user038', 350000, 'Silk scarf with designer print', 'CAT00202', 10, NOW(), NOW()),
-('Sephora Lipstick', 'user039', 25000, 'Long-lasting lipstick', 'CAT00202', 100, NOW(), NOW()),
-('Ray-Ban Sunglasses', 'user040', 150000, 'UV-protection sunglasses', 'CAT00202', 35, NOW(), NOW());
+('Zara Women\'s Dress', 'seller2', 80000, 'Elegant floral dress', 'CAT00202', 50, NOW(), NOW()),
+('H&M Women\'s Blazer', 'seller2', 39000, 'Professional blazer for women', 'CAT00202', 40, NOW(), NOW()),
+('Forever 21 Skirt', 'seller3', 30000, 'A-line mini skirt', 'CAT00202', 70, NOW(), NOW()),
+('Uniqlo Women\'s Sweater', 'seller3', 39000, 'Soft and warm sweater', 'CAT00202', 90, NOW(), NOW()),
+('Coach Handbag', 'seller3', 250000, 'Leather handbag with spacious interior', 'CAT00202', 20, NOW(), NOW()),
+('Michael Kors Watch', 'seller3', 180000, 'Elegant wrist watch', 'CAT00202', 30, NOW(), NOW()),
+('Aldo Women\'s Heels', 'seller1', 89000, 'Stylish high heels', 'CAT00202', 25, NOW(), NOW()),
+('Gucci Scarf', 'seller1', 350000, 'Silk scarf with designer print', 'CAT00202', 10, NOW(), NOW()),
+('Sephora Lipstick', 'seller3', 25000, 'Long-lasting lipstick', 'CAT00202', 100, NOW(), NOW()),
+('Ray-Ban Sunglasses', 'seller2', 150000, 'UV-protection sunglasses', 'CAT00202', 35, NOW(), NOW());
 
 -- Kitchen Appliances (하위 카테고리: CAT00301)
 INSERT INTO `product` (`name`, `userid`, `price`, `content`, `category_id`, `quantity`, `created_at`, `updated_at`) VALUES
@@ -185,10 +185,10 @@ INSERT INTO `product` (`name`, `userid`, `price`, `content`, `category_id`, `qua
 -- category Table
 
 CREATE TABLE `category` (
-  `category_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `category_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `category_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `category_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `depth` int NOT NULL,
-  `parent_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `parent_id` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
   PRIMARY KEY (`category_id`)
@@ -229,7 +229,7 @@ INSERT INTO `category` (`category_id`, `category_name`, `depth`, `parent_id`, `c
 
 CREATE TABLE `orders` (
   `order_num` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문번호',
-  `userid` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문 시 로그인 아이디',
+  `userid` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문 시 로그인 아이디',
   `order_name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '주문 명',
   `payment_key` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '결제키',
   `customer_name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '주문자 이름',
@@ -320,10 +320,10 @@ CREATE TABLE `zzim` (
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `cart_product_FK` (`product_id`),
-  KEY `cart_users_FK` (`userid`),
-  CONSTRAINT `cart_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
-  CONSTRAINT `cart_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
+  KEY `zzim_product_FK` (`product_id`),
+  KEY `zzim_users_FK` (`userid`),
+  CONSTRAINT `zzim_product_FK` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  CONSTRAINT `zzim_users_FK` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- side.commoncode definition
