@@ -32,10 +32,10 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN_KEY }}
-          sudo docker build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/side1 .
-          sudo docker tag ${{ secrets.DOCKER_USERNAME }}/side1 ${{ secrets.DOCKER_USERNAME }}/side1:v14
-          sudo docker push ${{ secrets.DOCKER_USERNAME }}/side1:v14
+          sudo docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_TOKEN_KEY }}
+          sudo docker build --platform linux/amd64 -t ${{ secrets.DOCKER_ID }}/side1 .
+          sudo docker tag ${{ secrets.DOCKER_ID }}/side1 ${{ secrets.DOCKER_ID }}/side1:v14
+          sudo docker push ${{ secrets.DOCKER_ID }}/side1:v14
 
   deploy:
       runs-on: ubuntu-22.04
@@ -51,9 +51,9 @@ jobs:
             port: 22
             script: |
               cd /home/ubuntu/side1  # 프로젝트 폴더로 이동
-              sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN_KEY }}
+              sudo docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_TOKEN_KEY }}
               sudo docker compose down
-              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/side:v14
+              sudo docker pull ${{ secrets.DOCKER_ID }}/side:v14
               sudo docker compose up -d --build
               
       
