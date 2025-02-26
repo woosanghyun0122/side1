@@ -51,7 +51,7 @@ function pay(){
         if(response.ok){
             return response.text().then(result =>{
                 const key = result;
-                window.location.href = `http://localhost:8080/order/register/orderList?key=${key}`;
+                window.location.href = `/order/register/orderList?key=${key}`;
             })
         }
         else{

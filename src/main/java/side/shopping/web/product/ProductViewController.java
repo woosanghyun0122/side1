@@ -81,7 +81,7 @@ public class ProductViewController {
         model.addAttribute("detail", detail);
         model.addAttribute("idList", idList);
 
-        return "/product/detail";
+        return "product/detail";
     }
 
     /**
@@ -105,7 +105,7 @@ public class ProductViewController {
         List<Product> list = service.findByCategoryId(categoryId);
         model.addAttribute("list", list);
         model.addAttribute("idList", idList);
-        return "/product/categoryList";
+        return "product/categoryList";
     }
 
     /**
@@ -139,7 +139,7 @@ public class ProductViewController {
         model.addAttribute("list", list);
         model.addAttribute("idList", idList);
 
-        return "/product/categoryList";
+        return "product/categoryList";
     }
 
     /**
@@ -154,7 +154,7 @@ public class ProductViewController {
             log.info("seller={}", sellerId);
             List<FindSellerProductDto> list = service.sellerProductList(sellerId);
             model.addAttribute("sellerList", list);
-            return "/product/seller-product-list";
+            return "product/seller-product-list";
 
     }
 
@@ -173,7 +173,7 @@ public class ProductViewController {
         model.addAttribute("lowerCategory", lowerList);
 
 
-        return "/product/product-form";
+        return "product/product-form";
     }
 
     /**
@@ -189,7 +189,7 @@ public class ProductViewController {
         Product product = service.findDetail(productId);
         model.addAttribute("product", product);
 
-        return "/product/productModify";
+        return "product/productModify";
     }
 
 

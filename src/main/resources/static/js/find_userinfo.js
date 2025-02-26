@@ -20,6 +20,7 @@ function findId(){
         if (response.ok) {
             return response.text().then(message => {
                 alert("아이디는 " + message + " 입니다.");
+                window.location.href = '/user/login';
             });
         } else if (response.status == 400) {
             return response.json().then(errorResponse => {
@@ -44,6 +45,7 @@ function findId(){
 
 function findPw(){
     var userid = document.getElementById('userid').value;
+    var userName = document.getElementById('userName').value
     var phone = document.getElementById('phone').value;
     document.getElementById('useridError').innerText = '';
     document.getElementById('userNameError').innerText = '';
@@ -51,7 +53,8 @@ function findPw(){
 
     var findUserDto = {
         userid: userid,
-        phone: phone
+        phone: phone,
+        userName: userName
     };
 
     fetch('/api/user/find-pw', {
@@ -65,6 +68,7 @@ function findPw(){
         if (response.ok) {
             return response.text().then(message => {
                 alert("비밀번호는 " + message + " 입니다.");
+                window.location.href = '/user/login';
             });
         } else if (response.status == 400) {
             return response.json().then(errorResponse => {

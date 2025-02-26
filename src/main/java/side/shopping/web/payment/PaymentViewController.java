@@ -44,7 +44,7 @@ public class PaymentViewController {
         model.addAttribute("order", order);
         model.addAttribute("clientKey", clientKey);
 
-        return "/payment/checkout";
+        return "payment/checkout";
     }
 
     @GetMapping("/success")
@@ -62,6 +62,6 @@ public class PaymentViewController {
         model.addAttribute("amount", amount);
         model.addAttribute("result", result);
         model.addAttribute("paymentKey", paymentKey);
-        return "/payment/success";
+        return "payment/success";
     }
 }

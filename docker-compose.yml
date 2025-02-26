@@ -1,56 +1,58 @@
-# docker-compose.yml
-
-FROM mysql:9.1.0
-COPY backup.sql /docker-entrypoint-initdb.d/
-
----
-
 version: '3.8'
-
 services:
   app:
-    image: your-spring-boot-image:latest
-    container_name: springboot-app
+    image: junuary2/side1:v3
+    container_name: shopping
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/side?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/side?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: mysql
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_PASSWORD: redis
     networks:
       - app-network
 
   mysql:
-    build:
-      context: .
-      dockerfile: Dockerfile-mysql
+    image: mysql:8.0
     container_name: mysql-db
     ports:
       - "3306:3306"
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: side
       MYSQL_USER: root
-      MYSQL_PASSWORD: mysql
-      MYSQL_ROOT_PASSWORD: mysql
-    volumes:
-      - mysql-data:/var/lib/mysql
+      MYSQL_PASSWORD: dtsg0704
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
-    image: redis:latest    # 직접 Dockerfile 없이 공식 이미지 사용
+    image: redis:latest
     container_name: redis-cache
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    command: redis-server --requirepass redis
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mysql-data:

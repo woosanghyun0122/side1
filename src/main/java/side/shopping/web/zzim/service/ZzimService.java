@@ -46,7 +46,7 @@ public class ZzimService {
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         Users user = userRepository.findByUserid(userid)
-                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SERVER_ERROR.getMessage()));
+                .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         Zzim zzim = Zzim.builder()
                 .product(product)

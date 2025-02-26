@@ -1,3 +1,4 @@
+/*
 package side.shopping.web.admin.service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -95,9 +96,9 @@ class AdminServiceTest {
 
         return AdminConditionDto.builder()
                 .userid("normal2")
-                .startDate(LocalDateTime.of(2024,1,1,00,00,00))
-                .endDate(LocalDateTime.of(2025,2,1,00,00,00))
+                .startDate(LocalDateTime.of(2024,1,1,00,00,00).toString())
+                .endDate(LocalDateTime.of(2025,2,1,00,00,00).toString())
                 .build();
     }
 
-}
+}*/

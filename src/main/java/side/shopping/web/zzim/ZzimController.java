@@ -37,7 +37,7 @@ public class ZzimController {
 
         String userid = sessionManager.getLoginUser().getUserId();
         model.addAttribute("list", service.findZzimList(userid));
-        return "/zzim/zzimList";
+        return "zzim/zzimList";
     }
 
     /**

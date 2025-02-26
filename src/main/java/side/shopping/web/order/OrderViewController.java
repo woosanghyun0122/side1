@@ -73,7 +73,7 @@ public class OrderViewController {
         model.addAttribute("orderList", list);
         model.addAttribute("method", Arrays.asList(Method.values()));
 
-        return "/order/order-register";
+        return "order/order-register";
     }
 
 
@@ -94,7 +94,7 @@ public class OrderViewController {
         List<UserOrderListDto> list = orderService.findOrderList(loginId);
         model.addAttribute("orderList", list);
 
-        return "/order/orderList";
+        return "order/orderList";
     }
 
     /**
@@ -107,7 +107,7 @@ public class OrderViewController {
                 .orElseThrow(() -> new CustomException(SELECT_ERROR.getCode(), SELECT_ERROR.getMessage()));
 
         model.addAttribute("order", order);
-        return "/order/modifyOrder";
+        return "order/modifyOrder";
     }
 
     /**
@@ -119,7 +119,7 @@ public class OrderViewController {
         OrderItem item = itemService.findById(id);
         model.addAttribute("item", item);
         model.addAttribute("reasons", Reason.values());
-        return "/order/exchange";
+        return "order/exchange";
     }
 
     /**
@@ -131,7 +131,7 @@ public class OrderViewController {
         OrderItem item = itemService.findById(id);
         model.addAttribute("item", item);
         model.addAttribute("reasons", Reason.values());
-        return "/order/refund";
+        return "order/refund";
     }
 
     /**
@@ -143,7 +143,7 @@ public class OrderViewController {
         OrderItem item = itemService.findById(id);
         model.addAttribute("item", item);
         model.addAttribute("reasons", RejectReason.values());
-        return "/order/reject";
+        return "order/reject";
     }
 
 
@@ -162,7 +162,7 @@ public class OrderViewController {
         model.addAttribute("exchangeList", exchangeList);
         model.addAttribute("refundList", refundList);
 
-        return "/order/changeList";
+        return "order/changeList";
     }
 
 

@@ -19,12 +19,12 @@
         <div class="field-error" id="useridError"></div>
         <div class="form-group">
             <label for="userName">이름</label>
-            <input type="tel" th:field="*{userName}">
+            <input type="text" th:field="*{userName}">
         </div>
         <div class="field-error" id="userNameError"></div>
         <div class="form-group">
             <label for="phone">핸드폰</label>
-            <input type="email"th:field="*{phone}">
+            <input type="text"th:field="*{phone}">
         </div>
         <div class="field-error" id="phoneError"></div>
         <button type="button" th:onclick="findPw()">비밀번호 찾기</button>

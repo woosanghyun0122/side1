@@ -46,14 +46,11 @@ public class UserViewController {
         LoginResponseDto loginUser = (LoginResponseDto) session.getAttribute("loginUser");
 
         log.info("session={}", loginUser.getUserId());
-        if (loginUser != null) {
             Users userInfo = repository.findByUserid(loginUser.getUserId())
                     .orElseThrow(() -> new NoSuchElementException());
             model.addAttribute("loginInfo", userInfo);
-            return "user/myPage";
-        } else {
-            return "redirect:/login";
-        }
+            return "user/mypage";
+
     }
 
     @GetMapping("/logout")
@@ -69,7 +66,7 @@ public class UserViewController {
 
     @GetMapping("/selectRole")
     public String selectRole() {
-        return "/user/selectRole";
+        return "user/selectRole";
     }
 
     @GetMapping("/signup")
@@ -77,17 +74,17 @@ public class UserViewController {
 
         Role userRole = Role.valueOf(role);
         model.addAttribute("persistUserDto", Users.builder().role(userRole).build());
-        return "/user/signUp";
+        return "user/signup";
     }
 
     @GetMapping("/find-id")
     public String findId(Model model) {
         model.addAttribute("findUserInfo", new FindUserDto());
-        return "/user/find_id";
+        return "user/find_id";
     }
     @GetMapping("/find-pw")
     public String findPw(Model model) {
         model.addAttribute("findUserInfo", new FindUserDto());
-        return "/user/find_pw";
+        return "user/find_pw";
     }
 }

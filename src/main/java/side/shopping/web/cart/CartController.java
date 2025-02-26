@@ -40,7 +40,7 @@ public class CartController {
         List<Cart> cart = cartService.findCartList(loginUser.getUserId());
         model.addAttribute("list", cart);
 
-        return "/cart/cartList";
+        return "cart/cartList";
     }
 
     @PostMapping("/cart")
